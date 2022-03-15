@@ -1,0 +1,191 @@
+# Generator ID
+cobblestone:
+  # Displayname used for placeholder {displayname} in item displayname and lore
+  displayname: 'Cobblestone'
+  # Generator's item
+  # Internal placeholders that can be used in displayname and lore:
+  # {name} - Name of generator (ID)
+  # {displayname} - Displayname of generator
+  # {cooldown} - Generator's cooldown
+  # {remaining-durability} - Durability that generator still have
+  # {full-durability} - Generator's default durability
+  item:
+    # Material of item, must be a block
+    material: CYAN_TERRACOTTA
+    # Whether item should have glowing effect
+    enchanted: false
+    # Displayname of item
+    displayname: '&6&lGenerator {displayname}'
+    # Lore of item
+    lore:
+      - '&eName: &a{displayname}'
+      - '&eDurability: &a{remaining-durability}/{full-durability}'
+      - '&eCooldown: &a{cooldown}'
+      - ''
+      - '&7To pick up generator right click it'
+      - '&7with a hand while sneaking.'
+    # Whether item should be stackable. When false, every item has its own id in NBT tag,
+    # to prevent stacking it
+    stackable: true
+    # Whether generator item can be used to craft any another item than another generator.
+    can-be-used-in-crafting: false
+  # Whether player on survival can break generator block
+  can-be-broken: false
+  # Double drop settings
+  doubledrop:
+    # Whether block chances should be multiplied by double drop multiplayer when it
+    # is active
+    use-multiplayer: true
+    # Durability decrease when double drop is enabled. When set to 0.42 it will take 0.42 durability
+    # from generator on every broken block
+    # Set this to 1 for normal decrease
+    durability-decrease: 0.5
+  # Durability of generator. One block broken = -1 durability
+  # Set this to -1 to make infinite generator
+  durability: 1000
+  # Cooldown in ticks for generating new block after mining it
+  cooldown: 10
+  # Whether two generators can be combined in crafting to make one with summed durability.
+  # Crafted generator won't have higher durability than its max durability
+  crafting-repair: true
+  # Max count of generators that can be placed in one chunk
+  max-in-chunk: -1
+  # Worlds in which generator can't be placed
+  disabled-worlds: []
+  # Default block that will be generated
+  default-block: COBBLESTONE
+  # Blocks with chances to generate
+  # Format is:
+  # <block id>: <chances in %>
+  # So 'DIRT: 50' will give generator 50% chance to generate dirt
+  blocks:
+    DIAMOND_ORE: 1
+    EMERALD_ORE: 1.5
+    GOLD_ORE: 3
+    IRON_ORE: 5
+    STONE: 10.0
+  # Recipe of generator. If you don't want it, just delete `recipe` section or comment it
+  recipe:
+    # Whether recipe should have shape. If false, section `shape` is unused and section
+    # 'ingredients' must be a list. For example:
+    # shaped: false
+    # ingredients:
+    #   - REDSTONE
+    #   - REPEATER
+    #   - REDSTONE
+    #   - LAVA_BUCKET
+    #   - PISTON
+    #   - WATER_BUCKET
+    #   - REDSTONE
+    #   - REPEATER
+    #   - REDSTONE
+    shaped: true
+    shape:
+      - "CCC"
+      - "LGW"
+      - "CCC"
+    # Ingredients in format
+    # <char in shape>: <item>
+    # You can also instead normal items use generator as an ingredient.
+    # Just use 'generator:<generator name>' in item place
+    ingredients:
+      C: COBBLESTONE
+      L: LAVA_BUCKET
+      W: WATER_BUCKET
+      G: GOLD_INGOT
+    # This setting is only useful when you add generator item as ingredient.
+    # When true, durability of crafted generator will be reduced by used durability
+    # of ingredient generator.
+    # Simple math:
+    # cg full durability - (ig full durability - ig durability) = cg durability
+    # cg - crafted generator
+    # ig - ingredient generator
+    #
+    # So for example we have generator that full durability is 2000 and durability
+    # left is 1500. We are crating better generator whose full durability is 3000.
+    # In that case durability of crafted generator will be:
+    # 3000 - (2000 - 1500) = 2500
+    reduce-durability-by-already-used: false
+
+stone:
+  displayname: 'Stone'
+  item:
+    material: GRAY_TERRACOTTA
+    enchanted: true
+    displayname: '&6&lGenerator {displayname}'
+    lore:
+      - '&eName: &a{displayname}'
+      - '&eDurability: &a{remaining-durability}/{full-durability}'
+      - '&eCooldown: &a{cooldown}'
+      - ''
+      - '&7To pick up generator right click it'
+      - '&7with a hand while sneaking.'
+    stackable: false
+    can-be-used-in-crafting: false
+  can-be-broken: true
+  doubledrop:
+    use-multiplayer: true
+    durability-decrase: 0.1
+  durability: 2000
+  cooldown: 8
+  crafting-repair: true
+  max-in-chunk: -1
+  disabled-worlds: []
+  default-block: STONE
+  blocks:
+    DIAMOND_ORE: 1
+    EMERALD_ORE: 1.5
+    GOLD_ORE: 3
+    IRON_ORE: 5
+    STONE: 10.0
+  recipe:
+    shape:
+      - "SSS"
+      - "SGS"
+      - "SSS"
+    ingredients:
+      S: STONE
+      G: generator:cobblestone
+    reduce-durability-by-already-used: true
+
+infinite:
+  displayname: 'Infinite'
+  item:
+    material: EMERALD_BLOCK
+    enchanted: true
+    displayname: '&6&lGenerator &#23db1d&l{displayname}'
+    lore:
+      - '&eName: &a{displayname}'
+      - '&eDurability: &ainfinite'
+      - '&eCooldown: &a{cooldown}'
+      - ''
+      - '&7To pick up generator right click it'
+      - '&7with a hand while sneaking.'
+    stackable: false
+    can-be-used-in-crafting: false
+  can-be-broken: false
+  doubledrop:
+    use-multiplayer: true
+    durability-decrase: 0.5
+  durability: -1
+  cooldown: 0
+  crafting-repair: false
+  max-in-chunk: 2
+  disabled-worlds: []
+  default-block: STONE
+  blocks:
+    DIAMOND_ORE: 1
+    EMERALD_ORE: 1.5
+    GOLD_ORE: 3
+    IRON_ORE: 5
+    STONE: 10.0
+  recipe:
+    shape:
+      - "EEE"
+      - "SCS"
+      - "EEE"
+    ingredients:
+      E: EMERALD_BLOCK
+      S: generator:stone
+      C: generator:cobblestone
+    reduce-durability-by-already-used: false

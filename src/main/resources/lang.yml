@@ -1,0 +1,85 @@
+##########################
+#                        #
+#  Lang file by Ynfuien  #
+#                        #
+##########################
+
+# If you don't want a message to be sent, just set it empty - ''
+
+# Prefix that will be used before every message
+prefix: '&3[&b&lY&9&lGenerators&3]&r '
+
+no-permission: '&cYou don''t have permission to do this!'
+only-player: '&cThis command only can use players!'
+plugin-is-reloading: '&cPlugin is reloading, wait a second..'
+plugin-is-disabling: '&cPlugin is currently turning off..'
+
+help-no-commands: '&cYou don''t have permission for any command!'
+help-top: '{prefix}&3Available commands:'
+help-command-template: '&9/{command} &f- &b{description}'
+
+commands-usage-generator: 'generator'
+commands-usage-player: 'player'
+commands-usage-amount: 'amount'
+commands-usage-durability: 'durability'
+
+command-help-description: 'Displays available commands'
+command-reload-description: 'Reloads plugin configuration'
+command-give-description: 'Gives provided generator'
+
+command-give-fail-no-generator: '&cYou must specify generator that you want to give/get!'
+command-give-fail-generator-doesnt-exist: '&cThat generator doesn''t exist!'
+command-give-fail-no-player: '&cYou must specify player you want to give generator!'
+command-give-fail-player-isnt-online: '&cThat player isn''t online!'
+command-give-fail-incorrect-amount: '&cProvided amount is incorrect!'
+command-give-fail-incorrect-durability: '&cDurability must be a number!'
+command-give-accept-high-amount: '&cYou provided large amount of generators ({amount}), use command again within 5 seconds to confirm it.'
+command-give-success-self: '&aSuccessfully &bgave generator &3{name}&b!'
+command-give-success-noself: '&aSuccessfully &bgave generator &3{name} &bto &e{player}&b!'
+command-give-success-noself-many: '&aSuccessfully &bgave &3x{amount} {name} &bgenerator(s) &bto &e{player}&b!'
+command-give-success-noself-durability: '&aSuccessfully &bgave &3x{amount} {name} &bgenerator(s) &bwith durability &3{durability} &bto &e{player}&b!'
+
+command-reload-fail: '&cAn error occurred while reloading plugin. Take a look in the console for more information!'
+command-reload-success: '&bPlugin was &asuccessfully &breloaded!'
+
+command-doubledrop-time-active: '&bDouble drop time left: &3{time}'
+command-doubledrop-time-active-multiplayer: '&bDouble drop (&3x{multiplayer}&b) &btime left: &3{time}'
+command-doubledrop-time-inactive: '&bDouble drop is currently &cinactive&b!'
+command-doubledrop-usage: '&cCommand usage: /doubledrop <add | remove | set | setmultiplayer> <time | multiplayer>'
+command-doubledrop-fail-incorrect-time: '&cProvided time is incorrect!'
+command-doubledrop-add-success: '&bSuccessfully &aadded &3{time} &bto double drop, it ends after &3{time-left}&b!'
+command-doubledrop-add-fail-no-time: '&cYou must specify time you want to add!'
+command-doubledrop-remove-success: '&bSuccessfully &cremoved &3{time} &bfrom double drop, it ends after &3{time-left}&b!'
+command-doubledrop-remove-success-deactivate: '&bSuccessfully &cdeactivated &bdouble drop!'
+command-doubledrop-remove-fail-no-time: '&cYou must specify time you want to remove!'
+command-doubledrop-set-success: '&aSuccessfully &bsetted double drop time to &3{time}&b!'
+command-doubledrop-set-success-deactivate: '&bSuccessfully &cdeactivated &bdouble drop!'
+command-doubledrop-set-fail-no-time: '&cYou must specify time you want to set!'
+command-doubledrop-setmultiplayer-success: '&aSuccessfully &bsetted double drop multiplayer to &3x{multiplayer}&b!'
+command-doubledrop-setmultiplayer-fail-incorrect-multiplayer: '&cProvided multiplayer is incorrect!'
+command-doubledrop-setmultiplayer-fail-no-multiplayer: '&cYou must specify multiplayer you want to set!'
+
+
+generator-deny-disabled-world: '&cIn this world you can''t place generator!'
+generator-deny-unknown-name: '&cThis generator has name, that doesn''t exist in plugin configuration! Contact with server administrator.'
+generator-deny-place-above: '&cYou can''t place generator above another!'
+generator-deny-place-under: '&cYou can''t place generator under another!'
+generator-deny-limit-global: '&cThere is limit of {limit} generators on chunk!'
+generator-deny-limit-single: '&cThere is limit of {limit} this generators on chunk!'
+generator-deny-cooldown: '&cWait a second before placing generator again!'
+generator-deny-break: '&cYou can''t destroy generator, it must be picked up!'
+generator-alert-broken: '&cGenerator {name} was worn out!'
+generator-alert-low-durability: '&cThe generator has {durability-left} {word} left!'
+generator-alert-durability-word-singular: 'durability'
+generator-alert-durability-word-plurar: 'durability'
+generator-alert-durability-word-plurar-2-4: 'durability'
+generator-info: '&bGenerator: &9{displayname} &7&l| &bDurability: &3{remaining-durability}'
+generator-info-infinite: '&bGenerator: &9{displayname} &7&l| &bDurability: &3infinite'
+
+doubledrop-time: '{hours}h and {minutes}m'
+doubledrop-time-infinity: '∞'
+doubledrop-end: "&e&lDouble drop has ended! If you want you can buy more time in &6&l/shop&e&l."
+doubledrop-placeholder-active: "&aactive"
+doubledrop-placeholder-inactive: "&cinactive"
+doubledrop-placeholder-status: "&e{time}"
+doubledrop-placeholder-status-multiplayer: "&e{time} &6(x{multiplayer})"

@@ -1,0 +1,6 @@
+# This file is automatically maintained be the plugin itself
+
+# time-left - Time left to the end of double drop
+# multiplayer - Multiplayer for chances of generated blocks while double drop is enabled
+time-left: 0
+multiplayer: 2

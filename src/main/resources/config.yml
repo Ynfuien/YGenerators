@@ -1,0 +1,85 @@
+# Database update interval in seconds
+database-update-interval: 60
+
+# Whether plugin should check for updates every server start
+check-updates: true
+
+# General generators configuration
+generators:
+  # Max amount of generators that can be placed in single chunk.
+  # Set to -1 to disable this feature
+  max-in-chunk: 20
+
+  # Worlds in which generators will be disabled
+  disabled-worlds:
+    - example_world
+    - example_world_2
+
+  # Durability list at which alerts will be sent to player about low durability
+  alert-durability:
+    - 1
+    - 2
+    - 5
+    - 10
+    - 20
+    - 50
+
+  # Whether generators can be placed on top of each other
+  place-on-top: false
+
+  # Actions to pick up generator
+  pick-up:
+    # Whether this feature should be enabled
+    enabled: true
+    # If player must sneak to pick up generator
+    sneak: true
+    # If player must have empty hand to pick up
+    empty-hand: true
+    # What button player must use to pick up generator
+    # Allowed buttons: left, right
+    click: right
+
+  # Actions to check placed generator status
+  # When enabled, player can click on generator to get its status in action bar
+  check-status:
+    # Whether this feature should be enabled
+    enabled: true
+    # If player must sneak to check generator status
+    sneak: true
+    # If player must have empty hand
+    empty-hand: true
+    # What button player must use
+    # Allowed buttons: left, right
+    click: left
+
+
+# Options to change vanilla generators
+vanilla-generators:
+  # Whether plugin should change default vanilla generators behavior
+  enabled: false
+
+  # Whether block chances should be multiplied by double drop multiplayer
+  # when double drop is active
+  use-doubledrop: true
+
+  # Default block to generate
+  # Use 'default' to not change by default generated block
+  default-block: default
+
+  # Blocks to generate, format:
+  # <material>: <chance>
+  blocks:
+    DIAMOND_ORE: 0.05
+    EMERALD_ORE: 0.10
+    GOLD_ORE: 0.20
+    COPPER_ORE: 0.30
+    IRON_ORE: 0.35
+    REDSTONE_ORE: 0.45
+    LAPIS_ORE: 0.45
+    COAL_ORE: 0.60
+    STONE: 2.0
+
+# Other additional options
+other-options:
+  # Whether iron, gold and copper ores should drop itself and not raw ore
+  1-16-ores: false
