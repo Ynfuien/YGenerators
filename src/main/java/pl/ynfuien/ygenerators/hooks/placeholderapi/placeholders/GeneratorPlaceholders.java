@@ -146,7 +146,7 @@ public class GeneratorPlaceholders implements Placeholder {
                 // Placeholder: %ygenerators_generator_<name>_blocks_<block>_current%
                 // Returns: current chance to generate block
                 if (id.equals("current")) {
-                    if (doubledrop.isActive()) return Util.formatDouble(chance * multiplayer, 2);
+                    if (doubledrop.isActive() && gene.getDoubledropUseMultiplayer()) return Util.formatDouble(chance * multiplayer, 2);
                     return Util.formatDouble(chance);
                 }
 
