@@ -11,7 +11,7 @@ If you are still using Spigot then come back from stone age and use [Paper](http
 - Global double drop
 - Custom blocks generated in vanilla generators
 - 1.16 ores drop instead of 1.17 raw ores drop
-- fully customizable translations
+- fully customizable translations ([English](https://github.com/Ynfuien/YGenerators/blob/main/src/main/resources/langs/en-lang.yml) is by default but [Polish](https://github.com/Ynfuien/YGenerators/blob/main/src/main/resources/langs/pl-lang.yml) translation is also prepared, just copy it to your `lang.yml`)
 - simple commands with tab completions
 
 ### Generators:
