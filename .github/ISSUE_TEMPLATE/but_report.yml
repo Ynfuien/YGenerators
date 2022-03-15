@@ -1,6 +1,7 @@
 name: Bug Report
 description: Report found bug
-labels: ["Bug"]
+assignees: [Ynfuien]
+labels: ["Bug Report", "On fly"]
 body:
   - type: input
     attributes:
