@@ -6,7 +6,7 @@ If you are still using Spigot then come back from stone age and use [Paper](http
 # Features
 ### General:
 - Support for [PlaceholderAPI](https://github.com/PlaceholderAPI/PlaceholderAPI)
-- Placeholders to use in any another plugin
+- Placeholders to use in any another plugin [(Click)](https://github.com/Ynfuien/YGenerators/wiki/Placeholders)
 - Custom generators
 - Global double drop
 - Custom blocks generated in vanilla generators
