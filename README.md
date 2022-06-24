@@ -46,9 +46,9 @@ If you are still using Spigot then come back from stone age and use [Paper](http
 
 # Configuration files
 - [`config.yml`](https://github.com/Ynfuien/YGenerators/blob/main/src/main/resources/config.yml) - It has basic settings about generators and configuration of vanilla generators.
-- [`generators.yml`](https://github.com/Ynfuien/YGenerators/blob/main/resources/generators.yml) - There are all settings about each generator.
-- [`doubledrop.yml`](https://github.com/Ynfuien/YGenerators/blob/main/resources/doubledrop.yml) - In this file is saved time left of double drop and its multiplayer.
-- [`database.yml`](https://github.com/Ynfuien/YGenerators/blob/main/resources/database.yml) - This file contains all palced generators on the server.
+- [`generators.yml`](https://github.com/Ynfuien/YGenerators/blob/main/src/main/resources/generators.yml) - There are all settings about each generator.
+- [`doubledrop.yml`](https://github.com/Ynfuien/YGenerators/blob/main/src/main/resources/doubledrop.yml) - In this file is saved time left of double drop and its multiplayer.
+- [`database.yml`](https://github.com/Ynfuien/YGenerators/blob/main/src/main/resources/database.yml) - This file contains all palced generators on the server.
 
 Most about configuring you will learn in configs themselves. Apparently "comment" should be my second name.
 
