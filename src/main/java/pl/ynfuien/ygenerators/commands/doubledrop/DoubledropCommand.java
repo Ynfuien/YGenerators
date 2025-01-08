@@ -11,7 +11,7 @@ import pl.ynfuien.ygenerators.commands.Subcommand;
 import pl.ynfuien.ygenerators.commands.doubledrop.subcommands.AddSubcommand;
 import pl.ynfuien.ygenerators.commands.doubledrop.subcommands.RemoveSubcommand;
 import pl.ynfuien.ygenerators.commands.doubledrop.subcommands.SetSubcommand;
-import pl.ynfuien.ygenerators.commands.doubledrop.subcommands.SetmultiplayerSubcommand;
+import pl.ynfuien.ygenerators.commands.doubledrop.subcommands.SetMultiplayerSubcommand;
 import pl.ynfuien.ygenerators.data.Doubledrop;
 import pl.ynfuien.ygenerators.managers.Lang;
 import pl.ynfuien.ygenerators.utils.Util;
@@ -27,7 +27,7 @@ public class DoubledropCommand implements CommandExecutor, TabCompleter {
             new AddSubcommand(),
             new SetSubcommand(),
             new RemoveSubcommand(),
-            new SetmultiplayerSubcommand()
+            new SetMultiplayerSubcommand()
     };
 
     @Override

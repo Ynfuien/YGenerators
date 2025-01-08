@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class SetmultiplayerSubcommand implements Subcommand {
+public class SetMultiplayerSubcommand implements Subcommand {
     @Override
     public String permission() {
         return "ygenerators.command.doubledrop."+name();
@@ -20,7 +20,7 @@ public class SetmultiplayerSubcommand implements Subcommand {
 
     @Override
     public String name() {
-        return "setmultiplayer";
+        return "set-multiplayer";
     }
 
     @Override
@@ -37,7 +37,7 @@ public class SetmultiplayerSubcommand implements Subcommand {
     public void run(CommandSender sender, String[] args) {
         // Return if no args are provided
         if (args.length == 0) {
-            Lang.Message.COMMAND_DOUBLEDROP_SETMULTIPLAYER_FAIL_NO_MULTIPLAYER.send(sender);
+            Lang.Message.COMMAND_DOUBLEDROP_SET_MULTIPLAYER_FAIL_NO_MULTIPLAYER.send(sender);
             return;
         }
 
@@ -49,13 +49,13 @@ public class SetmultiplayerSubcommand implements Subcommand {
         try {
             multiplayer = Double.parseDouble(arg1);
         } catch (NumberFormatException e) {
-            Lang.Message.COMMAND_DOUBLEDROP_SETMULTIPLAYER_FAIL_INCORRECT_MULTIPLAYER.send(sender);
+            Lang.Message.COMMAND_DOUBLEDROP_SET_MULTIPLAYER_FAIL_INCORRECT_MULTIPLAYER.send(sender);
             return;
         }
 
         // If multiplayer is lower than 0
         if (multiplayer < 0) {
-            Lang.Message.COMMAND_DOUBLEDROP_SETMULTIPLAYER_FAIL_INCORRECT_MULTIPLAYER.send(sender);
+            Lang.Message.COMMAND_DOUBLEDROP_SET_MULTIPLAYER_FAIL_INCORRECT_MULTIPLAYER.send(sender);
             return;
         }
 
@@ -71,7 +71,7 @@ public class SetmultiplayerSubcommand implements Subcommand {
         placeholders.put("multiplayer", Util.formatDouble(multiplayer));
 
         // Send success message
-        Lang.Message.COMMAND_DOUBLEDROP_SETMULTIPLAYER_SUCCESS.send(sender, placeholders);
+        Lang.Message.COMMAND_DOUBLEDROP_SET_MULTIPLAYER_SUCCESS.send(sender, placeholders);
     }
 
     @Override
