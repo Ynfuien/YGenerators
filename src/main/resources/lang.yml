@@ -1,85 +1,105 @@
-##########################
-#                        #
-#  Lang file by Ynfuien  #
-#                        #
-##########################
+################################
+#                              #
+#     Lang file by Ynfuien     #
+#                              #
+################################
 
-# If you don't want a message to be sent, just set it empty - ''
 
-# Prefix that will be used before every message
-prefix: '&3[&b&lY&9&lGenerators&3]&r '
+#### Quick info:
+# 1. If you don't want a message to be sent, just set it empty - ''
 
-no-permission: '&cYou don''t have permission to do this!'
-only-player: '&cThis command can by used only by players!'
-plugin-is-reloading: '&cPlugin is reloading, wait a second..'
-plugin-is-disabling: '&cPlugin is currently turning off..'
+# 2. You can use MiniMessage formatting for custom colors and formats!
+# If you don't know how, then here is documentation:
+# https://docs.advntr.dev/minimessage/format.html
 
-help-no-commands: '&cYou don''t have permission for any command!'
-help-top: '{prefix}&3Available commands:'
-help-command-template: '&9/{command} &f- &b{description}'
+# 3. PlaceholderAPI is supported
+
+# 4. Plugin placeholders are within curly brackets - {placeholder}
+# And can have additional flags:
+# ! - no formatting
+# @ - no papi
+# # - escaped double quotes (")
+# To use a flag for a placeholder, append it before the name - {!placeholder}
+# You can also combine flags, so for example {@#placeholder}, will not parse PAPI placeholders,
+# and will escape double quotes (" will become \").
+# ! - is useful for player input, that is not supposed to be formatted
+# @ - for input that's supposed to be formatted, but not with papi
+# # - for things that can contain double quotes, and you want them in hover/click event
+
+# Prefix that will be used for {prefix} placeholder
+prefix: '<dark_aqua>[<aqua><bold>Y<blue><bold>Generators<dark_aqua>]<reset> '
+
+no-permission: '{prefix} <red>You don''t have permission to do this!'
+only-player: '{prefix} <red>This command can by used only by players!'
+plugin-is-reloading: '{prefix} <red>Plugin is reloading, wait a second..'
+plugin-is-disabling: '{prefix} <red>Plugin is currently turning off..'
+
+help-no-commands: '{prefix} <red>You don''t have permission for any command!'
+help-top: '{prefix} {prefix}<dark_aqua>Available commands:'
+help-command-template: '{prefix} <blue>/{command} <white>- <aqua>{description}'
 
 commands-usage-generator: 'generator'
 commands-usage-player: 'player'
 commands-usage-amount: 'amount'
 commands-usage-durability: 'durability'
 
-command-help-description: 'Displays available commands'
-command-reload-description: 'Reloads plugin configuration'
-command-give-description: 'Gives provided generator'
+command-help-description: '{prefix} Displays available commands'
+command-reload-description: '{prefix} Reloads plugin configuration'
+command-give-description: '{prefix} Gives provided generator'
 
-command-give-fail-no-generator: '&cYou must specify generator that you want to give/get!'
-command-give-fail-generator-doesnt-exist: '&cThat generator doesn''t exist!'
-command-give-fail-no-player: '&cYou must specify player you want to give generator to!'
-command-give-fail-player-isnt-online: '&cThat player isn''t online!'
-command-give-fail-incorrect-amount: '&cProvided amount is incorrect!'
-command-give-fail-incorrect-durability: '&cDurability must be a number!'
-command-give-accept-high-amount: '&cYou provided large amount of generators ({amount}), use command again within 5 seconds to confirm it.'
-command-give-success-self: '&aSuccessfully &bgave &3{name} &bgenerator!'
-command-give-success-noself: '&aSuccessfully &bgave 3{name} &bgenerator &to &e{player}&b!'
-command-give-success-noself-many: '&aSuccessfully &bgave &3x{amount} {name} &bgenerator(s) &bto &e{player}&b!'
-command-give-success-noself-durability: '&aSuccessfully &bgave &3x{amount} {name} &bgenerator(s) &bwith durability &3{durability} &bto &e{player}&b!'
+command-give-fail-no-generator: '{prefix} <red>You must specify generator that you want to give/get!'
+command-give-fail-generator-doesnt-exist: '{prefix} <red>That generator doesn''t exist!'
+command-give-fail-no-player: '{prefix} <red>You must specify player you want to give generator to!'
+command-give-fail-player-isnt-online: '{prefix} <red>That player isn''t online!'
+command-give-fail-incorrect-amount: '{prefix} <red>Provided amount is incorrect!'
+command-give-fail-incorrect-durability: '{prefix} <red>Durability must be a number!'
+command-give-accept-high-amount: '{prefix} <red>You provided large amount of generators ({amount}), use command again within 5 seconds to confirm it.'
+command-give-success-self: '{prefix} <green>Successfully <aqua>gave <dark_aqua>{name}</dark_aqua> generator!'
+command-give-success-player: '{prefix} <green>Successfully <aqua>gave <dark_aqua>{name}</dark_aqua> generator to <yellow>{player}</yellow>!'
+command-give-success-player-many: '{prefix} <green>Successfully <aqua>gave <dark_aqua>x{amount} {name}</dark_aqua> generator(s) to <yellow>{player}</yellow>!'
+command-give-success-player-durability: '{prefix} <green>Successfully <aqua>gave <dark_aqua>x{amount} {name}</dark_aqua> generator(s) with durability <dark_aqua>{durability}</dark_aqua> to <yellow>{player}</yellow>!'
 
-command-reload-fail: '&cAn error occurred while reloading plugin. Take a look in the console for more information!'
-command-reload-success: '&bPlugin was &asuccessfully &breloaded!'
+command-reload-fail: '{prefix} <red>An error occurred while reloading plugin. Take a look in the console for more information!'
+command-reload-success: '{prefix} <aqua>Plugin was <green>successfully</green> reloaded!'
 
-command-doubledrop-time-active: '&bDouble drop time left: &3{time}'
-command-doubledrop-time-active-multiplayer: '&bDouble drop (&3x{multiplayer}&b) &btime left: &3{time}'
-command-doubledrop-time-inactive: '&bDouble drop is currently &cinactive&b!'
-command-doubledrop-usage: '&cCommand usage: /doubledrop <add | remove | set | set-multiplayer> <time | multiplayer>'
-command-doubledrop-fail-incorrect-time: '&cProvided time is incorrect!'
-command-doubledrop-add-success: '&bSuccessfully &aadded &3{time} &bto double drop, it will end in &3{time-left}&b!'
-command-doubledrop-add-fail-no-time: '&cYou must specify time you want to add!'
-command-doubledrop-remove-success: '&bSuccessfully &cremoved &3{time} &bfrom double drop, it will end in &3{time-left}&b!'
-command-doubledrop-remove-success-deactivate: '&bSuccessfully &cdeactivated &bdouble drop!'
-command-doubledrop-remove-fail-no-time: '&cYou must specify time you want to remove!'
-command-doubledrop-set-success: '&aSuccessfully &bset double drop time to &3{time}&b!'
-command-doubledrop-set-success-deactivate: '&bSuccessfully &cdeactivated &bdouble drop!'
-command-doubledrop-set-fail-no-time: '&cYou must specify time you want to set!'
-command-doubledrop-set-multiplayer-success: '&aSuccessfully &bset double drop multiplayer to &3x{multiplayer}&b!'
-command-doubledrop-set-multiplayer-fail-incorrect-multiplayer: '&cProvided multiplayer is incorrect!'
-command-doubledrop-set-multiplayer-fail-no-multiplayer: '&cYou must specify multiplayer you want to set!'
+command-doubledrop-time-active: '{prefix} <aqua>Double drop time left: <dark_aqua>{time}'
+command-doubledrop-time-active-multiplayer: '{prefix} <aqua>Double drop (<dark_aqua>x{multiplayer}</dark_aqua>) time left: <dark_aqua>{time}'
+command-doubledrop-time-inactive: '{prefix} <aqua>Double drop is currently <red>inactive</red>!'
+command-doubledrop-usage: '{prefix} <red>Command usage: /doubledrop <add | remove | set | set-multiplayer> <time | multiplayer>'
+command-doubledrop-fail-incorrect-time: '{prefix} <red>Provided time is incorrect!'
+command-doubledrop-add-success: '{prefix} <aqua>Successfully <green>added</green> <dark_aqua>{time}</dark_aqua> to double drop, it will end in <dark_aqua>{time-left}</dark_aqua>!'
+command-doubledrop-add-fail-no-time: '{prefix} <red>You must specify time you want to add!'
+command-doubledrop-remove-success: '{prefix} <aqua>Successfully <red>removed</red> <dark_aqua>{time}</dark_aqua> from double drop, it will end in <dark_aqua>{time-left}</dark_aqua>!'
+command-doubledrop-remove-success-deactivate: '{prefix} <aqua>Successfully <red>deactivated</red> double drop!'
+command-doubledrop-remove-fail-no-time: '{prefix} <red>You must specify time you want to remove!'
+command-doubledrop-set-success: '{prefix} <green>Successfully <aqua>set double drop time to <dark_aqua>{time}</dark_aqua>!'
+command-doubledrop-set-success-deactivate: '{prefix} <aqua>Successfully <red>deactivated</red> double drop!'
+command-doubledrop-set-fail-no-time: '{prefix} <red>You must specify time you want to set!'
+command-doubledrop-set-multiplayer-success: '{prefix} <green>Successfully <aqua>set double drop multiplayer to <dark_aqua>x{multiplayer}</dark_aqua>!'
+command-doubledrop-set-multiplayer-fail-incorrect-multiplayer: '{prefix} <red>Provided multiplayer is incorrect!'
+command-doubledrop-set-multiplayer-fail-no-multiplayer: '{prefix} <red>You must specify multiplayer you want to set!'
 
 
-generator-deny-disabled-world: '&cYou can''t place this generator in this world!'
-generator-deny-unknown-name: '&cThis generator has a name, that doesn''t exist in plugin configuration! Contact the server administrator.'
-generator-deny-place-above: '&cYou can''t place generator above another!'
-generator-deny-place-under: '&cYou can''t place generator under another!'
-generator-deny-limit-global: '&cThere is a limit of {limit} generators on a chunk!'
-generator-deny-limit-single: '&cThere is a limit of {limit} of those generators on a chunk!'
-generator-deny-cooldown: '&cWait a second before placing generator again!'
-generator-deny-break: '&cYou can''t destroy this generator, it must be picked up!'
-generator-alert-broken: '&c{displayname} generator has been used up!'
-generator-alert-low-durability: '&cThe generator has {durability-left} {word} left!'
+generator-deny-disabled-world: '{prefix} <red>You can''t place this generator in this world!'
+generator-deny-unknown-name: '{prefix} <red>This generator has a name, that doesn''t exist in plugin configuration! Contact the server administrator.'
+generator-deny-place-above: '{prefix} <red>You can''t place generator above another!'
+generator-deny-place-under: '{prefix} <red>You can''t place generator under another!'
+generator-deny-limit-global: '{prefix} <red>There is a limit of {limit} generators on a chunk!'
+generator-deny-limit-single: '{prefix} <red>There is a limit of {limit} of those generators on a chunk!'
+generator-deny-cooldown: '{prefix} <red>Wait a second before placing generator again!'
+generator-deny-break: '{prefix} <red>You can''t destroy this generator, it must be picked up!'
+generator-alert-broken: '{prefix} <red>{displayname} generator has been used up!'
+generator-alert-low-durability: '{prefix} <red>The generator has {durability-left} {word} left!'
 generator-alert-durability-word-singular: 'durability'
 generator-alert-durability-word-plural: 'durability'
 generator-alert-durability-word-plural-2-4: 'durability'
-generator-info: '&bGenerator: &9{displayname} &7&l| &bDurability: &3{remaining-durability}'
-generator-info-infinite: '&bGenerator: &9{displayname} &7&l| &bDurability: &3infinite'
+generator-info: '{prefix} <aqua>Generator: <blue>{displayname} <light_gray><bold>|</bold> <aqua>Durability: <dark_aqua>{remaining-durability}'
+generator-info-infinite: '{prefix} <aqua>Generator: <blue>{displayname} <light_gray><bold>|</bold> <aqua>Durability: <dark_aqua>infinite'
 
 doubledrop-time: '{hours}h and {minutes}m'
 doubledrop-time-infinity: '∞'
-doubledrop-end: "&e&lDouble drop has ended! If you want you can buy more time in &6&l/shop&e&l."
-doubledrop-placeholder-active: "&aactive"
-doubledrop-placeholder-inactive: "&cinactive"
-doubledrop-placeholder-status: "&e{time}"
-doubledrop-placeholder-status-multiplayer: "&e{time} &6(x{multiplayer})"
+doubledrop-end: '<yellow><bold>Double drop has ended! If you want you can buy more time in <gold>/shop</gold>.'
+doubledrop-placeholder-active: '<green>active'
+doubledrop-placeholder-inactive: '<red>inactive'
+doubledrop-placeholder-status: '<yellow>{time}'
+doubledrop-placeholder-status-multiplayer: '<yellow>{time} <gold>(x{multiplayer})'
