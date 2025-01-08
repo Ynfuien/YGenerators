@@ -2,7 +2,6 @@ package pl.ynfuien.ygenerators;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.ynfuien.ygenerators.data.Generators;
 import pl.ynfuien.ygenerators.generators.Database;

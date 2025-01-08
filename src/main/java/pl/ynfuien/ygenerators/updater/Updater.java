@@ -1,7 +1,5 @@
 package pl.ynfuien.ygenerators.updater;
 
-//import com.google.gson.G
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

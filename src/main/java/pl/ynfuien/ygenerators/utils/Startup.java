@@ -11,7 +11,6 @@ import pl.ynfuien.ygenerators.listeners.*;
 import pl.ynfuien.ygenerators.managers.NBTTags;
 import pl.ynfuien.ygenerators.managers.config.ConfigManager;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class Startup {
