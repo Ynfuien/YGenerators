@@ -13,7 +13,7 @@
 
     <description>Custom generators!</description>
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -24,14 +24,14 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.5.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -39,7 +39,43 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <!--    Disable paper remapping-->
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <manifestEntries>
+                                        <paperweight-mappings-namespace>mojang</paperweight-mappings-namespace>
+                                    </manifestEntries>
+                                </transformer>
+                            </transformers>
+
+                            <filters>
+                                <filter>
+                                    <artifact>*.*</artifact>
+                                    <excludes>
+                                        <exclude>module-info.class</exclude>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+
                             <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <relocations>
+                                <!--    HikariCP    -->
+<!--                                <relocation>-->
+<!--                                    <pattern>com.zaxxer.hikari</pattern>-->
+<!--                                    <shadedPattern>pl.ynfuien.ygenerators.libs.hikari</shadedPattern>-->
+<!--                                </relocation>-->
+                                <!--    BStats    -->
+                                <relocation>
+                                    <pattern>org.bstats</pattern>
+                                    <shadedPattern>pl.ynfuien.ygenerators.libs.bstats</shadedPattern>
+                                </relocation>
+                                <!--    YDevLib    -->
+                                <relocation>
+                                    <pattern>org.bstats</pattern>
+                                    <shadedPattern>pl.ynfuien.ygenerators.libs.ydevlib</shadedPattern>
+                                </relocation>
+                            </relocations>
                         </configuration>
                     </execution>
                 </executions>
@@ -56,7 +92,7 @@
     <repositories>
         <repository>
             <id>papermc-repo</id>
-            <url>https://papermc.io/repo/repository/maven-public/</url>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
         <repository>
             <id>sonatype</id>
@@ -68,34 +104,54 @@
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
         <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
             <id>bg-repo</id>
             <url>https://repo.bg-software.com/repository/api/</url>
         </repository>
     </repositories>
 
     <dependencies>
-<!--        PaperAPI-->
+        <!--        PaperAPI-->
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.17.1-R0.1-SNAPSHOT</version>
+            <version>1.20.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
-<!--        PlaceholderAPI-->
+        <!--        PlaceholderAPI-->
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
-            <version>2.11.1</version>
+            <version>2.11.5</version>
             <scope>provided</scope>
         </dependency>
 
-<!--        SuperiorSkyblockAPI-->
+        <!--        SuperiorSkyblockAPI-->
         <dependency>
             <groupId>com.bgsoftware</groupId>
             <artifactId>SuperiorSkyblockAPI</artifactId>
-            <version>latest</version>
+            <version>2024.4</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!--        BStats-->
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>3.0.2</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!--        Dev library -->
+        <dependency>
+            <groupId>com.github.Ynfuien</groupId>
+            <artifactId>YDevLib</artifactId>
+            <version>1.0.2</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
