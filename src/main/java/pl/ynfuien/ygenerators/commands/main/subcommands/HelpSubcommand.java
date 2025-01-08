@@ -2,8 +2,7 @@ package pl.ynfuien.ygenerators.commands.main.subcommands;
 
 import org.bukkit.command.CommandSender;
 import pl.ynfuien.ygenerators.commands.Subcommand;
-import pl.ynfuien.ygenerators.managers.Lang;
-import pl.ynfuien.ygenerators.utils.Messages;
+import pl.ynfuien.ygenerators.Lang;
 
 import java.util.ArrayList;
 import java.util.Arrays;

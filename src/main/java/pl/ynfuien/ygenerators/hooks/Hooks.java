@@ -3,7 +3,7 @@ package pl.ynfuien.ygenerators.hooks;
 import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.hooks.placeholderapi.PlaceholderAPIHook;
 import pl.ynfuien.ygenerators.hooks.superiorskyblock2.SuperiorSkyblock2Hook;
-import pl.ynfuien.ygenerators.utils.Logger;
+import pl.ynfuien.ydevlib.messages.YLogger;
 import pl.ynfuien.ygenerators.utils.Util;
 
 public class Hooks {
@@ -16,13 +16,13 @@ public class Hooks {
             papiHook = new PlaceholderAPIHook(instance);
             papiHook.register();
             papiHookEnabled = true;
-            Logger.log("[Hooks] Successfully registered hook for PlaceholderAPI!");
+            YLogger.info("[Hooks] Successfully registered hook for PlaceholderAPI!");
         }
 
         // Register SuperiorSkyblock2 hook
         if (Util.isSS2Enabled()) {
             SuperiorSkyblock2Hook.load(instance);
-            Logger.log("[Hooks] Successfully registered hook for SuperiorSkyblock2!");
+            YLogger.info("[Hooks] Successfully registered hook for SuperiorSkyblock2!");
         }
 
     }

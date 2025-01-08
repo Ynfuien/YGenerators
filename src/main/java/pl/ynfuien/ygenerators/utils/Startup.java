@@ -16,7 +16,7 @@ import java.util.List;
 public class Startup {
     // Register plugin listeners
     public static void registerListeners(YGenerators instance) {
-        Logger.log("Registering listeners...");
+        YLogger.info("Registering listeners...");
 
         Listener[] listeners = new Listener[] {
                 new BlockBreakListener(instance),
@@ -34,7 +34,7 @@ public class Startup {
             pm.registerEvents(listener, instance);
         }
 
-        Logger.log("Successfully registered all listeners!");
+        YLogger.info("Successfully registered all listeners!");
     }
 
     // Register plugin commands

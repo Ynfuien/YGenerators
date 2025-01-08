@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.data.generator.Generator;
 import pl.ynfuien.ygenerators.data.generator.GeneratorRecipe;
-import pl.ynfuien.ygenerators.utils.Logger;
+import pl.ynfuien.ydevlib.messages.YLogger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -116,11 +116,11 @@ public class Generators {
 
     // Logs provided error
     private void logError(String message) {
-        Logger.logWarning("[Generators] " + message);
+        YLogger.warn("[Generators] " + message);
     }
     // Logs provided info
     private void logInfo(String message) {
-        Logger.log("[Generators] " + message);
+        YLogger.info("[Generators] " + message);
     }
 
     // Gets generator
@@ -183,7 +183,7 @@ public class Generators {
 
     // Loads generator recipes
     public void loadRecipes() {
-        Logger.log("[Generator-Recipes] Loading generator recipes...");
+        YLogger.info("[Generator-Recipes] Loading generator recipes...");
 
         // Loop through all generators
         for (Generator gene : generators.values()) {
@@ -194,15 +194,15 @@ public class Generators {
 
             boolean success = recipe.registerRecipe(this);
             if (!success) {
-                Logger.logWarning(String.format("[Generator-Recipes] Recipe for generator '%s' couldn't be loaded!", gene.getName()));
+                YLogger.warn(String.format("[Generator-Recipes] Recipe for generator '%s' couldn't be loaded!", gene.getName()));
                 continue;
             }
 
-            Logger.log(String.format("[Generator-Recipes] Recipe for generator '%s' successfully loaded!", gene.getName()));
+            YLogger.info(String.format("[Generator-Recipes] Recipe for generator '%s' successfully loaded!", gene.getName()));
         }
 
 
-        Logger.log("[Generator-Recipes] Generator recipes successfully loaded!");
+        YLogger.info("[Generator-Recipes] Generator recipes successfully loaded!");
     }
 
     // Remove generator recipes

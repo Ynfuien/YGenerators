@@ -3,13 +3,12 @@ package pl.ynfuien.ygenerators;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import pl.ynfuien.ydevlib.messages.YLogger;
 import pl.ynfuien.ygenerators.data.Generators;
 import pl.ynfuien.ygenerators.generators.Database;
 import pl.ynfuien.ygenerators.hooks.Hooks;
-import pl.ynfuien.ygenerators.managers.Lang;
 import pl.ynfuien.ygenerators.managers.config.ConfigManager;
 import pl.ynfuien.ygenerators.updater.Updater;
-import pl.ynfuien.ygenerators.utils.Logger;
 import pl.ynfuien.ygenerators.utils.Startup;
 import pl.ynfuien.ygenerators.utils.Util;
 
@@ -27,7 +26,7 @@ public final class YGenerators extends JavaPlugin {
         instance = this;
 
         // Set logger prefix
-        Logger.setPrefix("&3[&bY&9Generators&3] &f");
+        YLogger.setup("<dark_aqua>[<aqua>Y<blue>Generators<dark_aqua>] <white>", getComponentLogger());
 
         // Register listeners
         Startup.registerListeners(this);
@@ -47,7 +46,7 @@ public final class YGenerators extends JavaPlugin {
         reloadLang();
 
         if (!Util.isPapiEnabled()) {
-            Logger.logWarning("There is no PlaceholderAPI on the server, placeholders won't work!");
+            YLogger.warn("There is no PlaceholderAPI on the server, placeholders won't work!");
         }
 
         // Load hooks
@@ -59,11 +58,11 @@ public final class YGenerators extends JavaPlugin {
             database.loadFromFile();
         });
 
-        Logger.log("Plugin successfully &aenabled&f!");
+        YLogger.info("Plugin successfully &aenabled&f!");
 
         // Welcome screen
-        Logger.log("&9╔═════════════════════════════════╗");
-        Logger.log("");
+        YLogger.info("&9╔═════════════════════════════════╗");
+        YLogger.info("");
         logCentered("&bY&9Generators &fby &7Ynfuien", 35);
         logCentered(String.format("&bVersion: &3%s", getDescription().getVersion()), 35);
         logCentered(String.format("&bServer version: &3%s", Bukkit.getMinecraftVersion()), 35);
@@ -71,8 +70,8 @@ public final class YGenerators extends JavaPlugin {
         logCentered(String.format("&bPlaced generators: &3%d", database.getAll().size()), 35);
         logCentered("&bPAPI hook: " + (Hooks.isPapiHookEnabled() ? "&aenabled" : "&cdisabled"), 35);
         logCentered("&bSS2 hook: " + (Hooks.isSS2HookEnabled() ? "&aenabled" : "&cdisabled"), 35);
-        Logger.log("");
-        Logger.log("&9╚═════════════════════════════════╝");
+        YLogger.info("");
+        YLogger.info("&9╚═════════════════════════════════╝");
 
         // If checking updates is enabled
         if (getConfig().getBoolean("check-updates")) {
@@ -90,7 +89,7 @@ public final class YGenerators extends JavaPlugin {
         int sideSpaceLength = (width - messageLength) / 2;
         String sideSpace = " ".repeat(sideSpaceLength);
 
-        Logger.log(sideSpace + message + sideSpace);
+        YLogger.info(sideSpace + message + sideSpace);
     }
 
     @Override
@@ -99,13 +98,13 @@ public final class YGenerators extends JavaPlugin {
 
         // Save database to file
         if (successfulLoad) {
-            Logger.log("Saving generators database to file...");
+            YLogger.info("Saving generators database to file...");
             database.stopUpdateInterval();
             database.saveToFile();
-            Logger.log("Generators database saved!");
+            YLogger.info("Generators database saved!");
         }
 
-        Logger.log("Plugin successfully &cdisabled&f!");
+        YLogger.info("Plugin successfully &cdisabled&f!");
     }
 
     // Reloads generators

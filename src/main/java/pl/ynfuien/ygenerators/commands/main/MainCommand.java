@@ -10,7 +10,7 @@ import pl.ynfuien.ygenerators.commands.Subcommand;
 import pl.ynfuien.ygenerators.commands.main.subcommands.GiveSubcommand;
 import pl.ynfuien.ygenerators.commands.main.subcommands.HelpSubcommand;
 import pl.ynfuien.ygenerators.commands.main.subcommands.ReloadSubcommand;
-import pl.ynfuien.ygenerators.managers.Lang;
+import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.utils.Util;
 
 import java.util.ArrayList;

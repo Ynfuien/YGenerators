@@ -180,7 +180,7 @@ public class Util {
         try {
             world.playEffect(loc, Effect.STEP_SOUND, type);
         } catch (Exception e) {
-            Logger.logWarning("Error 1:");
+            YLogger.warn("Error 1:");
             e.printStackTrace();
         }
     }

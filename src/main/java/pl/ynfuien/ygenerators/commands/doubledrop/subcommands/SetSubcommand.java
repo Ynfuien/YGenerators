@@ -4,7 +4,7 @@ import org.bukkit.command.CommandSender;
 import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.commands.Subcommand;
 import pl.ynfuien.ygenerators.data.Doubledrop;
-import pl.ynfuien.ygenerators.managers.Lang;
+import pl.ynfuien.ygenerators.Lang;
 
 import java.util.ArrayList;
 import java.util.Arrays;

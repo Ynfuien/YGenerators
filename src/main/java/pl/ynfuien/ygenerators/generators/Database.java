@@ -9,7 +9,7 @@ import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.data.Generators;
 import pl.ynfuien.ygenerators.data.generator.Generator;
 import pl.ynfuien.ygenerators.managers.config.ConfigManager;
-import pl.ynfuien.ygenerators.utils.Logger;
+import pl.ynfuien.ydevlib.messages.YLogger;
 
 import java.io.File;
 import java.io.IOException;
@@ -143,11 +143,11 @@ public class Database {
     }
 
     private void logInfo(String message) {
-        Logger.log("[Generators-Database] " + message);
+        YLogger.info("[Generators-Database] " + message);
     }
 
     private void logError(String message) {
-        Logger.logWarning("[Generators-Database] " + message);
+        YLogger.warn("[Generators-Database] " + message);
     }
 
     // Starts interval which updates database every x seconds
@@ -205,7 +205,7 @@ public class Database {
         try {
             database.save(new File(instance.getDataFolder(), fileName));
         } catch (IOException e) {
-            Logger.logError("An error occurred while saving generators database to file! Error:");
+            YLogger.error("An error occurred while saving generators database to file! Error:");
             e.printStackTrace();
             return false;
         }

@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
-import pl.ynfuien.ygenerators.utils.Logger;
+import pl.ynfuien.ydevlib.messages.YLogger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -92,21 +92,21 @@ public class Updater {
             int lastReleaseVersion = convertVersionToInt(latestVersion);
             if (!isNewerVersion(lastReleaseVersion)) return;
 
-            Logger.log("&9===================================================");
-            Logger.log("");
-            Logger.log("&3New version of the plugin is available!");
-            Logger.log("");
-            Logger.log("&bCurrent version: &c" + plugin.getDescription().getVersion());
-            Logger.log("&bNew version: &a" + latestVersion);
+            YLogger.info("&9===================================================");
+            YLogger.info("");
+            YLogger.info("&3New version of the plugin is available!");
+            YLogger.info("");
+            YLogger.info("&bCurrent version: &c" + plugin.getDescription().getVersion());
+            YLogger.info("&bNew version: &a" + latestVersion);
             String title = getLatestUpdateTitle();
             if (title != null) {
-                Logger.log("&bUpdate title: &f" + title);
+                YLogger.info("&bUpdate title: &f" + title);
             }
-            Logger.log("");
-            Logger.log("&bLink:");
-            Logger.log(" &3" + plugin.getDescription().getWebsite() + "/releases");
-            Logger.log("");
-            Logger.log("&9===================================================");
+            YLogger.info("");
+            YLogger.info("&bLink:");
+            YLogger.info(" &3" + plugin.getDescription().getWebsite() + "/releases");
+            YLogger.info("");
+            YLogger.info("&9===================================================");
         });
     }
 }

@@ -1,0 +1,149 @@
+package pl.ynfuien.ygenerators;
+
+import net.kyori.adventure.text.Component;
+import org.bukkit.command.CommandSender;
+import pl.ynfuien.ydevlib.messages.LangBase;
+import pl.ynfuien.ydevlib.messages.Messenger;
+import pl.ynfuien.ydevlib.messages.colors.ColorFormatter;
+
+import java.util.HashMap;
+
+public class Lang extends LangBase {
+    public enum Message implements LangBase.Message {
+        PREFIX,
+        NO_PERMISSION,
+        ONLY_PLAYER,
+        PLUGIN_IS_RELOADING,
+        PLUGIN_IS_DISABLING,
+        HELP_NO_COMMANDS,
+        HELP_TOP,
+        HELP_COMMAND_TEMPLATE,
+        COMMANDS_USAGE_GENERATOR,
+        COMMANDS_USAGE_PLAYER,
+        COMMANDS_USAGE_AMOUNT,
+        COMMANDS_USAGE_DURABILITY,
+        COMMAND_HELP_DESCRIPTION,
+        COMMAND_RELOAD_DESCRIPTION,
+        COMMAND_GIVE_DESCRIPTION,
+        COMMAND_GIVE_FAIL_NO_GENERATOR,
+        COMMAND_GIVE_FAIL_GENERATOR_DOESNT_EXIST,
+        COMMAND_GIVE_FAIL_NO_PLAYER,
+        COMMAND_GIVE_FAIL_PLAYER_ISNT_ONLINE,
+        COMMAND_GIVE_FAIL_INCORRECT_AMOUNT,
+        COMMAND_GIVE_FAIL_INCORRECT_DURABILITY,
+        COMMAND_GIVE_ACCEPT_HIGH_AMOUNT,
+        COMMAND_GIVE_SUCCESS_SELF,
+        COMMAND_GIVE_SUCCESS_NOSELF,
+        COMMAND_GIVE_SUCCESS_NOSELF_MANY,
+        COMMAND_GIVE_SUCCESS_NOSELF_DURABILITY,
+        COMMAND_RELOAD_FAIL,
+        COMMAND_RELOAD_SUCCESS,
+        COMMAND_DOUBLEDROP_TIME_ACTIVE,
+        COMMAND_DOUBLEDROP_TIME_ACTIVE_MULTIPLAYER,
+        COMMAND_DOUBLEDROP_TIME_INACTIVE,
+        COMMAND_DOUBLEDROP_USAGE,
+        COMMAND_DOUBLEDROP_FAIL_INCORRECT_TIME,
+        COMMAND_DOUBLEDROP_ADD_SUCCESS,
+        COMMAND_DOUBLEDROP_ADD_FAIL_NO_TIME,
+        COMMAND_DOUBLEDROP_REMOVE_SUCCESS,
+        COMMAND_DOUBLEDROP_REMOVE_SUCCESS_DEACTIVATE,
+        COMMAND_DOUBLEDROP_REMOVE_FAIL_NO_TIME,
+        COMMAND_DOUBLEDROP_SET_SUCCESS,
+        COMMAND_DOUBLEDROP_SET_SUCCESS_DEACTIVATE,
+        COMMAND_DOUBLEDROP_SET_FAIL_NO_TIME,
+        COMMAND_DOUBLEDROP_SET_MULTIPLAYER_SUCCESS,
+        COMMAND_DOUBLEDROP_SET_MULTIPLAYER_FAIL_INCORRECT_MULTIPLAYER,
+        COMMAND_DOUBLEDROP_SET_MULTIPLAYER_FAIL_NO_MULTIPLAYER,
+        GENERATOR_DENY_DISABLED_WORLD,
+        GENERATOR_DENY_UNKNOWN_NAME,
+        GENERATOR_DENY_PLACE_ABOVE,
+        GENERATOR_DENY_PLACE_UNDER,
+        GENERATOR_DENY_LIMIT_GLOBAL,
+        GENERATOR_DENY_LIMIT_SINGLE,
+        GENERATOR_DENY_COOLDOWN,
+        GENERATOR_DENY_BREAK,
+        GENERATOR_ALERT_BROKEN,
+        GENERATOR_ALERT_LOW_DURABILITY,
+        GENERATOR_ALERT_DURABILITY_WORD_SINGULAR,
+        GENERATOR_ALERT_DURABILITY_WORD_PLURAL,
+        GENERATOR_ALERT_DURABILITY_WORD_PLURAL_2_4,
+        GENERATOR_INFO,
+        GENERATOR_INFO_INFINITE,
+        DOUBLEDROP_TIME,
+        DOUBLEDROP_TIME_INFINITY,
+        DOUBLEDROP_END,
+        DOUBLEDROP_PLACEHOLDER_ACTIVE,
+        DOUBLEDROP_PLACEHOLDER_INACTIVE,
+        DOUBLEDROP_PLACEHOLDER_STATUS,
+        DOUBLEDROP_PLACEHOLDER_STATUS_MULTIPLAYER,
+        ;
+
+        /**
+         * Gets name/path of this message.
+         */
+        @Override
+        public String getName() {
+            return name().toLowerCase().replace('_', '-');
+        }
+
+        /**
+         * Gets original unformatted message.
+         */
+        public String get() {
+            return Lang.get(getName());
+        }
+
+        /**
+         * Gets message with parsed:
+         * - {prefix} placeholder
+         * - additional provided placeholders
+         */
+        public String get(HashMap<String, Object> placeholders) {
+            return Lang.get(getName(), placeholders);
+        }
+
+        /**
+         * Gets message with parsed:
+         * - PlaceholderAPI
+         * - {prefix} placeholder
+         * - additional provided placeholders
+         */
+        public String get(CommandSender sender, HashMap<String, Object> placeholders) {
+            return ColorFormatter.parsePAPI(sender, Lang.get(getName(), placeholders));
+        }
+
+        /**
+         * Gets message as component with parsed:
+         * - MiniMessage
+         * - PlaceholderAPI
+         * - {prefix} placeholder
+         * - additional provided placeholders
+         */
+        public Component getComponent(CommandSender sender, HashMap<String, Object> placeholders) {
+            return Messenger.parseMessage(sender, Lang.get(getName()), placeholders);
+        }
+
+        /**
+         * Sends this message to provided sender.<br/>
+         * Parses:<br/>
+         * - MiniMessage<br/>
+         * - PlaceholderAPI<br/>
+         * - {prefix} placeholder
+         */
+        public void send(CommandSender sender) {
+            this.send(sender, new HashMap<>());
+        }
+
+        /**
+         * Sends this message to provided sender.<br/>
+         * Parses:<br/>
+         * - MiniMessage<br/>
+         * - PlaceholderAPI<br/>
+         * - {prefix} placeholder<br/>
+         * - additional provided placeholders
+         */
+        public void send(CommandSender sender, HashMap<String, Object> placeholders) {
+            Lang.sendMessage(sender, this, placeholders);
+        }
+    }
+}

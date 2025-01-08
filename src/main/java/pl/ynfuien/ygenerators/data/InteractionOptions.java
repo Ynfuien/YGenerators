@@ -4,7 +4,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
-import pl.ynfuien.ygenerators.utils.Logger;
+import pl.ynfuien.ydevlib.messages.YLogger;
 
 public class InteractionOptions {
     private final boolean sneak;
@@ -33,7 +33,7 @@ public class InteractionOptions {
     }
 
     private void logError(String message) {
-        Logger.logWarning("[InteractionOptions] " + message);
+        YLogger.warn("[InteractionOptions] " + message);
     }
 
     // Gets whether player must sneak to interact

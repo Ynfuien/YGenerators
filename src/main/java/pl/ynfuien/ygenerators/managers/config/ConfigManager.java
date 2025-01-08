@@ -5,7 +5,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import pl.ynfuien.ygenerators.managers.config.configupdater.ConfigUpdater;
-import pl.ynfuien.ygenerators.utils.Logger;
+import pl.ynfuien.ydevlib.messages.YLogger;
 
 import java.io.File;
 import java.io.IOException;
@@ -202,12 +202,12 @@ public class ConfigManager {
 
     // Logs info message
     private void logInfo(String message, String name) {
-        Logger.log(String.format("[Configs-%s] %s", name, message));
+        YLogger.info(String.format("[Configs-%s] %s", name, message));
     }
 
     // Logs error message
     private void logError(String message, String name) {
-        Logger.logWarning(String.format("[Configs-%s] %s", name, message));
+        YLogger.warn(String.format("[Configs-%s] %s", name, message));
     }
 
     // Config class

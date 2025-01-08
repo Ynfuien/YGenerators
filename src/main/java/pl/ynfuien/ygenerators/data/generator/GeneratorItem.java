@@ -10,9 +10,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pl.ynfuien.ydevlib.messages.Messenger;
+import pl.ynfuien.ydevlib.messages.colors.ColorFormatter;
 import pl.ynfuien.ygenerators.managers.NBTTags;
-import pl.ynfuien.ygenerators.utils.Logger;
-import pl.ynfuien.ygenerators.utils.Messages;
+import pl.ynfuien.ydevlib.messages.YLogger;
 import pl.ynfuien.ygenerators.utils.Util;
 
 import java.util.ArrayList;
@@ -81,7 +82,7 @@ public class GeneratorItem {
 
     // Logs error with provided message
     protected void logError(String message) {
-        Logger.logWarning(String.format("[GeneratorItem-%s] %s", generator.getName(), message));
+        YLogger.warn(String.format("[GeneratorItem-%s] %s", generator.getName(), message));
     }
 
     // Gets generator
@@ -227,7 +228,8 @@ public class GeneratorItem {
 
     // Format text with generator placeholders, colors and papi placeholders
     private String formatText(Player p, String text, double durability) {
-        return Messages.format(p, setPlaceholders(text, durability));
+        return ColorFormatter.LEGACY_SERIALIZER.serialize(Messenger.parseMessage(p, setPlaceholders(text, durability), null));
+//        return Messages.format(p, setPlaceholders(text, durability));
     }
 
     // Set generator placeholders in text

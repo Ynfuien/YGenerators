@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.data.Generators;
-import pl.ynfuien.ygenerators.utils.Logger;
+import pl.ynfuien.ydevlib.messages.YLogger;
 
 import java.util.HashMap;
 import java.util.List;
@@ -280,7 +280,7 @@ public class GeneratorRecipe {
     }
 
     private void logError(String message) {
-        Logger.logWarning(String.format("[GeneratorRecipe-%s] %s", generator.getName(), message));
+        YLogger.warn(String.format("[GeneratorRecipe-%s] %s", generator.getName(), message));
     }
 
     // Gets generator

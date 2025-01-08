@@ -4,7 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pl.ynfuien.ygenerators.utils.Logger;
+import pl.ynfuien.ydevlib.messages.YLogger;
 
 import java.util.HashMap;
 
@@ -65,11 +65,11 @@ public class VanillaGenerators {
     }
 
     private void logInfo(String message) {
-        Logger.log("[Vanilla-Generators] " + message);
+        YLogger.info("[Vanilla-Generators] " + message);
     }
 
     private void logError(String message) {
-        Logger.logWarning("[Vanilla-Generators] " + message);
+        YLogger.warn("[Vanilla-Generators] " + message);
     }
 
     // Gets whether feature is enabled
