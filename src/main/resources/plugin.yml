@@ -17,7 +17,7 @@ commands:
   ygenerators:
     description: Command to manage plugin
     permission: ygenerators.command.main
-    aliases: [ gene ]
+    aliases: [ ygene ]
 
 permissions:
   # Permission to all commands
