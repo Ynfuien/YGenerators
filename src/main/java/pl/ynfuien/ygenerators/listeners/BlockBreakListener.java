@@ -154,8 +154,8 @@ public class BlockBreakListener implements Listener {
             Lang.WordType wordType = Lang.getWordType(durability);
 
             // Set word by word type
-            Lang.Message word = Lang.Message.GENERATOR_ALERT_DURABILITY_WORD_PLURAR;
-            if (wordType.equals(Lang.WordType.PLURAR_2_4)) word = Lang.Message.GENERATOR_ALERT_DURABILITY_WORD_PLURAR_2_4;
+            Lang.Message word = Lang.Message.GENERATOR_ALERT_DURABILITY_WORD_PLURAL;
+            if (wordType.equals(Lang.WordType.PLURAR_2_4)) word = Lang.Message.GENERATOR_ALERT_DURABILITY_WORD_PLURAL_2_4;
             else if (wordType.equals(Lang.WordType.SINGULAR)) word = Lang.Message.GENERATOR_ALERT_DURABILITY_WORD_SINGULAR;
 
             // Add word placeholder
