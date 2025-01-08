@@ -1,10 +1,10 @@
 name: YGenerators
 version: '${project.version}'
 main: pl.ynfuien.ygenerators.YGenerators
-api-version: 1.15
+api-version: 1.20
 softdepend: [ PlaceholderAPI ]
-loadbefore:  [ SuperiorSkyblock2 ]
-author: Ynfuien
+loadbefore: [ SuperiorSkyblock2 ]
+authors: [ Ynfuien ]
 website: https://github.com/Ynfuien/YGenerators
 description: Custom generators!
 
@@ -12,12 +12,12 @@ commands:
   doubledrop:
     description: Checks double drop's time left
     permission: ygenerators.command.doubledrop
-    aliases: [dd]
+    aliases: [ dd ]
 
   ygenerators:
     description: Command to manage plugin
     permission: ygenerators.command.main
-    aliases: [gene]
+    aliases: [ gene ]
 
 permissions:
   # Permission to all commands
