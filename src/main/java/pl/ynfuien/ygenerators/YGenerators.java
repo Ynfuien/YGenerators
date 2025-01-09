@@ -131,7 +131,7 @@ public final class YGenerators extends JavaPlugin {
         FileConfiguration config = configManager.getConfig("lang.yml");
 
         // Reload lang
-        Lang.reloadLang(config);
+        Lang.loadLang(config);
     }
 
     // Gets plugin instance

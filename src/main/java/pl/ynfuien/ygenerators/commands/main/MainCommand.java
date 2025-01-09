@@ -8,30 +8,24 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pl.ynfuien.ygenerators.commands.Subcommand;
 import pl.ynfuien.ygenerators.commands.main.subcommands.GiveSubcommand;
-import pl.ynfuien.ygenerators.commands.main.subcommands.HelpSubcommand;
 import pl.ynfuien.ygenerators.commands.main.subcommands.ReloadSubcommand;
-import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.utils.Util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class MainCommand implements CommandExecutor, TabCompleter {
     public static Subcommand[] subcommands = {
             new ReloadSubcommand(),
-            new GiveSubcommand(),
-            new HelpSubcommand()
+            new GiveSubcommand()
     };
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        // Return if plugin is reloading
-        if (Util.isReloading()) {
-            Lang.Message.PLUGIN_IS_RELOADING.send(sender);
-            return true;
-        }
+        HashMap<String, Object> placeholders = new HashMap<>() {{put("command", label);}};
 
         // Get subcommands player cas use
         Subcommand[] canuse = Arrays.stream(subcommands).filter(sub -> sender.hasPermission(sub.permission())).toArray(Subcommand[]::new);

@@ -30,23 +30,14 @@
 prefix: '<dark_aqua>[<aqua><bold>Y<blue><bold>Generators<dark_aqua>]<reset> '
 
 no-permission: '{prefix} <red>You don''t have permission to do this!'
-only-player: '{prefix} <red>This command can by used only by players!'
-plugin-is-reloading: '{prefix} <red>Plugin is reloading, wait a second..'
-plugin-is-disabling: '{prefix} <red>Plugin is currently turning off..'
+only-player: '{prefix} <red>This command can be used only by players!'
 
-help-no-commands: '{prefix} <red>You don''t have permission for any command!'
-help-top: '{prefix} {prefix}<dark_aqua>Available commands:'
-help-command-template: '{prefix} <blue>/{command} <white>- <aqua>{description}'
+command-main-usage: '{prefix} <gray>Command usage: /{command} <reload | give>'
 
-commands-usage-generator: 'generator'
-commands-usage-player: 'player'
-commands-usage-amount: 'amount'
-commands-usage-durability: 'durability'
+command-reload-fail: '{prefix} <red>An error occurred while reloading plugin. Take a look in the console for more information!'
+command-reload-success: '{prefix} <aqua>Plugin was <green>successfully</green> reloaded!'
 
-command-help-description: '{prefix} Displays available commands'
-command-reload-description: '{prefix} Reloads plugin configuration'
-command-give-description: '{prefix} Gives provided generator'
-
+command-give-usage: '{prefix} <gray>Command usage: /{command} give <generator> [player] [amount] [durability]'
 command-give-fail-no-generator: '{prefix} <red>You must specify generator that you want to give/get!'
 command-give-fail-generator-doesnt-exist: '{prefix} <red>That generator doesn''t exist!'
 command-give-fail-no-player: '{prefix} <red>You must specify player you want to give generator to!'
@@ -58,9 +49,6 @@ command-give-success-self: '{prefix} <green>Successfully <aqua>gave <dark_aqua>{
 command-give-success-player: '{prefix} <green>Successfully <aqua>gave <dark_aqua>{name}</dark_aqua> generator to <yellow>{player}</yellow>!'
 command-give-success-player-many: '{prefix} <green>Successfully <aqua>gave <dark_aqua>x{amount} {name}</dark_aqua> generator(s) to <yellow>{player}</yellow>!'
 command-give-success-player-durability: '{prefix} <green>Successfully <aqua>gave <dark_aqua>x{amount} {name}</dark_aqua> generator(s) with durability <dark_aqua>{durability}</dark_aqua> to <yellow>{player}</yellow>!'
-
-command-reload-fail: '{prefix} <red>An error occurred while reloading plugin. Take a look in the console for more information!'
-command-reload-success: '{prefix} <aqua>Plugin was <green>successfully</green> reloaded!'
 
 command-doubledrop-time-active: '{prefix} <aqua>Double drop time left: <dark_aqua>{time}'
 command-doubledrop-time-active-multiplayer: '{prefix} <aqua>Double drop (<dark_aqua>x{multiplayer}</dark_aqua>) time left: <dark_aqua>{time}'
@@ -93,8 +81,8 @@ generator-alert-low-durability: '{prefix} <red>The generator has {durability-lef
 generator-alert-durability-word-singular: 'durability'
 generator-alert-durability-word-plural: 'durability'
 generator-alert-durability-word-plural-2-4: 'durability'
-generator-info: '{prefix} <aqua>Generator: <blue>{displayname} <light_gray><bold>|</bold> <aqua>Durability: <dark_aqua>{remaining-durability}'
-generator-info-infinite: '{prefix} <aqua>Generator: <blue>{displayname} <light_gray><bold>|</bold> <aqua>Durability: <dark_aqua>infinite'
+generator-info: '{prefix} <aqua>Generator: <blue>{displayname} <gray><bold>|</bold> <aqua>Durability: <dark_aqua>{remaining-durability}'
+generator-info-infinite: '{prefix} <aqua>Generator: <blue>{displayname} <gray><bold>|</bold> <aqua>Durability: <dark_aqua>infinite'
 
 doubledrop-time: '{hours}h and {minutes}m'
 doubledrop-time-infinity: '∞'
