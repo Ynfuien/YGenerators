@@ -18,23 +18,24 @@ import java.util.List;
 import java.util.Set;
 
 public class Generators {
+    private final YGenerators instance;
     private final HashMap<String, Generator> generators = new HashMap<>();
+
     private int maxInChunk = -1;
     private List<String> disabledWorlds = new ArrayList<>();
     private List<Double> alertDurability = new ArrayList<>();
     private InteractionOptions pickUp = null;
     private InteractionOptions checkStatus = null;
     private VanillaGenerators vanillaGenerators = null;
-    private Doubledrop doubledrop = null;
+
+    public Generators(YGenerators instance) {
+        this.instance = instance;
+    }
 
     // Loads generators from config
-    public boolean loadFromConfig(FileConfiguration generators, FileConfiguration config, FileConfiguration doubledrop) {
-        // Return false if config is null
+    public boolean load(FileConfiguration generators, FileConfiguration config) {
         if (generators == null) return false;
-        // Return false if config is null
         if (config == null) return false;
-        // Return false if doubledrop is null
-        if (doubledrop == null) return false;
 
         // Get generators settings config section
         ConfigurationSection settings = config.getConfigurationSection("generators");
@@ -61,10 +62,6 @@ public class Generators {
         // Get vanilla generators settings
         ConfigurationSection vanillaGeneSettings = config.getConfigurationSection("vanilla-generators");
         vanillaGenerators = new VanillaGenerators(vanillaGeneSettings);
-
-        // Get double drop time and multiplayer
-        this.doubledrop = new Doubledrop(doubledrop);
-
 
         logInfo("Starting loading generators...");
 
@@ -175,11 +172,6 @@ public class Generators {
         return vanillaGenerators;
     }
 
-    // Gets double drop
-    @NotNull
-    public Doubledrop getDoubledrop() {
-        return doubledrop;
-    }
 
     // Loads generator recipes
     public void loadRecipes() {
@@ -236,63 +228,4 @@ public class Generators {
         // Return whether generator is disabled in provided location
         return gene.isDisabledInLocation(loc);
     }
-
-
-//    public class PickUp {
-//        private final boolean enabled;
-//        private boolean sneak = true;
-//        private boolean hand = true;
-//        private Action click = Action.RIGHT_CLICK_BLOCK;
-//
-//        public PickUp(ConfigurationSection config) {
-//            // Enabled
-//            enabled = config.getBoolean("enabled");
-//
-//            // Return if feature isn't enabled
-//            if (!enabled) return;
-//
-//            // Sneak
-//            sneak = config.getBoolean("sneak");
-//            // Hand
-//            hand = config.getBoolean("hand");
-//
-//            // Click
-//            // l - left
-//            // r - right
-//            String clickType = config.getString("click");
-//            if (clickType.startsWith("l")) {
-//                click = Action.LEFT_CLICK_BLOCK;
-//                return;
-//            }
-//
-//            // Log error if click type isn't left or right
-//            if (!clickType.startsWith("r")) {
-//                logError("Click type in 'generators.pick-up.click' in config.yml is incorrect! Will be used right click type.");
-//            }
-//        }
-//
-//        // Gets whether this feature is enabled
-//        @NotNull
-//        public boolean isEnabled() {
-//            return enabled;
-//        }
-//
-//        // Gets whether player must sneak to pick up generator
-//        @NotNull
-//        public boolean getSneak() {
-//            return sneak;
-//        }
-//
-//        // Gets whether player must have empty hand to pick up generator
-//        @NotNull
-//        public boolean getHand() {
-//            return hand;
-//        }
-//
-//        // Gets click type
-//        @NotNull
-//        public Action getClick() {
-//            return click;
-//        }
-//    }
 }

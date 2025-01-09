@@ -2,6 +2,8 @@ package pl.ynfuien.ygenerators.hooks.placeholderapi.placeholders;
 
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import pl.ynfuien.ydevlib.utils.DoubleFormatter;
+import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.data.Doubledrop;
 import pl.ynfuien.ygenerators.data.Generators;
 import pl.ynfuien.ygenerators.data.generator.Generator;
@@ -13,8 +15,12 @@ import java.util.HashMap;
 
 public class GeneratorPlaceholders implements Placeholder {
     private final Generators generators;
-    public GeneratorPlaceholders(Generators generators) {
-        this.generators = generators;
+    private final static DoubleFormatter df = new DoubleFormatter();
+    private final Doubledrop doubledrop;
+
+    public GeneratorPlaceholders(YGenerators instance) {
+        this.generators = instance.getGenerators();
+        this.doubledrop = instance.getDoubledrop();
     }
 
     @Override
@@ -53,7 +59,7 @@ public class GeneratorPlaceholders implements Placeholder {
         // Placeholder: %ygenerators_generator_<name>_durability%
         // Returns: generator's durability
         if (id.equals("durability")) {
-            return Util.formatDouble(gene.getDurability());
+            return df.format(gene.getDurability());
         }
 
         // Placeholder: %ygenerators_generator_<name>_cooldown%
@@ -129,25 +135,23 @@ public class GeneratorPlaceholders implements Placeholder {
                 // Placeholder: %ygenerators_generator_<name>_blocks_<block>_normal%
                 // Returns: normal chance to generate block
                 if (id.equals("normal")) {
-                    return Util.formatDouble(chance, 2);
+                    return df.format(chance);
                 }
 
-                // Get doubledrop
-                Doubledrop doubledrop = generators.getDoubledrop();
                 // Get double drop multiplayer
                 double multiplayer = doubledrop.getMultiplayer();
 
                 // Placeholder: %ygenerators_generator_<name>_blocks_<block>_doubledrop%
                 // Returns: chance to generate block with double drop
                 if (id.equals("doubledrop")) {
-                    return Util.formatDouble(chance * multiplayer, 2);
+                    return df.format(chance * multiplayer);
                 }
 
                 // Placeholder: %ygenerators_generator_<name>_blocks_<block>_current%
                 // Returns: current chance to generate block
                 if (id.equals("current")) {
-                    if (doubledrop.isActive() && gene.getDoubledropUseMultiplayer()) return Util.formatDouble(chance * multiplayer, 2);
-                    return Util.formatDouble(chance);
+                    if (doubledrop.isActive() && gene.getDoubledropUseMultiplayer()) return df.format(chance * multiplayer);
+                    return df.format(chance);
                 }
 
                 return null;

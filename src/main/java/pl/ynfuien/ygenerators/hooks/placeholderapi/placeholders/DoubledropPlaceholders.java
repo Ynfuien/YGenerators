@@ -2,8 +2,8 @@ package pl.ynfuien.ygenerators.hooks.placeholderapi.placeholders;
 
 import org.bukkit.OfflinePlayer;
 import pl.ynfuien.ygenerators.Lang;
+import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.data.Doubledrop;
-import pl.ynfuien.ygenerators.data.Generators;
 import pl.ynfuien.ygenerators.hooks.placeholderapi.Placeholder;
 import pl.ynfuien.ygenerators.utils.Messages;
 import pl.ynfuien.ygenerators.utils.Util;
@@ -11,9 +11,9 @@ import pl.ynfuien.ygenerators.utils.Util;
 import java.util.HashMap;
 
 public class DoubledropPlaceholders implements Placeholder {
-    private final Generators generators;
-    public DoubledropPlaceholders(Generators generators) {
-        this.generators = generators;
+    private final Doubledrop doubledrop;
+    public DoubledropPlaceholders(YGenerators instance) {
+        this.doubledrop = instance.getDoubledrop();
     }
 
     @Override
@@ -23,8 +23,6 @@ public class DoubledropPlaceholders implements Placeholder {
 
     @Override
     public String getPlaceholder(String id, OfflinePlayer p) {
-        // Get doubledrop
-        Doubledrop doubledrop = generators.getDoubledrop();
         // Get multiplayer
         double multiplayer = doubledrop.getMultiplayer();
 

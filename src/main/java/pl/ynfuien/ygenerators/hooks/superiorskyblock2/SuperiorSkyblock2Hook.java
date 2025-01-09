@@ -19,11 +19,9 @@ public class SuperiorSkyblock2Hook implements Listener {
         // Register event on ss2 initialize
         Bukkit.getPluginManager().registerEvents(new SuperiorSkyblock2Hook(), instance);
 
-        // Get generators database
         database = instance.getDatabase();
     }
 
-    // Returns whether hook is enabled
     public static boolean isEnabled() {
         return enabled;
     }

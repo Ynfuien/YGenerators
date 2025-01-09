@@ -1,4 +1,4 @@
-package pl.ynfuien.ygenerators.managers;
+package pl.ynfuien.ygenerators.utils;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;

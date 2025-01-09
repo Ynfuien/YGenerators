@@ -12,20 +12,16 @@ import pl.ynfuien.ygenerators.hooks.placeholderapi.placeholders.GeneratorsPlaceh
 
 public class PlaceholderAPIHook extends PlaceholderExpansion {
     private final YGenerators instance;
-    private final Database database;
-    private final Generators generators;
 
     private final Placeholder[] placeholders;
 
     public PlaceholderAPIHook(YGenerators instance) {
         this.instance = instance;
-        database = instance.getDatabase();
-        generators = instance.getGenerators();
 
         placeholders = new Placeholder[] {
-            new DoubledropPlaceholders(generators),
-            new GeneratorPlaceholders(generators),
-            new GeneratorsPlaceholders(database)
+            new DoubledropPlaceholders(instance),
+            new GeneratorPlaceholders(instance),
+            new GeneratorsPlaceholders(instance)
         };
     }
 

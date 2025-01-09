@@ -1,6 +1,7 @@
 package pl.ynfuien.ygenerators.data;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -16,23 +17,20 @@ import java.util.HashMap;
 
 public class Doubledrop {
     private YGenerators instance;
-    private ConfigManager configManager;
 
     private long timeLeft = 0;
     private double multiplayer = -1;
 
     private BukkitTask interval = null;
 
-    public Doubledrop(FileConfiguration config) {
-        // Instance
-        instance = YGenerators.getInstance();
-        // Config manager
-        configManager = instance.getConfigManager();
+    public Doubledrop(YGenerators instance) {
+        this.instance = YGenerators.getInstance();
+    }
 
-        // Time left
-        setTimeLeft(config.getLong("time-left"));
-        // Multiplayer
-        setMultiplayer(config.getDouble("multiplayer"));
+    public boolean load(ConfigurationSection config) {
+        // TO DO
+        // Load from database
+        return true;
     }
 
     // Gets whether double drop is active
@@ -151,22 +149,25 @@ public class Doubledrop {
         saveConfig();
     }
 
-    private boolean saveConfig() {
-        String fileName = "doubledrop.yml";
-
-        FileConfiguration config = configManager.getConfig(fileName);
-        config.set("time-left", timeLeft);
-        if (multiplayer != -1) {
-            config.set("multiplayer", multiplayer);
-        }
-
-        try {
-            File file = new File(instance.getDataFolder(), fileName);
-            config.save(file);
-        } catch (IOException e) {
-            return false;
-        }
-
+    private boolean save() {
+        // TO DO
+        // Save to the database
         return true;
+//        String fileName = "doubledrop.yml";
+//
+//        FileConfiguration config = configManager.getConfig(fileName);
+//        config.set("time-left", timeLeft);
+//        if (multiplayer != -1) {
+//            config.set("multiplayer", multiplayer);
+//        }
+//
+//        try {
+//            File file = new File(instance.getDataFolder(), fileName);
+//            config.save(file);
+//        } catch (IOException e) {
+//            return false;
+//        }
+//
+//        return true;
     }
 }

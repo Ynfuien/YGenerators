@@ -17,7 +17,7 @@ import pl.ynfuien.ygenerators.data.Generators;
 import pl.ynfuien.ygenerators.data.generator.Generator;
 import pl.ynfuien.ygenerators.generators.Database;
 import pl.ynfuien.ygenerators.generators.PlacedGenerator;
-import pl.ynfuien.ygenerators.managers.NBTTags;
+import pl.ynfuien.ygenerators.utils.NBTTags;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,5 +1,6 @@
 package pl.ynfuien.ygenerators.hooks;
 
+import org.bukkit.Bukkit;
 import pl.ynfuien.ydevlib.messages.YLogger;
 import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.hooks.placeholderapi.PlaceholderAPIHook;
@@ -8,30 +9,45 @@ import pl.ynfuien.ygenerators.utils.Util;
 
 public class Hooks {
     private static PlaceholderAPIHook papiHook = null;
-    private static boolean papiHookEnabled = false;
 
     public static void load(YGenerators instance) {
-        // Register PlaceholderAPI hook
-        if (Util.isPapiEnabled()) {
+        // PAPI
+        if (isPluginEnabled(Plugin.PAPI)) {
             papiHook = new PlaceholderAPIHook(instance);
-            papiHook.register();
-            papiHookEnabled = true;
-            YLogger.info("[Hooks] Successfully registered hook for PlaceholderAPI!");
+            if (!papiHook.register()) {
+                papiHook = null;
+                YLogger.error("[Hooks] Something went wrong while registering PlaceholderAPI hook!");
+            }
+            else {
+                YLogger.info("[Hooks] Successfully registered hook for PlaceholderAPI!");
+            }
         }
 
-        // Register SuperiorSkyblock2 hook
-        if (Util.isSS2Enabled()) {
+        // SS2
+        if (isPluginEnabled(Plugin.SS2)) {
             SuperiorSkyblock2Hook.load(instance);
-            YLogger.info("[Hooks] Successfully registered hook for SuperiorSkyblock2!");
+            YLogger.info("[Hooks] Successfully registered hook for SuperioSkyblock2!");
+        }
+    }
+
+    public static boolean isPluginEnabled(Plugin plugin) {
+        return Bukkit.getPluginManager().isPluginEnabled(plugin.getName());
+    }
+
+    public enum Plugin {
+        PAPI("PlaceholderAPI"),
+        VAULT("Vault"),
+        LUCKPERMS("LuckPerms"),
+        SS2("SuperiorSkyblock2"),
+        ;
+
+        private final String name;
+        Plugin(String name) {
+            this.name = name;
         }
 
-    }
-
-    public static boolean isPapiHookEnabled() {
-        return papiHookEnabled;
-    }
-
-    public static boolean isSS2HookEnabled() {
-        return SuperiorSkyblock2Hook.isEnabled();
+        public String getName() {
+            return name;
+        }
     }
 }

@@ -1,110 +1,118 @@
 package pl.ynfuien.ygenerators;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import pl.ynfuien.ydevlib.config.ConfigHandler;
+import pl.ynfuien.ydevlib.config.ConfigObject;
 import pl.ynfuien.ydevlib.messages.YLogger;
+import pl.ynfuien.ygenerators.commands.doubledrop.DoubledropCommand;
+import pl.ynfuien.ygenerators.commands.main.MainCommand;
+import pl.ynfuien.ygenerators.data.Doubledrop;
 import pl.ynfuien.ygenerators.data.Generators;
 import pl.ynfuien.ygenerators.generators.Database;
 import pl.ynfuien.ygenerators.hooks.Hooks;
+import pl.ynfuien.ygenerators.listeners.*;
 import pl.ynfuien.ygenerators.managers.config.ConfigManager;
-import pl.ynfuien.ygenerators.updater.Updater;
-import pl.ynfuien.ygenerators.utils.Startup;
-import pl.ynfuien.ygenerators.utils.Util;
+
+import java.util.HashMap;
 
 public final class YGenerators extends JavaPlugin {
     private static YGenerators instance;
-    private ConfigManager configManager = new ConfigManager(this);
-    private Generators generators = new Generators();
-    private Database database = new Database(this);
 
-    private boolean successfulLoad = false;
+    private final ConfigHandler configHandler = new ConfigHandler(this);
+    private ConfigObject config;
+
+    private final Generators generators = new Generators(this);
+    private final Doubledrop doubledrop = new Doubledrop(this);
+
+    private final Database database = new Database(this);
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
         instance = this;
 
         // Set logger prefix
         YLogger.setup("<dark_aqua>[<aqua>Y<blue>Generators<dark_aqua>] <white>", getComponentLogger());
 
-        // Register listeners
-        Startup.registerListeners(this);
-        // Register commands
-        Startup.registerCommands();
-        // Setup instances for classes
-        Startup.setupInstances(this);
-        // Load config files
-        boolean success = Startup.loadConfigs(this);
+        // TO DO
+        // Register commands, listeners
+        // Startup logic, configs, database
 
-        if (!success) return;
+        loadConfigs();
+        loadLang();
+//        config = configHandler.getConfigObject(ConfigName.CONFIG);
 
-        // Load generators
-        reloadGenerators();
 
-        // Load lang
-        reloadLang();
-
-        if (!Util.isPapiEnabled()) {
-            YLogger.warn("There is no PlaceholderAPI on the server, placeholders won't work!");
-        }
+//        ConfigurationSection dbConfig = config.getConfig().getConfigurationSection("database");
+//        database = getDatabase(dbConfig);
+//        if (database != null && database.setup(dbConfig)) database.createNicknamesTable();
+//        Storage.setup(this);
 
         // Load hooks
         Hooks.load(this);
 
-        // Create scheduler to run after server finish startup
-        Bukkit.getScheduler().runTask(this, () -> {
-            // Load generators from file
-            database.loadFromFile();
-        });
+        setupCommands();
+        registerListeners();
 
-        YLogger.info("Plugin successfully &aenabled&f!");
+        // BStats
+        new Metrics(this, 24412);
 
-        // Welcome screen
-        YLogger.info("&9╔═════════════════════════════════╗");
-        YLogger.info("");
-        logCentered("&bY&9Generators &fby &7Ynfuien", 35);
-        logCentered(String.format("&bVersion: &3%s", getDescription().getVersion()), 35);
-        logCentered(String.format("&bServer version: &3%s", Bukkit.getMinecraftVersion()), 35);
-        logCentered(String.format("&bGenerators: &3%d", generators.getAll().size()), 35);
-        logCentered(String.format("&bPlaced generators: &3%d", database.getAll().size()), 35);
-        logCentered("&bPAPI hook: " + (Hooks.isPapiHookEnabled() ? "&aenabled" : "&cdisabled"), 35);
-        logCentered("&bSS2 hook: " + (Hooks.isSS2HookEnabled() ? "&aenabled" : "&cdisabled"), 35);
-        YLogger.info("");
-        YLogger.info("&9╚═════════════════════════════════╝");
-
-        // If checking updates is enabled
-        if (getConfig().getBoolean("check-updates")) {
-            // Create updater instance
-            Updater updater = new Updater(this, getDescription().getAuthors().get(0), getName());
-            // Check for update
-            updater.checkUpdate();
-        }
-
-        successfulLoad = true;
-    }
-
-    private void logCentered(String message, int width) {
-        int messageLength = message.replaceAll("&[0-9a-fA-Fl-o-L-O]", "").length();
-        int sideSpaceLength = (width - messageLength) / 2;
-        String sideSpace = " ".repeat(sideSpaceLength);
-
-        YLogger.info(sideSpace + message + sideSpace);
+        YLogger.info("Plugin successfully <green>enabled<white>!");
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+//        if (database != null) database.close();
 
-        // Save database to file
-        if (successfulLoad) {
-            YLogger.info("Saving generators database to file...");
-            database.stopUpdateInterval();
-            database.saveToFile();
-            YLogger.info("Generators database saved!");
+        YLogger.info("Plugin successfully <red>disabled<white>!");
+    }
+
+    private void setupCommands() {
+        HashMap<String, CommandExecutor> commands = new HashMap<>();
+        commands.put("ygenerators", new MainCommand(this));
+        commands.put("doubledrop", new DoubledropCommand(this));
+
+        for (String name : commands.keySet()) {
+            CommandExecutor cmd = commands.get(name);
+
+            getCommand(name).setExecutor(cmd);
+            getCommand(name).setTabCompleter((TabCompleter) cmd);
         }
+    }
 
-        YLogger.info("Plugin successfully &cdisabled&f!");
+    private void registerListeners() {
+        Listener[] listeners = new Listener[] {
+                new BlockBreakListener(this),
+                new BlockFormListener(this),
+                new BlockPistonExtendListener(this),
+                new BlockPistonRetractListener(this),
+                new BlockPlaceListener(this),
+                new EntityExplodeListener(this),
+                new PlayerInteractListener(this),
+                new PrepareItemCraftListener(this)
+        };
+
+        for (Listener listener : listeners) {
+            Bukkit.getPluginManager().registerEvents(listener, this);
+        }
+    }
+
+    private void loadLang() {
+        // Get lang config
+//        FileConfiguration config = configHandler.getConfig(ConfigName.LANG);
+
+        // Reload lang
+        Lang.loadLang(config);
+    }
+
+    private void loadConfigs() {
+//        configHandler.load(ConfigName.CONFIG);
+//        configHandler.load(ConfigName.LANG, true, true);
     }
 
     // Reloads generators
@@ -112,44 +120,50 @@ public final class YGenerators extends JavaPlugin {
         // Remove current generator recipes
         this.generators.removeRecipes();
 
-        // Get generators config
-        FileConfiguration generators = configManager.getConfig("generators.yml");
-        // Get double drop config
-        FileConfiguration doubledrop = configManager.getConfig("doubledrop.yml");
+//        FileConfiguration generators = configManager.getConfig("generators.yml");
 
         // Load generators from config
-        this.generators.loadFromConfig(generators, getConfig(), doubledrop);
+//        this.generators.load(generators, getConfig());
 
         // Load generator recipes
         this.generators.loadRecipes();
         return true;
     }
 
-    // Reloads lang
-    public void reloadLang() {
-        // Get lang config
-        FileConfiguration config = configManager.getConfig("lang.yml");
+    public boolean reloadPlugin() {
+        doubledrop.cancelInterval();
 
-        // Reload lang
-        Lang.loadLang(config);
+        database.stopUpdateInterval();
+        database.saveToFile();
+
+//        // Reload all configs
+//        configManager.reloadConfigs();
+//
+//        reloadGenerators();
+//        reloadLang();
+
+        database.loadFromFile();
+        database.startUpdateInterval(instance.getConfig().getInt("database-update-interval"));
+
+        return true;
     }
 
-    // Gets plugin instance
     public static YGenerators getInstance() {
         return instance;
     }
 
-    // Gets config manager
-    public ConfigManager getConfigManager() {
-        return configManager;
+    public ConfigHandler getConfigHandler() {
+        return configHandler;
     }
 
-    // Gets generators instance
     public Generators getGenerators() {
         return generators;
     }
 
-    // Gets generators instance
+    public Doubledrop getDoubledrop() {
+        return doubledrop;
+    }
+
     public Database getDatabase() {
         return database;
     }
