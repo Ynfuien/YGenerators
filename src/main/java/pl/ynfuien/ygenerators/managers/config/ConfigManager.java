@@ -4,8 +4,8 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
-import pl.ynfuien.ygenerators.managers.config.configupdater.ConfigUpdater;
 import pl.ynfuien.ydevlib.messages.YLogger;
+import pl.ynfuien.ygenerators.managers.config.configupdater.ConfigUpdater;
 
 import java.io.File;
 import java.io.IOException;

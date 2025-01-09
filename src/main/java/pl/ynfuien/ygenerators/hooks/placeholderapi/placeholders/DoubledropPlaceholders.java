@@ -1,10 +1,10 @@
 package pl.ynfuien.ygenerators.hooks.placeholderapi.placeholders;
 
 import org.bukkit.OfflinePlayer;
+import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.data.Doubledrop;
 import pl.ynfuien.ygenerators.data.Generators;
 import pl.ynfuien.ygenerators.hooks.placeholderapi.Placeholder;
-import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.utils.Messages;
 import pl.ynfuien.ygenerators.utils.Util;
 

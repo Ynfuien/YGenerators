@@ -11,12 +11,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
+import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.data.Generators;
 import pl.ynfuien.ygenerators.data.generator.Generator;
 import pl.ynfuien.ygenerators.generators.Database;
 import pl.ynfuien.ygenerators.generators.PlacedGenerator;
-import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.managers.NBTTags;
 
 import java.util.ArrayList;

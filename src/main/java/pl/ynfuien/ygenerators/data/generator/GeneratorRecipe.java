@@ -9,9 +9,9 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pl.ynfuien.ydevlib.messages.YLogger;
 import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.data.Generators;
-import pl.ynfuien.ydevlib.messages.YLogger;
 
 import java.util.HashMap;
 import java.util.List;

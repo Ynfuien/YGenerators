@@ -2,6 +2,7 @@ package pl.ynfuien.ygenerators.commands;
 
 import org.bukkit.command.CommandSender;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface Subcommand {
@@ -9,11 +10,7 @@ public interface Subcommand {
 
     String name();
 
-    String description();
-
-    String usage();
-
-    void run(CommandSender sender, String[] args);
+    void run(CommandSender sender, String[] args, HashMap<String, Object> placeholders);
 
     List<String> getTabCompletions(CommandSender sender, String[] args);
 }

@@ -39,10 +39,10 @@ public class Startup {
 
     // Register plugin commands
     public static void registerCommands() {
-        Bukkit.getPluginCommand("ygenerators").setExecutor(new MainCommand());
-        Bukkit.getPluginCommand("ygenerators").setTabCompleter(new MainCommand());
-        Bukkit.getPluginCommand("doubledrop").setExecutor(new DoubledropCommand());
-        Bukkit.getPluginCommand("doubledrop").setTabCompleter(new DoubledropCommand());
+        Bukkit.getPluginCommand("ygenerators").setExecutor(new MainCommand(YGenerators.getInstance()));
+        Bukkit.getPluginCommand("ygenerators").setTabCompleter(new MainCommand(YGenerators.getInstance()));
+        Bukkit.getPluginCommand("doubledrop").setExecutor(new DoubledropCommand(YGenerators.getInstance()));
+        Bukkit.getPluginCommand("doubledrop").setTabCompleter(new DoubledropCommand(YGenerators.getInstance()));
     }
 
     public static void setupInstances(YGenerators instance) {

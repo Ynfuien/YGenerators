@@ -4,20 +4,20 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.commands.Subcommand;
 import pl.ynfuien.ygenerators.data.Generators;
 import pl.ynfuien.ygenerators.data.generator.Generator;
-import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.utils.Items;
 import pl.ynfuien.ygenerators.utils.Util;
 
 import java.util.*;
 
-public class GiveSubcommand implements Subcommand {
+public class    GiveSubcommand implements Subcommand {
     @Override
     public String permission() {
-        return "ygenerators.command.main."+name();
+        return "ygenerators.command."+name();
     }
 
     @Override
@@ -25,29 +25,13 @@ public class GiveSubcommand implements Subcommand {
         return "give";
     }
 
-    @Override
-    public String description() {
-        return Lang.Message.COMMAND_GIVE_DESCRIPTION.get();
-    }
-
-    @Override
-    public String usage() {
-        return String.format(
-                "<%s> [%s] [%s] [%s]",
-                Lang.Message.COMMANDS_USAGE_GENERATOR.get(),
-                Lang.Message.COMMANDS_USAGE_PLAYER.get(),
-                Lang.Message.COMMANDS_USAGE_AMOUNT.get(),
-                Lang.Message.COMMANDS_USAGE_DURABILITY.get()
-        );
-    }
-
     private List<UUID> acceptCooldown = new ArrayList<>();
 
     @Override
-    public void run(CommandSender sender, String[] args) {
+    public void run(CommandSender sender, String[] args, HashMap<String, Object> placeholders) {
         // Return if generator name isn't provided
         if (args.length == 0) {
-            Lang.Message.COMMAND_GIVE_FAIL_NO_GENERATOR.send(sender);
+            Lang.Message.COMMAND_GIVE_FAIL_NO_GENERATOR.send(sender, placeholders);
             return;
         }
 
@@ -60,15 +44,13 @@ public class GiveSubcommand implements Subcommand {
 
         // Return if generator with provided name doesn't exist
         if (!generators.has(geneName)) {
-            Lang.Message.COMMAND_GIVE_FAIL_GENERATOR_DOESNT_EXIST.send(sender);
+            Lang.Message.COMMAND_GIVE_FAIL_GENERATOR_DOESNT_EXIST.send(sender, placeholders);
             return;
         }
 
         // Get provided generator by name
         Generator gene = generators.get(geneName);
 
-        // Placeholders in messages
-        HashMap<String, Object> placeholders = new HashMap<>();
         // Add generator name placeholder
         placeholders.put("name", gene.getName());
 
@@ -76,7 +58,7 @@ public class GiveSubcommand implements Subcommand {
         if (args.length == 1) {
             // Return if sender isn't player
             if (!isSenderPlayer) {
-                Lang.Message.COMMAND_GIVE_FAIL_NO_PLAYER.send(sender);
+                Lang.Message.COMMAND_GIVE_FAIL_NO_PLAYER.send(sender, placeholders);
                 return;
             }
 
@@ -104,7 +86,7 @@ public class GiveSubcommand implements Subcommand {
 
         // Return if provided player isn't online
         if (p == null || !p.isOnline()) {
-            Lang.Message.COMMAND_GIVE_FAIL_PLAYER_ISNT_ONLINE.send(sender);
+            Lang.Message.COMMAND_GIVE_FAIL_PLAYER_ISNT_ONLINE.send(sender, placeholders);
             return;
         }
 
@@ -132,13 +114,13 @@ public class GiveSubcommand implements Subcommand {
         try {
             amount = Integer.parseInt(args[2]);
         } catch (NumberFormatException e) {
-            Lang.Message.COMMAND_GIVE_FAIL_INCORRECT_AMOUNT.send(sender);
+            Lang.Message.COMMAND_GIVE_FAIL_INCORRECT_AMOUNT.send(sender, placeholders);
             return;
         }
 
         // Return if amount is lower than 1
         if (amount < 1) {
-            Lang.Message.COMMAND_GIVE_FAIL_INCORRECT_AMOUNT.send(sender);
+            Lang.Message.COMMAND_GIVE_FAIL_INCORRECT_AMOUNT.send(sender, placeholders);
             return;
         }
 
@@ -188,7 +170,7 @@ public class GiveSubcommand implements Subcommand {
         try {
             durability = Double.parseDouble(args[3]);
         } catch (NumberFormatException e) {
-            Lang.Message.COMMAND_GIVE_FAIL_INCORRECT_DURABILITY.send(sender);
+            Lang.Message.COMMAND_GIVE_FAIL_INCORRECT_DURABILITY.send(sender, placeholders);
             return;
         }
 

@@ -1,18 +1,24 @@
 package pl.ynfuien.ygenerators.commands.doubledrop.subcommands;
 
 import org.bukkit.command.CommandSender;
-import pl.ynfuien.ygenerators.YGenerators;
-import pl.ynfuien.ygenerators.commands.Subcommand;
-import pl.ynfuien.ygenerators.data.Doubledrop;
+import pl.ynfuien.ydevlib.utils.DoubleFormatter;
 import pl.ynfuien.ygenerators.Lang;
-import pl.ynfuien.ygenerators.utils.Util;
+import pl.ynfuien.ygenerators.commands.Subcommand;
+import pl.ynfuien.ygenerators.commands.doubledrop.DoubledropCommand;
+import pl.ynfuien.ygenerators.data.Doubledrop;
+import pl.ynfuien.ygenerators.data.Generators;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 public class SetMultiplayerSubcommand implements Subcommand {
+    private final Generators generators;
+    private final static DoubleFormatter df = new DoubleFormatter();
+
+    public SetMultiplayerSubcommand(Generators generators) {
+        this.generators = generators;
+    }
+
     @Override
     public String permission() {
         return "ygenerators.command.doubledrop."+name();
@@ -24,72 +30,42 @@ public class SetMultiplayerSubcommand implements Subcommand {
     }
 
     @Override
-    public String description() {
-        return null;
-    }
-
-    @Override
-    public String usage() {
-        return null;
-    }
-
-    @Override
-    public void run(CommandSender sender, String[] args) {
-        // Return if no args are provided
+    public void run(CommandSender sender, String[] args, HashMap<String, Object> placeholders) {
         if (args.length == 0) {
-            Lang.Message.COMMAND_DOUBLEDROP_SET_MULTIPLAYER_FAIL_NO_MULTIPLAYER.send(sender);
+            Lang.Message.COMMAND_DOUBLEDROP_SET_MULTIPLAYER_FAIL_NO_MULTIPLAYER.send(sender, placeholders);
             return;
         }
 
-        // Get first arg
+        // Get argument
         String arg1 = args[0].toLowerCase();
+        placeholders.put("multiplayer", arg1);
 
-        // Get multiplayer from first arg
+        // Parse number
         double multiplayer;
         try {
             multiplayer = Double.parseDouble(arg1);
+            placeholders.put("multiplayer", df.format(multiplayer));
         } catch (NumberFormatException e) {
-            Lang.Message.COMMAND_DOUBLEDROP_SET_MULTIPLAYER_FAIL_INCORRECT_MULTIPLAYER.send(sender);
+            Lang.Message.COMMAND_DOUBLEDROP_SET_MULTIPLAYER_FAIL_INCORRECT_MULTIPLAYER.send(sender, placeholders);
             return;
         }
 
-        // If multiplayer is lower than 0
+        // Incorrect multiplayer
         if (multiplayer < 0) {
-            Lang.Message.COMMAND_DOUBLEDROP_SET_MULTIPLAYER_FAIL_INCORRECT_MULTIPLAYER.send(sender);
+            Lang.Message.COMMAND_DOUBLEDROP_SET_MULTIPLAYER_FAIL_INCORRECT_MULTIPLAYER.send(sender, placeholders);
             return;
         }
 
-        // Get double drop
-        Doubledrop doubledrop = YGenerators.getInstance().getGenerators().getDoubledrop();
-        // Set double drop multiplayer
+        // Set multiplayer
+        Doubledrop doubledrop = generators.getDoubledrop();
         doubledrop.setMultiplayer(multiplayer);
 
-        // Create placeholders hashmap for message
-        HashMap<String, Object> placeholders = new HashMap<>();
-
-        // Add time placeholder
-        placeholders.put("multiplayer", Util.formatDouble(multiplayer));
-
-        // Send success message
+        // Success message
         Lang.Message.COMMAND_DOUBLEDROP_SET_MULTIPLAYER_SUCCESS.send(sender, placeholders);
     }
 
     @Override
     public List<String> getTabCompletions(CommandSender sender, String[] args) {
-        // Create new list for completions
-        List<String> completions = new ArrayList<>();
-
-        // Return empty list if args length isn't 1
-        if (args.length != 1) return completions;
-
-        // Get first arg
-        String arg1 = args[0].toLowerCase();
-
-        // Loop through completions
-        for (String completion : Arrays.asList("2", "4", "5", "8")) {
-            if (completion.startsWith(arg1)) completions.add(completion);
-        }
-
-        return completions;
+        return DoubledropCommand.getCompletionsForTimeArgument(args);
     }
 }
