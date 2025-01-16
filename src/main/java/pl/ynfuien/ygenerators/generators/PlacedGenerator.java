@@ -9,8 +9,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import pl.ynfuien.ygenerators.data.Doubledrop;
-import pl.ynfuien.ygenerators.data.generator.Generator;
+import pl.ynfuien.ygenerators.core.Doubledrop;
+import pl.ynfuien.ygenerators.core.generator.Generator;
 import pl.ynfuien.ygenerators.utils.Items;
 import pl.ynfuien.ygenerators.utils.Util;
 

@@ -7,8 +7,8 @@ import org.bukkit.inventory.ItemStack;
 import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.commands.Subcommand;
-import pl.ynfuien.ygenerators.data.Generators;
-import pl.ynfuien.ygenerators.data.generator.Generator;
+import pl.ynfuien.ygenerators.core.Generators;
+import pl.ynfuien.ygenerators.core.generator.Generator;
 import pl.ynfuien.ygenerators.utils.Items;
 import pl.ynfuien.ygenerators.utils.Util;
 

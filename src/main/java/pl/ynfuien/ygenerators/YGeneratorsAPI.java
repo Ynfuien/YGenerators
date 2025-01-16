@@ -1,7 +1,7 @@
 package pl.ynfuien.ygenerators;
 
-import pl.ynfuien.ygenerators.data.Doubledrop;
-import pl.ynfuien.ygenerators.data.Generators;
+import pl.ynfuien.ygenerators.core.Doubledrop;
+import pl.ynfuien.ygenerators.core.Generators;
 import pl.ynfuien.ygenerators.generators.Database;
 
 public class YGeneratorsAPI {

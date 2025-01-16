@@ -7,9 +7,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFormEvent;
 import pl.ynfuien.ygenerators.YGenerators;
-import pl.ynfuien.ygenerators.data.Doubledrop;
-import pl.ynfuien.ygenerators.data.Generators;
-import pl.ynfuien.ygenerators.data.VanillaGenerators;
+import pl.ynfuien.ygenerators.core.Doubledrop;
+import pl.ynfuien.ygenerators.core.Generators;
+import pl.ynfuien.ygenerators.core.VanillaGenerators;
 import pl.ynfuien.ygenerators.generators.ChanceSystem;
 
 import java.util.HashMap;

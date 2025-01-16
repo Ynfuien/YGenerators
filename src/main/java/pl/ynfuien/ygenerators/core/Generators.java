@@ -1,4 +1,4 @@
-package pl.ynfuien.ygenerators.data;
+package pl.ynfuien.ygenerators.core;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -9,8 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pl.ynfuien.ydevlib.messages.YLogger;
 import pl.ynfuien.ygenerators.YGenerators;
-import pl.ynfuien.ygenerators.data.generator.Generator;
-import pl.ynfuien.ygenerators.data.generator.GeneratorRecipe;
+import pl.ynfuien.ygenerators.core.generator.Generator;
+import pl.ynfuien.ygenerators.core.generator.GeneratorRecipe;
 
 import java.util.ArrayList;
 import java.util.HashMap;

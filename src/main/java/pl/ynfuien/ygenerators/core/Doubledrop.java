@@ -1,8 +1,7 @@
-package pl.ynfuien.ygenerators.data;
+package pl.ynfuien.ygenerators.core;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
@@ -11,8 +10,6 @@ import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.managers.config.ConfigManager;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 
 public class Doubledrop {

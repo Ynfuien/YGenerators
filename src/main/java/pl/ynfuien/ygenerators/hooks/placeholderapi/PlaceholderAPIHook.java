@@ -4,8 +4,6 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import pl.ynfuien.ygenerators.YGenerators;
-import pl.ynfuien.ygenerators.data.Generators;
-import pl.ynfuien.ygenerators.generators.Database;
 import pl.ynfuien.ygenerators.hooks.placeholderapi.placeholders.DoubledropPlaceholders;
 import pl.ynfuien.ygenerators.hooks.placeholderapi.placeholders.GeneratorPlaceholders;
 import pl.ynfuien.ygenerators.hooks.placeholderapi.placeholders.GeneratorsPlaceholders;

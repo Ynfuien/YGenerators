@@ -15,8 +15,8 @@ import pl.ynfuien.ygenerators.commands.doubledrop.subcommands.RemoveSubcommand;
 import pl.ynfuien.ygenerators.commands.doubledrop.subcommands.SetMultiplayerSubcommand;
 import pl.ynfuien.ygenerators.commands.doubledrop.subcommands.SetSubcommand;
 import pl.ynfuien.ygenerators.commands.main.MainCommand;
-import pl.ynfuien.ygenerators.data.Doubledrop;
-import pl.ynfuien.ygenerators.data.Generators;
+import pl.ynfuien.ygenerators.core.Doubledrop;
+import pl.ynfuien.ygenerators.core.Generators;
 
 import java.util.ArrayList;
 import java.util.Arrays;

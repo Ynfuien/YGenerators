@@ -7,8 +7,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scheduler.BukkitTask;
 import pl.ynfuien.ydevlib.messages.YLogger;
 import pl.ynfuien.ygenerators.YGenerators;
-import pl.ynfuien.ygenerators.data.Generators;
-import pl.ynfuien.ygenerators.data.generator.Generator;
+import pl.ynfuien.ygenerators.core.Generators;
+import pl.ynfuien.ygenerators.core.generator.Generator;
 import pl.ynfuien.ygenerators.managers.config.ConfigManager;
 
 import java.io.File;

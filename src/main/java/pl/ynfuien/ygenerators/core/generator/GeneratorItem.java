@@ -1,4 +1,4 @@
-package pl.ynfuien.ygenerators.data.generator;
+package pl.ynfuien.ygenerators.core.generator;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
