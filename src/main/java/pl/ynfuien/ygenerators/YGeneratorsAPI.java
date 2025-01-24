@@ -2,7 +2,7 @@ package pl.ynfuien.ygenerators;
 
 import pl.ynfuien.ygenerators.core.Doubledrop;
 import pl.ynfuien.ygenerators.core.Generators;
-import pl.ynfuien.ygenerators.generators.Database;
+import pl.ynfuien.ygenerators.generators.GeneratorsDatabase;
 
 public class YGeneratorsAPI {
     private static YGenerators instance;
@@ -28,7 +28,7 @@ public class YGeneratorsAPI {
     /**
      * @return Generators database instance
      */
-    public static Database getDatabase() {
+    public static GeneratorsDatabase getDatabase() {
         return instance.getDatabase();
     }
 }

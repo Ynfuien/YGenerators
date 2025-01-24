@@ -6,7 +6,6 @@ import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.core.Doubledrop;
 import pl.ynfuien.ygenerators.hooks.placeholderapi.Placeholder;
-import pl.ynfuien.ygenerators.utils.Util;
 
 import java.util.HashMap;
 

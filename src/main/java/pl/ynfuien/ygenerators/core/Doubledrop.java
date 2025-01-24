@@ -1,32 +1,42 @@
 package pl.ynfuien.ygenerators.core;
 
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.YGenerators;
+import pl.ynfuien.ygenerators.storage.Database;
 
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 public class Doubledrop {
     private YGenerators instance;
+    private Database database;
 
-    private long timeLeft = 0;
-    private double multiplayer = -1;
+    private int timeLeft = 0;
+    private float multiplayer = 2;
 
-    private BukkitTask interval = null;
+    private ScheduledTask intervalTask = null;
 
     public Doubledrop(YGenerators instance) {
         this.instance = YGenerators.getInstance();
     }
 
-    public boolean load(ConfigurationSection config) {
-        // TO DO
-        // Load from database
+    public boolean load(Database database) {
+        this.database = database;
+
+        Values values = database.getDoubledrop();
+        if (values == null) return false;
+
+        setTimeLeft(values.timeLeft());
+        setMultiplayer(values.multiplayer());
         return true;
+    }
+
+    private boolean save() {
+        return database.setDoubledrop(timeLeft, multiplayer);
     }
 
     // Gets whether double drop is active
@@ -48,7 +58,7 @@ public class Doubledrop {
         // Get hours from time left
         long hours = timeLeft / 60;
         // Get minutes from time left
-        int minutes = (int)(timeLeft % 60);
+        int minutes = timeLeft % 60;
 
         // Create hashmap for placeholders
         HashMap<String, Object> placeholders = new HashMap<>();
@@ -67,103 +77,72 @@ public class Doubledrop {
     }
 
     // Adds time to double drop time left
-    public void addTime(long time) {
+    public void addTime(int time) {
         if (timeLeft == -1) return;
         setTimeLeft(timeLeft + time);
     }
 
     // Sets double drop time left
-    public void setTimeLeft(long timeLeft) {
+    public void setTimeLeft(int timeLeft) {
         // Set time left to -1 if it is lower than -1
         if (timeLeft < -1) timeLeft = -1;
         this.timeLeft = timeLeft;
 
         // Save new time in config
-        saveConfig();
+        save();
         // Return if time left is lower than 1
         if (timeLeft < 1) {
             cancelInterval();
             return;
         }
         // Return if interval is already set
-        if (interval != null) return;
+        if (intervalTask != null) return;
 
-        // Get plugin instance
-        YGenerators instance = YGenerators.getInstance();
-        // Get bukkit scheduler
-        BukkitScheduler scheduler = Bukkit.getScheduler();
-        // Create interval
-        interval = scheduler.runTaskTimerAsynchronously(instance, () -> {
-            // Cancel interval if time left is lower than 1
+        intervalTask = Bukkit.getAsyncScheduler().runAtFixedRate(instance, (task) -> {
+            // Cancel interval
             if (this.timeLeft < 1) {
                 cancelInterval();
                 return;
             }
 
-            // Decrease time left
+            // Decrease time and save it
             this.timeLeft -= 1;
-            // Save config
-            saveConfig();
+            save();
 
-            // Cancel interval if time left is lower than 1
+            // Cancel interval and broadcast message about it
             if (this.timeLeft < 1) {
                 cancelInterval();
 
-                // Broadcast message to all players about end of double drop
-                scheduler.runTask(instance, () -> {
-                    for (Player p : Bukkit.getOnlinePlayers()) {
-                        Lang.Message.DOUBLEDROP_END.send(p);
-                    }
-                     Lang.Message.DOUBLEDROP_END.send(Bukkit.getConsoleSender());
-                });
+                Lang.Message.DOUBLEDROP_END.send(Bukkit.getConsoleSender());
+                for (Player p : Bukkit.getOnlinePlayers()) Lang.Message.DOUBLEDROP_END.send(p);
             }
-        }, 60 * 20, 60 * 20);
+        }, 1, 1, TimeUnit.MINUTES);
     }
 
     // Cancels interval
     public boolean cancelInterval() {
-        if (interval == null) return false;
+        if (intervalTask == null) return false;
 
-        interval.cancel();
-        interval = null;
+        intervalTask.cancel();
+        intervalTask = null;
 
         return true;
     }
 
     // Removes time from double drop time left
-    public void removeTime(long time) {
+    public void removeTime(int time) {
         if (timeLeft == -1) return;
         if (timeLeft - time < 0) time = timeLeft;
         setTimeLeft(timeLeft - time);
     }
 
     // Sets double drop multiplayer
-    public void setMultiplayer(double multiplayer) {
+    public void setMultiplayer(float multiplayer) {
         if (multiplayer < 0) multiplayer = 0;
         this.multiplayer = multiplayer;
 
-        saveConfig();
+        save();
     }
 
-    private boolean save() {
-        // TO DO
-        // Save to the database
-        return true;
-//        String fileName = "doubledrop.yml";
-//
-//        FileConfiguration config = configManager.getConfig(fileName);
-//        config.set("time-left", timeLeft);
-//        if (multiplayer != -1) {
-//            config.set("multiplayer", multiplayer);
-//        }
-//
-//        try {
-//            File file = new File(instance.getDataFolder(), fileName);
-//            config.save(file);
-//        } catch (IOException e) {
-//            return false;
-//        }
-//
-//        return true;
-    }
+    public record Values(int timeLeft, float multiplayer) {};
 }

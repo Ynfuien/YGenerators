@@ -22,6 +22,7 @@ import pl.ynfuien.ygenerators.storage.MysqlDatabase;
 import pl.ynfuien.ygenerators.storage.SqliteDatabase;
 
 import java.util.HashMap;
+import java.util.List;
 
 public final class YGenerators extends JavaPlugin {
     private static YGenerators instance;
@@ -33,7 +34,6 @@ public final class YGenerators extends JavaPlugin {
     private final Doubledrop doubledrop = new Doubledrop(this);
 
     private Database database;
-//    private final Database database = new Database(this);
 
     @Override
     public void onEnable() {
@@ -42,19 +42,19 @@ public final class YGenerators extends JavaPlugin {
         // Set logger prefix
         YLogger.setup("<dark_aqua>[<aqua>Y<blue>Generators<dark_aqua>] <white>", getComponentLogger());
 
-        // TO DO
-        // Register commands, listeners
-        // Startup logic, configs, database
-
+        // Configuration
         loadConfigs();
         loadLang();
         config = configHandler.getConfigObject(ConfigName.CONFIG);
 
-
+        // Database
         ConfigurationSection dbConfig = config.getConfig().getConfigurationSection("database");
         database = getDatabase(dbConfig);
         if (database != null && database.setup(dbConfig)) database.createTables();
-        Storage.setup(this);
+
+        // Generators and doubledrop
+        generators.load(config.getConfig(), configHandler.getConfig(ConfigName.GENERATORS));
+        doubledrop.load(database);
 
         // Load hooks
         Hooks.load(this);
@@ -70,7 +70,7 @@ public final class YGenerators extends JavaPlugin {
 
     @Override
     public void onDisable() {
-//        if (database != null) database.close();
+        if (database != null) database.close();
 
         YLogger.info("Plugin successfully <red>disabled<white>!");
     }
@@ -114,18 +114,15 @@ public final class YGenerators extends JavaPlugin {
         return null;
     }
 
-    private void loadLang() {
-        // Get lang config
-        FileConfiguration config = configHandler.getConfig(ConfigName.LANG);
-
-        // Reload lang
-        Lang.loadLang(config);
-    }
-
     private void loadConfigs() {
-        configHandler.load(ConfigName.CONFIG);
+        configHandler.load(ConfigName.CONFIG, true, false, List.of("vanilla-generators.blocks"));
         configHandler.load(ConfigName.LANG, true, true);
         configHandler.load(ConfigName.GENERATORS, false);
+    }
+
+    private void loadLang() {
+        FileConfiguration config = configHandler.getConfig(ConfigName.LANG);
+        Lang.loadLang(config);
     }
 
     // Reloads generators
@@ -177,7 +174,7 @@ public final class YGenerators extends JavaPlugin {
         return doubledrop;
     }
 
-//    public Database getDatabase() {
-//        return database;
-//    }
+    public Database getDatabase() {
+        return database;
+    }
 }

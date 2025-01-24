@@ -2,30 +2,25 @@ package pl.ynfuien.ygenerators.generators;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scheduler.BukkitTask;
 import pl.ynfuien.ydevlib.messages.YLogger;
 import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.core.Generators;
-import pl.ynfuien.ygenerators.core.generator.Generator;
-//import pl.ynfuien.ygenerators.managers.config.ConfigManager;
+import pl.ynfuien.ygenerators.storage.Database;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
-public class Database {
+public class GeneratorsDatabase {
     private YGenerators instance;
-//    private ConfigManager configManager;
+    private final Database database;
 
     private HashMap<Location, PlacedGenerator> placedGenerators = new HashMap<>();
 
     private BukkitTask interval = null;
 
-    public Database(YGenerators instance) {
+    public GeneratorsDatabase(YGenerators instance) {
         this.instance = instance;
-//        configManager = instance.getConfigManager();
+        this.database = instance.getDatabase();
     }
 
     public boolean loadFromFile() {

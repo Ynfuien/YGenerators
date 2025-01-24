@@ -16,7 +16,7 @@ import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.core.Generators;
 import pl.ynfuien.ygenerators.core.generator.Generator;
-import pl.ynfuien.ygenerators.generators.Database;
+import pl.ynfuien.ygenerators.generators.GeneratorsDatabase;
 import pl.ynfuien.ygenerators.generators.PlacedGenerator;
 import pl.ynfuien.ygenerators.utils.Util;
 
@@ -30,11 +30,11 @@ public class BlockBreakListener implements Listener {
 
     private final YGenerators instance;
     private final Generators generators;
-    private final Database database;
+    private final GeneratorsDatabase generatorsDatabase;
     public BlockBreakListener(YGenerators instance) {
         this.instance = instance;
         generators = instance.getGenerators();
-        database = instance.getDatabase();
+        generatorsDatabase = instance.getDatabase();
     }
 
     // List for deny messages cooldown
@@ -53,9 +53,9 @@ public class BlockBreakListener implements Listener {
         handle116Ores(e);
 
         // If block is generator
-        if (database.has(location)) {
+        if (generatorsDatabase.has(location)) {
             // Get placed generator
-            PlacedGenerator generator = database.get(location);
+            PlacedGenerator generator = generatorsDatabase.get(location);
 
             // Cancel event
             e.setCancelled(true);
@@ -63,7 +63,7 @@ public class BlockBreakListener implements Listener {
             // If player's gamemode is creative
             if (p.getGameMode().equals(GameMode.CREATIVE)) {
                 // Remove generator from database
-                database.remove(location);
+                generatorsDatabase.remove(location);
                 // Destroy generator and give player it's item stack
                 generator.destroy(p);
                 return;
@@ -90,7 +90,7 @@ public class BlockBreakListener implements Listener {
 
             // If generator can be broken
             // Remove generator from database
-            database.remove(location);
+            generatorsDatabase.remove(location);
             // Destroy generator and give player it's item stack
             generator.destroy(p);
             return;
@@ -99,11 +99,11 @@ public class BlockBreakListener implements Listener {
         // Get location under block
         Location locUnder = b.getRelative(BlockFace.DOWN).getLocation();
         // Return if block under isn't generator
-        if (!database.has(locUnder)) return;
+        if (!generatorsDatabase.has(locUnder)) return;
 
 
         // Get placed generator
-        PlacedGenerator placedGenerator = database.get(locUnder);
+        PlacedGenerator placedGenerator = generatorsDatabase.get(locUnder);
         // Get generator
         Generator generator = placedGenerator.getGenerator();
 
@@ -111,7 +111,7 @@ public class BlockBreakListener implements Listener {
         // Create task for generating block
         Bukkit.getScheduler().runTaskLater(instance, () -> {
             // Return if placed generator was destroyed
-            if (!database.has(locUnder)) return;
+            if (!generatorsDatabase.has(locUnder)) return;
 
             // Generate block
             placedGenerator.generateBlock();
@@ -134,7 +134,7 @@ public class BlockBreakListener implements Listener {
         // If durability is 0
         if (durability == 0) {
             // Remove generator from database
-            database.remove(locUnder);
+            generatorsDatabase.remove(locUnder);
             // Destroy placed generator
             placedGenerator.destroy();
 

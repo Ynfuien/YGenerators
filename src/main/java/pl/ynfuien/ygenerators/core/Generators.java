@@ -32,10 +32,9 @@ public class Generators {
         this.instance = instance;
     }
 
-    // Loads generators from config
-    public boolean load(FileConfiguration generators, FileConfiguration config) {
-        if (generators == null) return false;
+    public boolean load(FileConfiguration config, FileConfiguration generatorsConfig) {
         if (config == null) return false;
+        if (generatorsConfig == null) return false;
 
         // Get generators settings config section
         ConfigurationSection settings = config.getConfigurationSection("generators");
@@ -63,10 +62,10 @@ public class Generators {
         ConfigurationSection vanillaGeneSettings = config.getConfigurationSection("vanilla-generators");
         vanillaGenerators = new VanillaGenerators(vanillaGeneSettings);
 
-        logInfo("Starting loading generators...");
+        logInfo("Started loading generators...");
 
         // Get generator names
-        Set<String> geneNames = generators.getKeys(false);
+        Set<String> geneNames = generatorsConfig.getKeys(false);
 
         // Clear current generators hashmap
         this.generators.clear();
@@ -83,26 +82,22 @@ public class Generators {
             }
 
             // Get generator config section
-            ConfigurationSection geneConfig = generators.getConfigurationSection(path);
+            ConfigurationSection geneConfig = generatorsConfig.getConfigurationSection(path);
 
             // Skip if generator doesn't have config section
             if (geneConfig == null) {
-                logError(String.format("Generator '%s' couldn't be loaded because doesn't have configuration section!", name));
+                logError(String.format("Generator '%s' couldn't be loaded because it doesn't have configuration section!", name));
                 continue;
             }
 
-            // Create new generator object
             Generator gene = new Generator(this, name);
-            // Load generator values from config section and get success state
             boolean success = gene.loadFromConfigSection(geneConfig);
 
-            // Skip if generator loading failed
             if (!success) {
                 logError(String.format("Generator '%s' couldn't be loaded!", name));
                 continue;
             }
 
-            // Put generator in generatos hashmap
             this.generators.put(name, gene);
             logInfo(String.format("Generator '%s' successfully loaded!", name));
         }
@@ -120,53 +115,44 @@ public class Generators {
         YLogger.info("[Generators] " + message);
     }
 
-    // Gets generator
     @Nullable
     public Generator get(String name) {
         return generators.get(name);
     }
 
-    // Gets true if generator exist
     public boolean has(String name) {
         return generators.containsKey(name);
     }
 
-    // Gets all generators
     @NotNull
     public HashMap<String, Generator> getAll() {
         return generators;
     }
 
-    // Gets max generators in chunk
     public int getMaxInChunk() {
         return maxInChunk;
     }
 
-    // Gets disabled worlds
     @NotNull
     public List<String> getDisabledWorlds() {
         return disabledWorlds;
     }
 
-    // Gets alert durability
     @NotNull
     public List<Double> getAlertDurability() {
         return alertDurability;
     }
 
-    // Gets generator pick up interaction options
     @Nullable
     public InteractionOptions getPickUp() {
         return pickUp;
     }
 
-    // Gets generator check status interaction options
     @Nullable
     public InteractionOptions getCheckStatus() {
         return checkStatus;
     }
 
-    // Gets vanilla generator settings options
     @NotNull
     public VanillaGenerators getVanillaGenerators() {
         return vanillaGenerators;
@@ -199,18 +185,12 @@ public class Generators {
 
     // Remove generator recipes
     public void removeRecipes() {
-        // Loop through generators
         for (Generator gene : generators.values()) {
-            // Get generator recipe
             GeneratorRecipe recipe = gene.getRecipe();
 
-            // Skip if generator doesn't have recipe
             if (recipe == null) continue;
 
-            // Create namespaced key
             NamespacedKey namespacedKey = new NamespacedKey(YGenerators.getInstance(), gene.getName());
-
-            // Remove recipe
             Bukkit.removeRecipe(namespacedKey);
         }
     }

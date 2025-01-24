@@ -48,9 +48,9 @@ public class AddSubcommand implements Subcommand {
         }
 
         // Parse number
-        long time;
+        int time;
         try {
-            time = Long.parseLong(arg1);
+            time = Integer.parseInt(arg1);
         } catch (NumberFormatException e) {
             Lang.Message.COMMAND_DOUBLEDROP_FAIL_INCORRECT_TIME.send(sender, placeholders);
             return;

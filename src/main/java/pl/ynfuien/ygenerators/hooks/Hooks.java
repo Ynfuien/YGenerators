@@ -5,7 +5,6 @@ import pl.ynfuien.ydevlib.messages.YLogger;
 import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.hooks.placeholderapi.PlaceholderAPIHook;
 import pl.ynfuien.ygenerators.hooks.superiorskyblock2.SuperiorSkyblock2Hook;
-import pl.ynfuien.ygenerators.utils.Util;
 
 public class Hooks {
     private static PlaceholderAPIHook papiHook = null;

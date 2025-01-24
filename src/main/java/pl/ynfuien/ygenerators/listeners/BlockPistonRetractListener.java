@@ -8,16 +8,16 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import pl.ynfuien.ygenerators.YGenerators;
-import pl.ynfuien.ygenerators.generators.Database;
+import pl.ynfuien.ygenerators.generators.GeneratorsDatabase;
 
 public class BlockPistonRetractListener implements Listener {
     // This listener handles moving by piston:
     // - generators
     // - generator's generated blocks
 
-    private final Database database;
+    private final GeneratorsDatabase generatorsDatabase;
     public BlockPistonRetractListener(YGenerators instance) {
-        database = instance.getDatabase();
+        generatorsDatabase = instance.getDatabase();
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
@@ -28,7 +28,7 @@ public class BlockPistonRetractListener implements Listener {
             Location loc = b.getLocation();
 
             // If in location is generator
-            if (database.has(loc)) {
+            if (generatorsDatabase.has(loc)) {
                 // Cancel event and return
                 e.setCancelled(true);
                 return;
@@ -37,7 +37,7 @@ public class BlockPistonRetractListener implements Listener {
             // Get location under block
             Location locUnder = b.getRelative(BlockFace.DOWN).getLocation();
             // If location under block is generator
-            if (database.has(locUnder)) {
+            if (generatorsDatabase.has(locUnder)) {
                 // Cancel event and return
                 e.setCancelled(true);
                 return;
