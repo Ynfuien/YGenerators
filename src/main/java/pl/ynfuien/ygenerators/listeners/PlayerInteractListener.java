@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import pl.ynfuien.ydevlib.utils.DoubleFormatter;
 import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.core.Generators;
@@ -19,7 +20,6 @@ import pl.ynfuien.ygenerators.core.generator.Generator;
 import pl.ynfuien.ygenerators.generators.Database;
 import pl.ynfuien.ygenerators.generators.PlacedGenerator;
 import pl.ynfuien.ygenerators.hooks.superiorskyblock2.SuperiorSkyblock2Hook;
-import pl.ynfuien.ygenerators.utils.Messages;
 import pl.ynfuien.ygenerators.utils.Util;
 
 import java.util.ArrayList;
@@ -32,11 +32,13 @@ public class PlayerInteractListener implements Listener {
 
     private final YGenerators instance;
     private final Generators generators;
-    private final Database database;
+//    private final Database database;
+
+    private static final DoubleFormatter df = new DoubleFormatter();
     public PlayerInteractListener(YGenerators instance) {
         this.instance = instance;
         generators = instance.getGenerators();
-        database = instance.getDatabase();
+//        database = instance.getDatabase();
     }
 
     public static List<UUID> pickupCooldown = new ArrayList<>();

@@ -1,17 +1,20 @@
 package pl.ynfuien.ygenerators.hooks.placeholderapi.placeholders;
 
 import org.bukkit.OfflinePlayer;
+import pl.ynfuien.ydevlib.utils.DoubleFormatter;
 import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.core.Doubledrop;
 import pl.ynfuien.ygenerators.hooks.placeholderapi.Placeholder;
-import pl.ynfuien.ygenerators.utils.Messages;
 import pl.ynfuien.ygenerators.utils.Util;
 
 import java.util.HashMap;
 
 public class DoubledropPlaceholders implements Placeholder {
     private final Doubledrop doubledrop;
+
+    private final static DoubleFormatter df = new DoubleFormatter();
+
     public DoubledropPlaceholders(YGenerators instance) {
         this.doubledrop = instance.getDoubledrop();
     }
@@ -34,7 +37,7 @@ public class DoubledropPlaceholders implements Placeholder {
                 status = Lang.Message.DOUBLEDROP_PLACEHOLDER_ACTIVE;
             }
 
-            return Messages.formatColors(status.get());
+            return status.get();
         }
 
         // Placeholder: %ygenerators_doubledrop_active_raw%
@@ -46,7 +49,7 @@ public class DoubledropPlaceholders implements Placeholder {
         // Placeholder: %ygenerators_doubledrop_multiplayer%
         // Returns: double drop multiplayer
         if (id.equals("multiplayer")) {
-            return Util.formatDouble(multiplayer);
+            return df.format(multiplayer);
         }
 
         // Placeholder: %ygenerators_doubledrop_time_left%
@@ -69,11 +72,11 @@ public class DoubledropPlaceholders implements Placeholder {
             // Add placeholder time
             placeholders.put("time", doubledrop.getFormattedTimeLeft());
             // Add placeholder multiplayer
-            placeholders.put("multiplayer", Util.formatDouble(multiplayer));
+            placeholders.put("multiplayer", df.format(multiplayer));
 
             // Return inactive message if double drop is... inactive
             if (!doubledrop.isActive()) {
-                return Messages.formatColors(Lang.Message.DOUBLEDROP_PLACEHOLDER_INACTIVE.get());
+                return Lang.Message.DOUBLEDROP_PLACEHOLDER_INACTIVE.get();
             }
 
             // Get normal status message
@@ -81,7 +84,7 @@ public class DoubledropPlaceholders implements Placeholder {
 
             // If id was only "status"
             if (id.equals("")) {
-                return Messages.formatColors(statusMessage.get(placeholders));
+                return statusMessage.get(placeholders);
             }
 
             // If id was "status_multiplayer"
@@ -90,12 +93,12 @@ public class DoubledropPlaceholders implements Placeholder {
                     statusMessage = Lang.Message.DOUBLEDROP_PLACEHOLDER_STATUS_MULTIPLAYER;
                 }
 
-                return Messages.formatColors(statusMessage.get(placeholders));
+                return statusMessage.get(placeholders);
             }
 
             // If id was "status_multiplayer_always"
             if (id.equals("_multiplayer_always")) {
-                return Messages.formatColors(Lang.Message.DOUBLEDROP_PLACEHOLDER_STATUS_MULTIPLAYER.get(placeholders));
+                return Lang.Message.DOUBLEDROP_PLACEHOLDER_STATUS_MULTIPLAYER.get(placeholders);
             }
 
             return null;

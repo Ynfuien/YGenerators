@@ -14,8 +14,9 @@ import java.util.HashMap;
 
 public class GeneratorPlaceholders implements Placeholder {
     private final Generators generators;
-    private final static DoubleFormatter df = new DoubleFormatter();
     private final Doubledrop doubledrop;
+
+    private final static DoubleFormatter df = new DoubleFormatter();
 
     public GeneratorPlaceholders(YGenerators instance) {
         this.generators = instance.getGenerators();

@@ -4,6 +4,8 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.ynfuien.ydevlib.config.ConfigHandler;
@@ -13,10 +15,11 @@ import pl.ynfuien.ygenerators.commands.doubledrop.DoubledropCommand;
 import pl.ynfuien.ygenerators.commands.main.MainCommand;
 import pl.ynfuien.ygenerators.core.Doubledrop;
 import pl.ynfuien.ygenerators.core.Generators;
-import pl.ynfuien.ygenerators.generators.Database;
 import pl.ynfuien.ygenerators.hooks.Hooks;
 import pl.ynfuien.ygenerators.listeners.*;
-import pl.ynfuien.ygenerators.managers.config.ConfigManager;
+import pl.ynfuien.ygenerators.storage.Database;
+import pl.ynfuien.ygenerators.storage.MysqlDatabase;
+import pl.ynfuien.ygenerators.storage.SqliteDatabase;
 
 import java.util.HashMap;
 
@@ -29,7 +32,8 @@ public final class YGenerators extends JavaPlugin {
     private final Generators generators = new Generators(this);
     private final Doubledrop doubledrop = new Doubledrop(this);
 
-    private final Database database = new Database(this);
+    private Database database;
+//    private final Database database = new Database(this);
 
     @Override
     public void onEnable() {
@@ -44,13 +48,13 @@ public final class YGenerators extends JavaPlugin {
 
         loadConfigs();
         loadLang();
-//        config = configHandler.getConfigObject(ConfigName.CONFIG);
+        config = configHandler.getConfigObject(ConfigName.CONFIG);
 
 
-//        ConfigurationSection dbConfig = config.getConfig().getConfigurationSection("database");
-//        database = getDatabase(dbConfig);
-//        if (database != null && database.setup(dbConfig)) database.createNicknamesTable();
-//        Storage.setup(this);
+        ConfigurationSection dbConfig = config.getConfig().getConfigurationSection("database");
+        database = getDatabase(dbConfig);
+        if (database != null && database.setup(dbConfig)) database.createTables();
+        Storage.setup(this);
 
         // Load hooks
         Hooks.load(this);
@@ -101,17 +105,27 @@ public final class YGenerators extends JavaPlugin {
         }
     }
 
+    private Database getDatabase(ConfigurationSection config) {
+        String type = config.getString("type");
+        if (type.equalsIgnoreCase("sqlite")) return new SqliteDatabase();
+        else if (type.equalsIgnoreCase("mysql")) return new MysqlDatabase();
+
+        YLogger.error("Database type is incorrect! Available database types: sqlite, mysql");
+        return null;
+    }
+
     private void loadLang() {
         // Get lang config
-//        FileConfiguration config = configHandler.getConfig(ConfigName.LANG);
+        FileConfiguration config = configHandler.getConfig(ConfigName.LANG);
 
         // Reload lang
         Lang.loadLang(config);
     }
 
     private void loadConfigs() {
-//        configHandler.load(ConfigName.CONFIG);
-//        configHandler.load(ConfigName.LANG, true, true);
+        configHandler.load(ConfigName.CONFIG);
+        configHandler.load(ConfigName.LANG, true, true);
+        configHandler.load(ConfigName.GENERATORS, false);
     }
 
     // Reloads generators
@@ -132,8 +146,8 @@ public final class YGenerators extends JavaPlugin {
     public boolean reloadPlugin() {
         doubledrop.cancelInterval();
 
-        database.stopUpdateInterval();
-        database.saveToFile();
+//        database.stopUpdateInterval();
+//        database.saveToFile();
 
 //        // Reload all configs
 //        configManager.reloadConfigs();
@@ -141,8 +155,8 @@ public final class YGenerators extends JavaPlugin {
 //        reloadGenerators();
 //        reloadLang();
 
-        database.loadFromFile();
-        database.startUpdateInterval(instance.getConfig().getInt("database-update-interval"));
+//        database.loadFromFile();
+//        database.startUpdateInterval(instance.getConfig().getInt("database-update-interval"));
 
         return true;
     }
@@ -163,7 +177,7 @@ public final class YGenerators extends JavaPlugin {
         return doubledrop;
     }
 
-    public Database getDatabase() {
-        return database;
-    }
+//    public Database getDatabase() {
+//        return database;
+//    }
 }

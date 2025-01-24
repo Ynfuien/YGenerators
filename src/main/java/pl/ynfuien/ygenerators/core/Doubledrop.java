@@ -8,7 +8,6 @@ import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.YGenerators;
-import pl.ynfuien.ygenerators.managers.config.ConfigManager;
 
 import java.util.HashMap;
 

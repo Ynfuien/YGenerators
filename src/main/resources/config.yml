@@ -1,3 +1,29 @@
+# Database configuration.
+# Used for saving placed generators and doubledrop values.
+database:
+  # Available types: mysql, sqlite
+  type: 'sqlite'
+  # Table names used both in mysql or sqlite
+  generators-table: 'ygene_generators'
+  doubledrop-table: 'ygene_doubledrop'
+
+  # Path for SQLite database file
+  path: 'database.db'
+
+  # Connection info for MySQL database type
+  # Host of your db
+  host: 'localhost'
+  # Default is 3306, don't touch it if you didn't change it in your db configuration
+  port: '3306'
+  # Default: 6
+  max-connections: 6
+  # Name of database
+  name: 'dbname'
+  # Login to db account
+  login: 'user'
+  # Password to db account
+  password: 'password'
+
 # Database update interval in seconds
 database-update-interval: 60
 
