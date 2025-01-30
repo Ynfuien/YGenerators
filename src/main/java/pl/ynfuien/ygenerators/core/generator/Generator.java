@@ -7,6 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pl.ynfuien.ydevlib.messages.YLogger;
+import pl.ynfuien.ydevlib.utils.DoubleFormatter;
 import pl.ynfuien.ygenerators.core.Generators;
 
 import java.util.*;
@@ -32,13 +33,16 @@ public class Generator {
     private final HashMap<Material, Double> blocks = new HashMap<>();
     private GeneratorRecipe recipe = null;
 
+    private final HashMap<String, Object> placeholders = new HashMap<>();
+    private final static DoubleFormatter df = DoubleFormatter.DEFAULT;
+
     public Generator(Generators generators, String name) {
         this.generators = generators;
         this.name = name;
         this.displayName = StringUtils.capitalize(name);
     }
 
-    public boolean loadFromConfigSection(ConfigurationSection config) {
+    public boolean load(ConfigurationSection config) {
         // Return if config doesn't have default-block or item key
         for (String key : Arrays.asList("item", "default-block")) {
             if (config.contains(key)) continue;
@@ -47,26 +51,21 @@ public class Generator {
             return false;
         }
 
-        if (config.contains("display-name")) {
-            displayName = config.getString("display-name");
-        }
-
-
-        // Generator item
-        ConfigurationSection itemConfig = config.getConfigurationSection("item");
-        item = new GeneratorItem(this);
-        boolean success = item.loadFromConfigSection(itemConfig);
-        if (!success) {
-            logError("Item couldn't be loaded!");
-            return false;
-        }
-
+        if (config.contains("display-name")) displayName = config.getString("display-name");
         if (config.contains("can-be-broken")) canBeBroken = config.getBoolean("can-be-broken");
         if (config.contains("durability")) durability = config.getInt("durability");
 
         if (config.contains("cooldown")) cooldown = config.getInt("cooldown");
         if (cooldown < 0) {
             logError("Cooldown can't be lower than 0!");
+            return false;
+        }
+
+        // Generator item
+        ConfigurationSection itemConfig = config.getConfigurationSection("item");
+        item = new GeneratorItem(this);
+        if (!item.load(itemConfig)) {
+            logError("Item couldn't be loaded!");
             return false;
         }
 
@@ -91,6 +90,12 @@ public class Generator {
         if (config.contains("crafting-repair")) craftingRepair = config.getBoolean("crafting-repair");
         if (config.contains("max-in-chunk")) maxInChunk = config.getInt("max-in-chunk");
         if (config.contains("disabled-worlds")) disabledWorlds = config.getStringList("disabled-worlds");
+
+        // Placeholders
+        placeholders.put("name", name);
+        placeholders.put("display-name", displayName);
+        placeholders.put("cooldown", cooldown);
+        placeholders.put("full-durability", durability);
 
         // Blocks
         if (config.contains("blocks")) {
@@ -139,7 +144,7 @@ public class Generator {
         if (recipeConfig == null) return true;
 
         recipe = new GeneratorRecipe(this);
-        if (!recipe.loadFromConfigSection(recipeConfig)) {
+        if (!recipe.load(recipeConfig)) {
             recipe = null;
 
             logError("Recipe couldn't be loaded!");
@@ -154,6 +159,17 @@ public class Generator {
 
         if (generators.getDisabledWorlds().contains(worldName)) return true;
         return disabledWorlds.contains(worldName);
+    }
+
+    public HashMap<String, Object> getDefaultPlaceholders() {
+        return new HashMap<>(placeholders);
+    }
+
+    public HashMap<String, Object> getPlaceholders(double remainingDurability) {
+        HashMap<String, Object> phs = new HashMap<>(placeholders);
+        phs.put("remaining-durability", df.format(remainingDurability));
+
+        return phs;
     }
 
     private void logError(String message) {

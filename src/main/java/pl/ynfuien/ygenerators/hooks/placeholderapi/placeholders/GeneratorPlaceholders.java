@@ -101,7 +101,7 @@ public class GeneratorPlaceholders implements Placeholder {
             // Placeholder: %ygenerators_generator_<name>_item_lore%
             // Returns: generator item's lore
             if (id.equals("lore")) {
-                return String.join("\n", item.getLore(p.getPlayer()));
+                return String.join("\n", item.getParsedLore(p.getPlayer()));
             }
 
             return null;

@@ -33,7 +33,7 @@ public class GeneratorRecipe {
         this.generator = generator;
     }
 
-    public boolean loadFromConfigSection(ConfigurationSection config) {
+    public boolean load(ConfigurationSection config) {
         // Return if recipe doesn't contain ingredients key
         if (!config.contains("ingredients")) {
             logError("Recipe doesn't contain ingredients key!");

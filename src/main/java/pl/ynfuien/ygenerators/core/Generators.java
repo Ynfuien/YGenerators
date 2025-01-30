@@ -82,7 +82,7 @@ public class Generators {
             }
 
             Generator gene = new Generator(this, name);
-            boolean success = gene.loadFromConfigSection(geneConfig);
+            boolean success = gene.load(geneConfig);
 
             if (!success) {
                 logError(String.format("Generator '%s' couldn't be loaded!", name));
