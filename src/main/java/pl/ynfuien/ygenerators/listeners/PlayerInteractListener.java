@@ -33,7 +33,7 @@ public class PlayerInteractListener implements Listener {
     private final Generators generators;
 //    private final Database database;
 
-    private static final DoubleFormatter df = new DoubleFormatter();
+    private static final DoubleFormatter df = DoubleFormatter.DEFAULT;
     public PlayerInteractListener(YGenerators instance) {
         this.instance = instance;
         generators = instance.getGenerators();
@@ -152,10 +152,10 @@ public class PlayerInteractListener implements Listener {
 
         // Add placeholders
         placeholders.put("name", generator.getName());
-        placeholders.put("displayname", generator.getDisplayname());
+        placeholders.put("displayname", generator.getDisplayName());
         placeholders.put("cooldown", generator.getCooldown());
-        placeholders.put("remaining-durability", Util.formatDouble(durability));
-        placeholders.put("full-durability", Util.formatDouble(generator.getDurability()));
+        placeholders.put("remaining-durability", df.format(durability));
+        placeholders.put("full-durability", df.format(generator.getDurability()));
 
         // Get message
         Lang.Message message = Lang.Message.GENERATOR_INFO;

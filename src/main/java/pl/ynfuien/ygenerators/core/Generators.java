@@ -36,14 +36,10 @@ public class Generators {
         if (config == null) return false;
         if (generatorsConfig == null) return false;
 
-        // Get generators settings config section
         ConfigurationSection settings = config.getConfigurationSection("generators");
 
-        // Max generators in chunk
         maxInChunk = settings.getInt("max-in-chunk");
-        // Disabled worlds
         disabledWorlds = settings.getStringList("disabled-worlds");
-        // Alert durability
         alertDurability = settings.getDoubleList("alert-durability");
 
         // Pick up
@@ -64,10 +60,8 @@ public class Generators {
 
         logInfo("Started loading generators...");
 
-        // Get generator names
         Set<String> geneNames = generatorsConfig.getKeys(false);
 
-        // Clear current generators hashmap
         this.generators.clear();
 
         // Loop all generators
@@ -81,10 +75,7 @@ public class Generators {
                 continue;
             }
 
-            // Get generator config section
             ConfigurationSection geneConfig = generatorsConfig.getConfigurationSection(path);
-
-            // Skip if generator doesn't have config section
             if (geneConfig == null) {
                 logError(String.format("Generator '%s' couldn't be loaded because it doesn't have configuration section!", name));
                 continue;
@@ -106,11 +97,9 @@ public class Generators {
         return true;
     }
 
-    // Logs provided error
     private void logError(String message) {
         YLogger.warn("[Generators] " + message);
     }
-    // Logs provided info
     private void logInfo(String message) {
         YLogger.info("[Generators] " + message);
     }

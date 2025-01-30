@@ -1,36 +1,32 @@
+#file: noinspection YAMLSchemaValidation
 # Generator ID
 cobblestone:
-  # Displayname used for placeholder {displayname} in item displayname and lore
+  # Display name used in messages and placeholders
   displayname: 'Cobblestone'
   # Generator's item
-  # Internal placeholders that can be used in displayname and lore:
-  # {name} - Name of generator (ID)
-  # {displayname} - Displayname of generator
-  # {cooldown} - Generator's cooldown
-  # {remaining-durability} - Durability that generator still have
-  # {full-durability} - Generator's default durability
+  # Internal placeholders that can be used for item's display name and lore:
+  # {name}, {display-name}, {cooldown},
+  # {remaining-durability}, {full-durability}
   item:
-    # Material of item, must be a block
+    # Material of the item - must be a block
     material: CYAN_TERRACOTTA
     # Whether item should have glowing effect
     enchanted: false
-    # Displayname of item
-    displayname: '&6&lGenerator {displayname}'
-    # Lore of item
+    # Display name of the item
+    display-name: '<gold><bold>Generator {display-name}'
+    # Lore of the item
     lore:
-      - '&eName: &a{displayname}'
-      - '&eDurability: &a{remaining-durability}/{full-durability}'
-      - '&eCooldown: &a{cooldown}'
+      - '<yellow>Name: <green>{display-name}'
+      - '<yellow>Durability: <green>{remaining-durability}/{full-durability}'
+      - '<yellow>Cooldown: <green>{cooldown}'
       - ''
-      - '&7To pick up generator right click it'
-      - '&7with a hand while sneaking.'
+      - '<gray>To pick up generator right click it'
+      - '<gray>with a hand while sneaking.'
     # Whether item should be stackable. When false, every item has its own id in NBT tag,
     # to prevent stacking it
     stackable: true
-    # Whether generator item can be used to craft any another item than another generator.
+    # Whether generator item can be used to craft other items, that are not different generators.
     can-be-used-in-crafting: false
-  # Whether player on survival can break generator block
-  can-be-broken: false
   # Double drop settings
   doubledrop:
     # Whether block chances should be multiplied by double drop multiplayer when it
@@ -40,17 +36,19 @@ cobblestone:
     # from generator on every broken block
     # Set this to 1 for normal decrease
     durability-decrease: 0.5
-  # Durability of generator. One block broken = -1 durability
+  # Whether placed generator can be broken by a player in survival game mode
+  can-be-broken: false
+  # Durability of the generator. One block broken is -1 durability
   # Set this to -1 to make infinite generator
   durability: 1000
-  # Cooldown in ticks for generating new block after mining it
+  # Cooldown in ticks between generating new blocks
   cooldown: 10
   # Whether two generators can be combined in crafting to make one with summed durability.
   # Crafted generator won't have higher durability than its max durability
   crafting-repair: true
   # Max count of generators that can be placed in one chunk
   max-in-chunk: -1
-  # Worlds in which generator can't be placed
+  # Worlds in which this generator can't be placed
   disabled-worlds: []
   # Default block that will be generated
   default-block: COBBLESTONE
@@ -87,45 +85,46 @@ cobblestone:
     # Ingredients in format
     # <char in shape>: <item>
     # You can also instead normal items use generator as an ingredient.
-    # Just use 'generator:<generator name>' in item place
+    # Just use 'generator:<generator name>' in the item's place
     ingredients:
       C: COBBLESTONE
       L: LAVA_BUCKET
       W: WATER_BUCKET
       G: GOLD_INGOT
-    # This setting is only useful when you add generator item as ingredient.
+
+    # This setting is only useful when you add generator item as an ingredient.
     # When true, durability of crafted generator will be reduced by used durability
     # of ingredient generator.
     # Simple math:
-    # cg full durability - (ig full durability - ig durability) = cg durability
-    # cg - crafted generator
-    # ig - ingredient generator
+    # CG full durability - (IG full durability - IG durability) = CG durability
+    # CG - crafted generator
+    # IG - ingredient generator
     #
     # So for example we have generator that full durability is 2000 and durability
-    # left is 1500. We are crating better generator whose full durability is 3000.
+    # left is 1500. We are creating better generator which full durability is 3000.
     # In that case durability of crafted generator will be:
     # 3000 - (2000 - 1500) = 2500
     reduce-durability-by-already-used: false
 
 stone:
-  displayname: 'Stone'
+  display-name: 'Stone'
   item:
     material: GRAY_TERRACOTTA
     enchanted: true
-    displayname: '&6&lGenerator {displayname}'
+    display-name: '<gold><bold>Generator {display-name}'
     lore:
-      - '&eName: &a{displayname}'
-      - '&eDurability: &a{remaining-durability}/{full-durability}'
-      - '&eCooldown: &a{cooldown}'
+      - '<yellow>Name: <green>{display-name}'
+      - '<yellow>Durability: <green>{remaining-durability}/{full-durability}'
+      - '<yellow>Cooldown: <green>{cooldown}'
       - ''
-      - '&7To pick up generator right click it'
-      - '&7with a hand while sneaking.'
+      - '<gray>To pick up generator right click it'
+      - '<gray>with a hand while sneaking.'
     stackable: false
     can-be-used-in-crafting: false
-  can-be-broken: true
   doubledrop:
     use-multiplayer: true
-    durability-decrase: 0.1
+    durability-decrease: 0.1
+  can-be-broken: true
   durability: 2000
   cooldown: 8
   crafting-repair: true
@@ -137,7 +136,6 @@ stone:
     EMERALD_ORE: 1.5
     GOLD_ORE: 3
     IRON_ORE: 5
-    STONE: 10.0
   recipe:
     shape:
       - "SSS"
@@ -149,24 +147,24 @@ stone:
     reduce-durability-by-already-used: true
 
 infinite:
-  displayname: 'Infinite'
+  display-name: 'Infinite'
   item:
     material: EMERALD_BLOCK
     enchanted: true
-    displayname: '&6&lGenerator &#23db1d&l{displayname}'
+    display-name: '<gold><bold>Generator <#23db1d>{display-name}'
     lore:
-      - '&eName: &a{displayname}'
-      - '&eDurability: &ainfinite'
-      - '&eCooldown: &a{cooldown}'
+      - '<yellow>Name: <green>{display-name}'
+      - '<yellow>Durability: <green>infinite'
+      - '<yellow>Cooldown: <green>{cooldown}'
       - ''
-      - '&7To pick up generator right click it'
-      - '&7with a hand while sneaking.'
+      - '<gray>To pick up generator right click it'
+      - '<gray>with a hand while sneaking.'
     stackable: false
     can-be-used-in-crafting: false
-  can-be-broken: false
   doubledrop:
     use-multiplayer: true
-    durability-decrase: 0.5
+    durability-decrease: 0.5
+  can-be-broken: false
   durability: -1
   cooldown: 0
   crafting-repair: false
@@ -178,7 +176,6 @@ infinite:
     EMERALD_ORE: 1.5
     GOLD_ORE: 3
     IRON_ORE: 5
-    STONE: 10.0
   recipe:
     shape:
       - "EEE"

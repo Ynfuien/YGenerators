@@ -1,5 +1,6 @@
 package pl.ynfuien.ygenerators.core.generator;
 
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -7,32 +8,34 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pl.ynfuien.ydevlib.messages.YLogger;
 import pl.ynfuien.ygenerators.core.Generators;
-import pl.ynfuien.ygenerators.utils.Util;
 
 import java.util.*;
 
 public class Generator {
     private final Generators generators;
     private final String name;
-    private String displayname;
+    private String displayName;
+
     private GeneratorItem item;
-    private boolean canBeBroken = false;
+
     private boolean doubledropUseMultiplayer = true;
     private double doubledropDurabilityDecrease = 1;
+
+    private boolean canBeBroken = false;
     private double durability = -1;
     private int cooldown = 0;
     private boolean craftingRepair = false;
     private int maxInChunk = -1;
+
     private List<String> disabledWorlds = new ArrayList<>();
     private Material defaultBlock;
-    private HashMap<Material, Double> blocks = new HashMap<>();
+    private final HashMap<Material, Double> blocks = new HashMap<>();
     private GeneratorRecipe recipe = null;
 
     public Generator(Generators generators, String name) {
         this.generators = generators;
         this.name = name;
-        // Set displayname to name with uppercase first letter
-        displayname = Util.uppercaseFirstLetter(name);
+        this.displayName = StringUtils.capitalize(name);
     }
 
     public boolean loadFromConfigSection(ConfigurationSection config) {
@@ -40,258 +43,186 @@ public class Generator {
         for (String key : Arrays.asList("item", "default-block")) {
             if (config.contains(key)) continue;
 
-            // Return
             logError(String.format("Missing key '%s'!", key));
             return false;
         }
 
-        // Can be broken
-        if (config.contains("displayname")) {
-            displayname = config.getString("displayname");
+        if (config.contains("display-name")) {
+            displayName = config.getString("display-name");
         }
 
 
         // Generator item
-        {
-            // Get item config section
-            ConfigurationSection itemConfigSection = config.getConfigurationSection("item");
-            // Create new generator item object
-            item = new GeneratorItem(this);
-            // Load generator item from config section and get success state
-            boolean success = item.loadFromConfigSection(itemConfigSection);
-            // Return if loading failed
-            if (!success) {
-                logError("Item couldn't be loaded!");
-                return false;
-            }
+        ConfigurationSection itemConfig = config.getConfigurationSection("item");
+        item = new GeneratorItem(this);
+        boolean success = item.loadFromConfigSection(itemConfig);
+        if (!success) {
+            logError("Item couldn't be loaded!");
+            return false;
         }
 
-        // Can be broken
-        if (config.contains("can-be-broken")) {
-            canBeBroken = config.getBoolean("can-be-broken");
+        if (config.contains("can-be-broken")) canBeBroken = config.getBoolean("can-be-broken");
+        if (config.contains("durability")) durability = config.getInt("durability");
+
+        if (config.contains("cooldown")) cooldown = config.getInt("cooldown");
+        if (cooldown < 0) {
+            logError("Cooldown can't be lower than 0!");
+            return false;
         }
 
-        // Durability
-        if (config.contains("durability")) {
-            try {
-                durability = Integer.parseInt(config.getString("durability"));
-            } catch (NumberFormatException e) {
-                logError("Durability number is incorect!");
-                return false;
-            }
-        }
-
-        // Cooldown
-        if (config.contains("cooldown")) {
-            try {
-                cooldown = Integer.parseInt(config.getString("cooldown"));
-            } catch (NumberFormatException e) {
-                logError("Cooldown number is incorect!");
-                return false;
-            }
-
-            if (cooldown < 0) {
-                logError("Cooldown can't be lower than 0!");
-                return false;
-            }
-        }
-
-        // Default block
         defaultBlock = Material.matchMaterial(config.getString("default-block"));
         if (defaultBlock == null) {
             logError("Default block is incorrect!");
             return false;
         }
+        if (!defaultBlock.isBlock()) {
+            logError("Default block isn't a block!");
+            return false;
+        }
 
-        // Use double drop multiplayer
         if (config.contains("doubledrop.use-multiplayer")) {
-            // Whether use double drop
             doubledropUseMultiplayer = config.getBoolean("doubledrop.use-multiplayer");
         }
 
-        // Double drop durability decrease
         if (config.contains("doubledrop.durability-decrease")) {
             doubledropDurabilityDecrease = config.getDouble("doubledrop.durability-decrease");
         }
 
-        // Crafting repair
-        if (config.contains("crafting-repair")) {
-            craftingRepair = config.getBoolean("crafting-repair");
-        }
-
-        // Max generators in chunk
-        if (config.contains("max-in-chunk")) {
-            maxInChunk = config.getInt("max-in-chunk");
-        }
-
-        // Disabled worlds
-        if (config.contains("disabled-worlds")) {
-            disabledWorlds = config.getStringList("disabled-worlds");
-        }
+        if (config.contains("crafting-repair")) craftingRepair = config.getBoolean("crafting-repair");
+        if (config.contains("max-in-chunk")) maxInChunk = config.getInt("max-in-chunk");
+        if (config.contains("disabled-worlds")) disabledWorlds = config.getStringList("disabled-worlds");
 
         // Blocks
         if (config.contains("blocks")) {
             ConfigurationSection blocksSection = config.getConfigurationSection("blocks");
+            if (blocksSection == null) {
+                logError("Blocks must be a section with blocks!");
+                return false;
+            }
 
-            // If blocks is section
-            if (blocksSection != null) {
-                // Get blocks
-                Set<String> blocksSet = blocksSection.getKeys(false);
+            Set<String> blocksSet = blocksSection.getKeys(false);
 
-                // Loop blocks
-                for (String block : blocksSet) {
-                    // Get block material
-                    Material material;
-                    try {
-                        material = Material.valueOf(block.toUpperCase().trim());
-
-                        // Skip if block isn't block
-                        if (!material.isBlock()) {
-                            logError(String.format("[%s] Provided material isn't block!", material));
-                            continue;
-                        }
-
-                        // Skip if block is air
-                        if (material.isAir()) {
-                            logError(String.format("[%s] Provided material is air!", material));
-                            continue;
-                        }
-                    } catch (IllegalArgumentException e) {
-                        logError(String.format("[%s] Provided material is incorrect!", block));
-                        continue;
-                    }
-
-                    // Get chance for block
-                    double chance = blocksSection.getDouble(block);
-                    // Skip if chance is lower or equal to 0
-                    if (chance <= 0) {
-                        logError(String.format("[%s] Chance can't be lower or equal to 0!", block));
-                        continue;
-                    }
-
-                    blocks.put(material, chance);
+            for (String block : blocksSet) {
+                Material material = Material.matchMaterial(block);
+                if (material == null) {
+                    logError(String.format("[%s] Provided material is incorrect!", block));
+                    continue;
                 }
+
+                // Skip if block isn't a block
+                if (!material.isBlock()) {
+                    logError(String.format("[%s] Provided material isn't block!", material));
+                    continue;
+                }
+
+                // Skip if block is air
+                if (material.isAir()) {
+                    logError(String.format("[%s] Provided material is air!", material));
+                    continue;
+                }
+
+                double chance = blocksSection.getDouble(block);
+                // Skip if chance is lower or equal to 0
+                if (chance <= 0) {
+                    logError(String.format("[%s] Chance can't be lower or equal to 0!", block));
+                    continue;
+                }
+
+                blocks.put(material, chance);
             }
         }
 
         // Recipe
-        if (config.contains("recipe")) {
-            // Get config section for recipe
-            ConfigurationSection recipeConfigSection = config.getConfigurationSection("recipe");
-            // If config section isn't null
-            if (recipeConfigSection != null) {
-                // Create new recipe
-                recipe = new GeneratorRecipe(this);
-                // Load recipe from config section and get result status
-                boolean success = recipe.loadFromConfigSection(recipeConfigSection);
-                // Return if loading failed
-                if (!success) {
-                    recipe = null;
-                    logError("Recipe couldn't be loaded!");
-                    return false;
-                }
-            }
+        if (!config.contains("recipe")) return true;
+
+        ConfigurationSection recipeConfig = config.getConfigurationSection("recipe");
+        if (recipeConfig == null) return true;
+
+        recipe = new GeneratorRecipe(this);
+        if (!recipe.loadFromConfigSection(recipeConfig)) {
+            recipe = null;
+
+            logError("Recipe couldn't be loaded!");
+            return false;
         }
 
         return true;
     }
 
-    // Gets whether generator is disabled in provided location
     public boolean isDisabledInLocation(Location loc) {
-        // Get location's world name
         String worldName = loc.getWorld().getName();
 
-        // Return true if world is disabled for all generators
         if (generators.getDisabledWorlds().contains(worldName)) return true;
-        // Return true if world is disabled for this generator
-        if (disabledWorlds.contains(worldName)) return true;
-
-        return false;
+        return disabledWorlds.contains(worldName);
     }
 
-    // Logs error
     private void logError(String message) {
         YLogger.warn(String.format("[Generator-%s] %s", name, message));
     }
 
-    // Gets generators instance
     @NotNull
     public Generators getGenerators() {
         return generators;
     }
 
-    // Gets generator name
     @NotNull
     public String getName() {
         return name;
     }
 
-    // Gets generator displayname
     @NotNull
-    public String getDisplayname() {
-        return displayname;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    // Gets generator item
     @NotNull
     public GeneratorItem getItem() {
         return item;
     }
 
-    // Gets durability
     public double getDurability() {
         return durability;
     }
 
-    // Gets can be broken
     public boolean canBeBroken() {
         return canBeBroken;
     }
 
-    // Gets cooldown
     public int getCooldown() {
         return cooldown;
     }
 
-    // Gets default block
     @NotNull
     public Material getDefaultBlock() {
         return defaultBlock;
     }
 
-    // Gets crafting repair
     public boolean getCraftingRepair() {
         return craftingRepair;
     }
 
-    // Gets max generators in chunk
     public int getMaxInChunk() {
         return maxInChunk;
     }
 
-    // Gets disabled worlds
     @NotNull
     public List<String> getDisabledWorlds() {
         return disabledWorlds;
     }
 
-    // Gets use doubledrop
     public boolean getDoubledropUseMultiplayer() {
         return doubledropUseMultiplayer;
     }
 
-    // Gets doubledrop affect durability
     public double getDoubledropDurabilityDecrease() {
         return doubledropDurabilityDecrease;
     }
 
-    // Gets blocks
     @NotNull
     public HashMap<Material, Double> getBlocks() {
         return blocks;
     }
 
-    // Gets recipe
     @Nullable
     public GeneratorRecipe getRecipe() {
         return recipe;

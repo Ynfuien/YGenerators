@@ -139,7 +139,7 @@ public class BlockBreakListener implements Listener {
             placedGenerator.destroy();
 
             // Add name placeholder
-            placeholders.put("name", generator.getDisplayname());
+            placeholders.put("name", generator.getDisplayName());
             // Send message
             Lang.Message.GENERATOR_ALERT_BROKEN.send(p, placeholders);
             return;

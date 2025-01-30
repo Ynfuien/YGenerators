@@ -13,7 +13,7 @@ import java.util.List;
 
 public class SetMultiplayerSubcommand implements Subcommand {
     private final Generators generators;
-    private final static DoubleFormatter df = new DoubleFormatter();
+    private final static DoubleFormatter df = DoubleFormatter.DEFAULT;
 
     public SetMultiplayerSubcommand(Generators generators) {
         this.generators = generators;

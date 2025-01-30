@@ -27,7 +27,7 @@ public class DoubledropCommand implements CommandExecutor, TabCompleter {
     private final YGenerators instance;
     private final Generators generators;
     private final Subcommand[] subcommands;
-    private final static DoubleFormatter df = new DoubleFormatter();
+    private final static DoubleFormatter df = DoubleFormatter.DEFAULT;
 
     public DoubledropCommand(YGenerators instance) {
         this.instance = instance;

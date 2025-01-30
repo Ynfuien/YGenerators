@@ -16,7 +16,7 @@ public class GeneratorPlaceholders implements Placeholder {
     private final Generators generators;
     private final Doubledrop doubledrop;
 
-    private final static DoubleFormatter df = new DoubleFormatter();
+    private final static DoubleFormatter df = DoubleFormatter.DEFAULT;
 
     public GeneratorPlaceholders(YGenerators instance) {
         this.generators = instance.getGenerators();

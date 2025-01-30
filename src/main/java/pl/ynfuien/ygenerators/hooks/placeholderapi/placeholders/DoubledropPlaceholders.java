@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class DoubledropPlaceholders implements Placeholder {
     private final Doubledrop doubledrop;
 
-    private final static DoubleFormatter df = new DoubleFormatter();
+    private final static DoubleFormatter df = DoubleFormatter.DEFAULT;
 
     public DoubledropPlaceholders(YGenerators instance) {
         this.doubledrop = instance.getDoubledrop();

@@ -13,8 +13,8 @@ import org.jetbrains.annotations.Nullable;
 import pl.ynfuien.ydevlib.messages.Messenger;
 import pl.ynfuien.ydevlib.messages.YLogger;
 import pl.ynfuien.ydevlib.messages.colors.ColorFormatter;
+import pl.ynfuien.ydevlib.utils.DoubleFormatter;
 import pl.ynfuien.ygenerators.utils.NBTTags;
-import pl.ynfuien.ygenerators.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,11 +23,15 @@ import java.util.UUID;
 public class GeneratorItem {
     private final Generator generator;
     private Material material;
+
     private String displayname = null;
     private boolean enchanted = false;
     private List<String> lore = new ArrayList<>();
+
     private boolean stackable = true;
     private boolean canBeUsedInCrafting = false;
+
+    private final static DoubleFormatter df = DoubleFormatter.DEFAULT;
 
     public GeneratorItem(Generator generator) {
         this.generator = generator;
@@ -236,10 +240,10 @@ public class GeneratorItem {
     private String setPlaceholders(String text, double durability) {
         return text
                 .replace("{name}", generator.getName())
-                .replace("{displayname}", generator.getDisplayname())
+                .replace("{displayname}", generator.getDisplayName())
                 .replace("{cooldown}", String.valueOf(generator.getCooldown()))
-                .replace("{remaining-durability}", Util.formatDouble(durability))
-                .replace("{full-durability}", Util.formatDouble(generator.getDurability()));
+                .replace("{remaining-durability}", df.format(durability))
+                .replace("{full-durability}", df.format(generator.getDurability()));
     }
 
     // Gets item's displayname with set generator placeholders
