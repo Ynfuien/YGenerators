@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import pl.ynfuien.ygenerators.Lang;
+import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.commands.Subcommand;
 import pl.ynfuien.ygenerators.utils.Util;
 
@@ -12,6 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ReloadSubcommand implements Subcommand {
+    private final YGenerators instance;
+
+    public ReloadSubcommand(YGenerators instance) {
+        this.instance = instance;
+    }
+
     @Override
     public String permission() {
         return "ygenerators.command."+name();
@@ -25,7 +32,7 @@ public class ReloadSubcommand implements Subcommand {
     @Override
     public void run(CommandSender sender, String[] args, HashMap<String, Object> placeholders) {
         // Reload plugin
-        boolean success = Util.reloadPlugin();
+        boolean success = instance.reloadPlugin();
 
         // Check if reload was success
         if (success) {

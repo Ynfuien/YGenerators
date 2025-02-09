@@ -97,7 +97,6 @@ public class GeneratorItem {
         return canBeUsedInCrafting;
     }
 
-    //// Single item with provided durability
     public ItemStack getItemStack() {
         return getItemStack(null);
     }
@@ -141,7 +140,6 @@ public class GeneratorItem {
         return item;
     }
 
-    //// Multiple items of provided amount with provided durability
     public ItemStack[] getItemStacks(Player player, int amount) {
         return getItemStacks(player, amount, generator.getDurability());
     }

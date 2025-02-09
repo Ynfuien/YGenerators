@@ -25,8 +25,8 @@ public class MainCommand implements CommandExecutor, TabCompleter {
         this.instance = instance;
 
         this.subcommands = new Subcommand[] {
-                new ReloadSubcommand(),
-                new GiveSubcommand()
+                new ReloadSubcommand(instance),
+                new GiveSubcommand(instance)
         };
     }
 

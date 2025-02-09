@@ -36,6 +36,8 @@ public class Doubledrop {
     }
 
     private boolean save() {
+        if (database == null) return false;
+
         return database.setDoubledrop(timeLeft, multiplayer);
     }
 

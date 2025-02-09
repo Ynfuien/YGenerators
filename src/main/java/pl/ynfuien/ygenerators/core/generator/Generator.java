@@ -181,7 +181,6 @@ public class Generator {
         return generators;
     }
 
-    @NotNull
     public String getName() {
         return name;
     }
