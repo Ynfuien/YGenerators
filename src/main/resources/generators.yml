@@ -2,7 +2,7 @@
 # Generator ID
 cobblestone:
   # Display name used in messages and placeholders
-  displayname: 'Cobblestone'
+  display-name: 'Cobblestone'
   # Generator's item
   # Internal placeholders that can be used for item's display name and lore:
   # {name}, {display-name}, {cooldown},
