@@ -26,7 +26,7 @@ public class GeneratorRecipe {
     private String secondRow = null;
     private String thirdRow = null;
 
-    private HashMap<Character, String> ingredients = new HashMap<>();
+    private final HashMap<Character, String> ingredients = new HashMap<>();
 
 
     public GeneratorRecipe(Generator generator) {
@@ -34,40 +34,29 @@ public class GeneratorRecipe {
     }
 
     public boolean load(ConfigurationSection config) {
-        // Return if recipe doesn't contain ingredients key
         if (!config.contains("ingredients")) {
             logError("Recipe doesn't contain ingredients key!");
             return false;
         }
 
-        // Get whether recipe have to be shaped
-        if (config.contains("shaped")) {
-            shaped = config.getBoolean("shaped");
-        }
+        if (config.contains("shaped")) shaped = config.getBoolean("shaped");
 
-        // Reduce durability by already used
         if (config.contains("reduce-durability-by-already-used")) {
             reduceDurabilityByAlreadyUsed = config.getBoolean("reduce-durability-by-already-used");
         }
 
         // If shaped is true
         if (shaped) {
-            // Return if recipe doesn't have shape
             if (!config.contains("shape")) {
                 logError("Recipe doesn't contain shape key!");
                 return false;
             }
 
-            // Get shape list
             List<String> shapeList = config.getStringList("shape");
-            // Return if shape has less than 3 rows.
-            // If has more than 3, then only first 3 will be taken anyway
             if (shapeList.size() < 3) {
                 logError("Shape must have 3 rows!");
                 return false;
             }
-
-            // Get all three rows and return if row is longer than 3 chars
 
             // First row
             firstRow = shapeList.get(0);
@@ -92,20 +81,17 @@ public class GeneratorRecipe {
 
 
             // Get ingredients config section
-            ConfigurationSection ingredientsConfigSection = config.getConfigurationSection("ingredients");
+            ConfigurationSection ingredientsConfig = config.getConfigurationSection("ingredients");
 
             // Loop through ingredients
-            for (String ingredientChar : ingredientsConfigSection.getKeys(false)) {
+            for (String ingredientChar : ingredientsConfig.getKeys(false)) {
                 // Return if ingredient char is longer than 1 char
                 if (ingredientChar.length() > 1) {
                     logError(String.format("[Ingredient-%s] Ingredient char can't be longer than 1 char!", ingredientChar));
                     return false;
                 }
 
-                // Get ingredient under ingredient char
-                String ingredient = ingredientsConfigSection.getString(ingredientChar);
-
-                // Set ingredient in lower case
+                String ingredient = ingredientsConfig.getString(ingredientChar);
                 ingredient = ingredient.toLowerCase();
 
                 // If ingredient value isn't generator item
@@ -129,8 +115,9 @@ public class GeneratorRecipe {
                     ingredient = material.name();
                 }
 
+
                 // Put ingredient in ingredients hashmap
-                ingredients.put(ingredientChar.toCharArray()[0], ingredient);
+                ingredients.put(ingredientChar.charAt(0), ingredient);
             }
 
             // Get all shape chars in one string
@@ -157,14 +144,10 @@ public class GeneratorRecipe {
 
         // If shaped isn't true
 
-        // Get ingredients list
         List<String> ingredientsList = config.getStringList("ingredients");
 
-        int i = 0;
-        // Loop through list
-        for (String ingredient : ingredientsList) {
-            // Set ingredient in lower case
-            ingredient = ingredient.toLowerCase();
+        for (int i = 0; i < ingredientsList.size(); i++) {
+            String ingredient = ingredientsList.get(i).toLowerCase();
 
             // If ingredient isn't generator item
             if (!ingredient.startsWith("generator:")) {
@@ -189,7 +172,6 @@ public class GeneratorRecipe {
 
             // Put ingredient in ingredients hashmap
             ingredients.put((char) i, ingredient);
-            i++;
         }
 
         return true;
