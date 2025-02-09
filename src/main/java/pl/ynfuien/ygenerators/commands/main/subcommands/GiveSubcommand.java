@@ -12,7 +12,6 @@ import pl.ynfuien.ygenerators.core.Generators;
 import pl.ynfuien.ygenerators.core.generator.Generator;
 import pl.ynfuien.ygenerators.core.generator.GeneratorItem;
 import pl.ynfuien.ygenerators.utils.Items;
-import pl.ynfuien.ygenerators.utils.Util;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
