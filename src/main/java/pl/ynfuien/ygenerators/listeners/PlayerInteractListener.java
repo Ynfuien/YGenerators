@@ -17,7 +17,7 @@ import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.core.Generators;
 import pl.ynfuien.ygenerators.core.InteractionOptions;
 import pl.ynfuien.ygenerators.core.generator.Generator;
-import pl.ynfuien.ygenerators.generators.PlacedGenerator;
+import pl.ynfuien.ygenerators.core.placedgenerators.PlacedGenerator;
 import pl.ynfuien.ygenerators.hooks.superiorskyblock2.SuperiorSkyblock2Hook;
 
 import java.util.ArrayList;

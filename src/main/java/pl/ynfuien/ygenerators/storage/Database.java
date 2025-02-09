@@ -1,21 +1,36 @@
 package pl.ynfuien.ygenerators.storage;
 
 import com.zaxxer.hikari.HikariDataSource;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import pl.ynfuien.ydevlib.messages.YLogger;
+import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.core.Doubledrop;
+import pl.ynfuien.ygenerators.core.Generators;
+import pl.ynfuien.ygenerators.core.placedgenerators.PlacedGenerator;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
 
 public abstract class Database {
+    private final YGenerators instance;
+    private final Generators generators;
+
     protected HikariDataSource dbSource;
     protected String dbName;
     protected String generatorsTableName = "ygene_generators";
     protected String doubledropTableName = "ygene_doubledrop";
 
+    public Database(YGenerators instance) {
+        this.instance = instance;
+        this.generators = instance.getGenerators();
+    }
 
     public abstract boolean setup(ConfigurationSection config);
 
@@ -32,7 +47,7 @@ public abstract class Database {
 
             return new Doubledrop.Values(result.getInt("time_left"), result.getFloat("multiplayer"));
         } catch (SQLException e) {
-            YLogger.warn(String.format("Couldn't retrieve data from table '%s'.", doubledropTableName));
+            logWarn(String.format("Couldn't retrieve data from table '%s'.", doubledropTableName));
             e.printStackTrace();
             return null;
         }
@@ -48,54 +63,156 @@ public abstract class Database {
 
             return true;
         } catch (SQLException e) {
-            YLogger.warn(String.format("Couldn't save data to table '%s'.", doubledropTableName));
+            logWarn(String.format("Couldn't save data to table '%s'.", doubledropTableName));
             e.printStackTrace();
             return false;
         }
     }
 
-//    public User getUser(UUID uuid) {
-//        String query = String.format("SELECT godmode, last_location, logout_location FROM `%s` WHERE uuid=? LIMIT 1", generatorsTableName);
-//
-//        try (Connection conn = dbSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
-//            stmt.setString(1, uuid.toString());
-//            ResultSet resultSet = stmt.executeQuery();
-//
-//            if (resultSet.next()) return new User(resultSet.getBoolean("godmode"), resultSet.getString("last_location"), resultSet.getString("logout_location"));
-//            return null;
-//        } catch (SQLException e) {
-//            YLogger.warn(String.format("Couldn't retrieve data from table '%s'.", generatorsTableName));
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-//
-//    public boolean setUser(UUID uuid, User user) {
-//        String query = String.format("UPDATE `%s` SET godmode=?, last_location=?, logout_location=? WHERE uuid=?", generatorsTableName);
-//
-//        if (!userExists(uuid)) {
-//            query = String.format("INSERT INTO `%s`(godmode, last_location, logout_location, uuid) VALUES(?, ?, ?, ?)", generatorsTableName);
-//        }
-//
-//        try (Connection conn = dbSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
-//            stmt.setBoolean(1, user.isGodModeEnabled());
-//            String lastLocation = null;
-//            if (user.getLastLocation() != null) lastLocation = JSONObject.toJSONString(user.getLastLocation().serialize());
-//            stmt.setString(2, lastLocation);
-//            String logoutLocation = null;
-//            if (user.getLastLocation() != null) logoutLocation = JSONObject.toJSONString(user.getLogoutLocation().serialize());
-//            stmt.setString(3, logoutLocation);
-//            stmt.setString(4, uuid.toString());
-//            stmt.execute();
-//
-//        } catch (SQLException e) {
-//            YLogger.warn(String.format("Couldn't save data to table '%s'.", generatorsTableName));
-//            e.printStackTrace();
-//            return false;
-//        }
-//
-//        return true;
-//    }
+    public HashMap<Location, PlacedGenerator> getGenerators() {
+        String query = String.format("SELECT name, durability, world, x, y, z FROM `%s`", generatorsTableName);
+
+        try (Connection conn = dbSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+            ResultSet result = stmt.executeQuery();
+
+
+            HashMap<Location, PlacedGenerator> placedGenerators = new HashMap<>();
+            while (result.next()) {
+                String name = result.getString("name");
+                if (!generators.has(name)) {
+                    logWarn(String.format("[Generators] There is no generator with the name '%s' in the config! It won't be loaded.", name));
+                    continue;
+                }
+
+                float durability = result.getFloat("durability");
+                String worldName = result.getString("name");
+                World world = Bukkit.getWorld(worldName);
+                if (world == null) {
+                    logWarn(String.format("[Generators] There is no world with the name '%s'. Generator placed in this world won't be loaded.", worldName));
+                    continue;
+                }
+
+                int x = result.getInt("x");
+                int y = result.getInt("y");
+                int z = result.getInt("z");
+                Location location = new Location(world, x, y, z);
+
+                PlacedGenerator placedGenerator = new PlacedGenerator(generators.get(name), location, durability);
+                placedGenerators.put(location, placedGenerator);
+            }
+
+            return placedGenerators;
+        } catch (SQLException e) {
+            logError(String.format("Couldn't load generators from the database (table '%s')!", generatorsTableName));
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean setGenerators(List<PlacedGenerator> placedGenerators) {
+        int saved = 0;
+
+        for (PlacedGenerator generator : placedGenerators) {
+            String query = String.format("UPDATE `%s` SET durability=? WHERE world=? AND x=? AND y=? AND z=?", generatorsTableName);
+
+            Location location = generator.getLocation();
+            try (Connection conn = dbSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setFloat(1, (float) generator.getDurability());
+                stmt.setString(2, location.getWorld().getName());
+                stmt.setInt(3, location.getBlockX());
+                stmt.setInt(4, location.getBlockY());
+                stmt.setInt(5, location.getBlockZ());
+
+                stmt.execute();
+                saved++;
+            } catch (SQLException e) {
+                logError(String.format(
+                        "Couldn't save generator %s (%s, %s %s %s) to the table '%s')!",
+                        generator.getGenerator().getName(),
+                        location.getWorld().getName(),
+                        location.getBlockX(),
+                        location.getBlockY(),
+                        location.getBlockZ(),
+                        generatorsTableName));
+                e.printStackTrace();
+            }
+        }
+
+        return saved == placedGenerators.size();
+    }
+
+    public boolean removeGenerators(List<PlacedGenerator> placedGenerators) {
+        int removed = 0;
+
+        for (PlacedGenerator generator : placedGenerators) {
+            String query = String.format("REMOVE FROM `%s` WHERE world=? AND x=? AND y=? AND z=?", generatorsTableName);
+
+            Location location = generator.getLocation();
+            try (Connection conn = dbSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setString(1, location.getWorld().getName());
+                stmt.setInt(2, location.getBlockX());
+                stmt.setInt(3, location.getBlockY());
+                stmt.setInt(4, location.getBlockZ());
+
+                stmt.execute();
+                removed++;
+            } catch (SQLException e) {
+                logError(String.format(
+                        "Couldn't remove generator %s (%s, %s %s %s) from the table '%s')!",
+                        generator.getGenerator().getName(),
+                        location.getWorld().getName(),
+                        location.getBlockX(),
+                        location.getBlockY(),
+                        location.getBlockZ(),
+                        generatorsTableName));
+                e.printStackTrace();
+            }
+        }
+
+        return removed == placedGenerators.size();
+    }
+
+    public boolean addGenerators(List<PlacedGenerator> placedGenerators) {
+        int added = 0;
+
+        for (PlacedGenerator generator : placedGenerators) {
+            String query = String.format("INSERT INTO `%s`(name, durability, world, x, y, z) VALUES(?, ?, ?, ?, ?, ?)", generatorsTableName);
+
+            Location location = generator.getLocation();
+            try (Connection conn = dbSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setString(1, generator.getGenerator().getName());
+                stmt.setFloat(2, (float) generator.getDurability());
+                stmt.setString(3, location.getWorld().getName());
+                stmt.setInt(4, location.getBlockX());
+                stmt.setInt(5, location.getBlockY());
+                stmt.setInt(6, location.getBlockZ());
+
+                stmt.execute();
+                added++;
+            } catch (SQLException e) {
+                logError(String.format(
+                        "Couldn't add generator %s (%s, %s %s %s) to the table '%s')!",
+                        generator.getGenerator().getName(),
+                        location.getWorld().getName(),
+                        location.getBlockX(),
+                        location.getBlockY(),
+                        location.getBlockZ(),
+                        generatorsTableName));
+                e.printStackTrace();
+            }
+        }
+
+        return added == placedGenerators.size();
+    }
+
+
+    protected void logWarn(String message) {
+        YLogger.warn("[Database] " + message);
+    }
+
+    protected void logError(String message) {
+        YLogger.error("[Database] " + message);
+    }
 
     public abstract boolean createTables();
 

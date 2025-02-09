@@ -118,6 +118,10 @@ public class Generators {
         return generators;
     }
 
+    public YGenerators getInstance() {
+        return instance;
+    }
+
     public int getMaxInChunk() {
         return maxInChunk;
     }

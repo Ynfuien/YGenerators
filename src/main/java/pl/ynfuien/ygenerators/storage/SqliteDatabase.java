@@ -12,6 +12,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SqliteDatabase extends Database {
+    public SqliteDatabase(YGenerators instance) {
+        super(instance);
+    }
+
     @Override
     public boolean setup(ConfigurationSection config) {
         close();
@@ -26,7 +30,7 @@ public class SqliteDatabase extends Database {
         try {
             dbSource = new HikariDataSource(dbConfig);
         } catch (Exception e) {
-            YLogger.error("Plugin couldn't connect to a database! Check connection data, because plugin can't work without the database!");
+            logError("Plugin couldn't connect to a database! Check connection data, because plugin can't work without the database!");
             return false;
         }
 
@@ -42,7 +46,7 @@ public class SqliteDatabase extends Database {
 //        try (Connection conn = dbSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
 //            stmt.execute();
 //        } catch (SQLException e) {
-//            YLogger.error(String.format("Couldn't create table '%s' in database '%s'", generatorsTableName, dbName));
+//            logError(String.format("Couldn't create table '%s' in database '%s'", generatorsTableName, dbName));
 //            e.printStackTrace();
 //            return false;
 //        }
@@ -66,7 +70,7 @@ public class SqliteDatabase extends Database {
             stmt = conn.prepareStatement(query);
             stmt.execute();
         } catch (SQLException e) {
-            YLogger.error(String.format("Couldn't create table '%s' in database '%s'", tableName, dbName));
+            logError(String.format("Couldn't create table '%s' in database '%s'", tableName, dbName));
             e.printStackTrace();
             return false;
         }
@@ -78,7 +82,7 @@ public class SqliteDatabase extends Database {
             ResultSet result = stmt.executeQuery();
             if (result.first()) return true;
         } catch (SQLException e) {
-            YLogger.error(String.format("Couldn't check whether '%s' table has any data!", tableName));
+            logError(String.format("Couldn't check whether '%s' table has any data!", tableName));
             e.printStackTrace();
             return false;
         }
@@ -87,7 +91,7 @@ public class SqliteDatabase extends Database {
         try (Connection conn = dbSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.execute();
         } catch (SQLException e) {
-            YLogger.error(String.format("Couldn't save default data to the '%s' table!", tableName));
+            logError(String.format("Couldn't save default data to the '%s' table!", tableName));
             e.printStackTrace();
             return false;
         }

@@ -16,8 +16,8 @@ import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.core.Generators;
 import pl.ynfuien.ygenerators.core.generator.Generator;
-import pl.ynfuien.ygenerators.generators.GeneratorsDatabase;
-import pl.ynfuien.ygenerators.generators.PlacedGenerator;
+import pl.ynfuien.ygenerators.core.placedgenerators.PlacedGenerators;
+import pl.ynfuien.ygenerators.core.placedgenerators.PlacedGenerator;
 import pl.ynfuien.ygenerators.utils.Util;
 
 import java.util.*;
@@ -30,11 +30,11 @@ public class BlockBreakListener implements Listener {
 
     private final YGenerators instance;
     private final Generators generators;
-    private final GeneratorsDatabase generatorsDatabase;
+    private final PlacedGenerators placedGenerators;
     public BlockBreakListener(YGenerators instance) {
         this.instance = instance;
         generators = instance.getGenerators();
-        generatorsDatabase = instance.getDatabase();
+        placedGenerators = instance.getDatabase();
     }
 
     // List for deny messages cooldown
@@ -53,9 +53,9 @@ public class BlockBreakListener implements Listener {
         handle116Ores(e);
 
         // If block is generator
-        if (generatorsDatabase.has(location)) {
+        if (placedGenerators.has(location)) {
             // Get placed generator
-            PlacedGenerator generator = generatorsDatabase.get(location);
+            PlacedGenerator generator = placedGenerators.get(location);
 
             // Cancel event
             e.setCancelled(true);
@@ -63,7 +63,7 @@ public class BlockBreakListener implements Listener {
             // If player's gamemode is creative
             if (p.getGameMode().equals(GameMode.CREATIVE)) {
                 // Remove generator from database
-                generatorsDatabase.remove(location);
+                placedGenerators.remove(location);
                 // Destroy generator and give player it's item stack
                 generator.destroy(p);
                 return;
@@ -90,7 +90,7 @@ public class BlockBreakListener implements Listener {
 
             // If generator can be broken
             // Remove generator from database
-            generatorsDatabase.remove(location);
+            placedGenerators.remove(location);
             // Destroy generator and give player it's item stack
             generator.destroy(p);
             return;
@@ -99,11 +99,11 @@ public class BlockBreakListener implements Listener {
         // Get location under block
         Location locUnder = b.getRelative(BlockFace.DOWN).getLocation();
         // Return if block under isn't generator
-        if (!generatorsDatabase.has(locUnder)) return;
+        if (!placedGenerators.has(locUnder)) return;
 
 
         // Get placed generator
-        PlacedGenerator placedGenerator = generatorsDatabase.get(locUnder);
+        PlacedGenerator placedGenerator = placedGenerators.get(locUnder);
         // Get generator
         Generator generator = placedGenerator.getGenerator();
 
@@ -111,14 +111,13 @@ public class BlockBreakListener implements Listener {
         // Create task for generating block
         Bukkit.getScheduler().runTaskLater(instance, () -> {
             // Return if placed generator was destroyed
-            if (!generatorsDatabase.has(locUnder)) return;
+            if (!placedGenerators.has(locUnder)) return;
 
             // Generate block
             placedGenerator.generateBlock();
         }, generator.getCooldown());
 
-        // Return if durability is -1 (Infinite generator)
-        if (placedGenerator.getDurability() == -1) return;
+        if (placedGenerator.isInfinite()) return;
 
         // Set amount of durability to decrease
         double amount = 1d;
@@ -134,7 +133,7 @@ public class BlockBreakListener implements Listener {
         // If durability is 0
         if (durability == 0) {
             // Remove generator from database
-            generatorsDatabase.remove(locUnder);
+            placedGenerators.remove(locUnder);
             // Destroy placed generator
             placedGenerator.destroy();
 

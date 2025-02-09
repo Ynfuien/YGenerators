@@ -9,17 +9,17 @@ import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import pl.ynfuien.ygenerators.YGenerators;
-import pl.ynfuien.ygenerators.generators.GeneratorsDatabase;
+import pl.ynfuien.ygenerators.core.placedgenerators.PlacedGenerators;
 
 public class SuperiorSkyblock2Hook implements Listener {
     private static boolean enabled = false;
-    private static GeneratorsDatabase generatorsDatabase;
+    private static PlacedGenerators placedGenerators;
 
     public static void load(YGenerators instance) {
         // Register event on ss2 initialize
         Bukkit.getPluginManager().registerEvents(new SuperiorSkyblock2Hook(), instance);
 
-        generatorsDatabase = instance.getDatabase();
+        placedGenerators = instance.getPlacedGenerators();
     }
 
     public static boolean isEnabled() {
@@ -39,12 +39,12 @@ public class SuperiorSkyblock2Hook implements Listener {
         Island island = e.getIsland();
 
         // Loop through placed generator locations
-        for (Location location : generatorsDatabase.getAllLocations().toArray(Location[]::new)) {
+        for (Location location : placedGenerators.getAllLocations().toArray(Location[]::new)) {
             // Skip if it isn't in island
             if (!island.isInside(location)) continue;
 
             // Remove generator from database
-            generatorsDatabase.remove(location);
+            placedGenerators.remove(location);
         }
     }
 }

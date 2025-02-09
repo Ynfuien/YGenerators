@@ -8,16 +8,16 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import pl.ynfuien.ygenerators.YGenerators;
-import pl.ynfuien.ygenerators.generators.GeneratorsDatabase;
+import pl.ynfuien.ygenerators.core.placedgenerators.PlacedGenerators;
 
 public class BlockPistonExtendListener implements Listener {
     // This listener handles pushing by piston:
     // - generators
     // - generator's generated blocks
 
-    private final GeneratorsDatabase generatorsDatabase;
+    private final PlacedGenerators placedGenerators;
     public BlockPistonExtendListener(YGenerators instance) {
-        generatorsDatabase = instance.getDatabase();
+        placedGenerators = instance.getDatabase();
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
@@ -28,7 +28,7 @@ public class BlockPistonExtendListener implements Listener {
             Location loc = b.getLocation();
 
             // If in location is generator
-            if (generatorsDatabase.has(loc)) {
+            if (placedGenerators.has(loc)) {
                 // Cancel event and return
                 e.setCancelled(true);
                 return;
@@ -37,7 +37,7 @@ public class BlockPistonExtendListener implements Listener {
             // Get location under block
             Location locUnder = b.getRelative(BlockFace.DOWN).getLocation();
             // If location under block is generator
-            if (generatorsDatabase.has(locUnder)) {
+            if (placedGenerators.has(locUnder)) {
                 // Cancel event and return
                 e.setCancelled(true);
                 return;

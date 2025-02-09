@@ -10,7 +10,7 @@ import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.core.Doubledrop;
 import pl.ynfuien.ygenerators.core.Generators;
 import pl.ynfuien.ygenerators.core.VanillaGenerators;
-import pl.ynfuien.ygenerators.generators.ChanceSystem;
+import pl.ynfuien.ygenerators.core.placedgenerators.ChanceSystem;
 
 import java.util.HashMap;
 

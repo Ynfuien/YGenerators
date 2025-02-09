@@ -15,8 +15,8 @@ import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.core.Generators;
 import pl.ynfuien.ygenerators.core.generator.Generator;
-import pl.ynfuien.ygenerators.generators.GeneratorsDatabase;
-import pl.ynfuien.ygenerators.generators.PlacedGenerator;
+import pl.ynfuien.ygenerators.core.placedgenerators.PlacedGenerators;
+import pl.ynfuien.ygenerators.core.placedgenerators.PlacedGenerator;
 import pl.ynfuien.ygenerators.utils.NBTTags;
 
 import java.util.ArrayList;
@@ -29,11 +29,11 @@ public class BlockPlaceListener implements Listener {
 
     private final YGenerators instance;
     private final Generators generators;
-    private final GeneratorsDatabase generatorsDatabase;
+    private final PlacedGenerators placedGenerators;
     public BlockPlaceListener(YGenerators instance) {
         this.instance = instance;
         generators = instance.getGenerators();
-        generatorsDatabase = instance.getDatabase();
+        placedGenerators = instance.getDatabase();
     }
 
     // List for deny messages cooldown
@@ -82,7 +82,7 @@ public class BlockPlaceListener implements Listener {
         if (!instance.getConfig().getBoolean("generators.place-on-top")) {
             // Cancel event if block above is generator
             Location locAbove = b.getRelative(BlockFace.UP).getLocation();
-            if (generatorsDatabase.has(locAbove)) {
+            if (placedGenerators.has(locAbove)) {
                 e.setCancelled(true);
 
                 sendDenyMessage(p, Lang.Message.GENERATOR_DENY_PLACE_UNDER);
@@ -91,7 +91,7 @@ public class BlockPlaceListener implements Listener {
 
             // Cancel event if block under is generator
             Location locUnder = b.getRelative(BlockFace.DOWN).getLocation();
-            if (generatorsDatabase.has(locUnder)) {
+            if (placedGenerators.has(locUnder)) {
                 e.setCancelled(true);
 
                 sendDenyMessage(p, Lang.Message.GENERATOR_DENY_PLACE_ABOVE);
@@ -117,7 +117,7 @@ public class BlockPlaceListener implements Listener {
         // If global limit is enabled
         if (globalMaxInChunk > -1) {
             int generatorsInChunk = 0;
-            for (Location loc : generatorsDatabase.getAllLocations()) {
+            for (Location loc : placedGenerators.getAllLocations()) {
                 // Skip value if chunk isn't loaded
                 if (!loc.isChunkLoaded()) continue;
 
@@ -140,7 +140,7 @@ public class BlockPlaceListener implements Listener {
         // If single generator limit is enabled
         if (geneMaxInChunk > -1) {
             int generatorsInChunk = 0;
-            for (PlacedGenerator gene : generatorsDatabase.getAllPlacedGenerators()) {
+            for (PlacedGenerator gene : placedGenerators.getAllPlacedGenerators()) {
                 // Skip placed generator if it isn't this generator
                 if (!gene.getGenerator().equals(generator)) continue;
 
@@ -179,10 +179,10 @@ public class BlockPlaceListener implements Listener {
         double durability = (double) NBTTags.get(item, PersistentDataType.DOUBLE, "durability");
 
         // Create placed generator
-        PlacedGenerator placedGenerator = new PlacedGenerator(generator, durability, location);
+        PlacedGenerator placedGenerator = new PlacedGenerator(generator, location, durability);
 
         // Add placed generator to database
-        generatorsDatabase.add(placedGenerator);
+        placedGenerators.add(placedGenerator);
 
         // Set block above generator to default block
         b.getRelative(BlockFace.UP).setType(generator.getDefaultBlock());

@@ -3,13 +3,13 @@ package pl.ynfuien.ygenerators.hooks.placeholderapi.placeholders;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
-import pl.ynfuien.ygenerators.generators.GeneratorsDatabase;
+import pl.ynfuien.ygenerators.core.placedgenerators.PlacedGenerators;
 import pl.ynfuien.ygenerators.hooks.placeholderapi.Placeholder;
 
 public class GeneratorsPlaceholders implements Placeholder {
-    private final GeneratorsDatabase generatorsDatabase;
-    public GeneratorsPlaceholders(GeneratorsDatabase generatorsDatabase) {
-        this.generatorsDatabase = generatorsDatabase;
+    private final PlacedGenerators placedGenerators;
+    public GeneratorsPlaceholders(PlacedGenerators placedGenerators) {
+        this.placedGenerators = placedGenerators;
     }
 
     @Override
@@ -22,7 +22,7 @@ public class GeneratorsPlaceholders implements Placeholder {
         // Placeholder: %ygenerators_generators_all%
         // Returns: count of all generators placed on the server
         if (id.equals("all")) {
-            return String.valueOf(generatorsDatabase.getAll().size());
+            return String.valueOf(placedGenerators.getAll().size());
         }
 
         // Placeholders:
@@ -38,7 +38,7 @@ public class GeneratorsPlaceholders implements Placeholder {
                 // Get world
                 World world = p.getPlayer().getWorld();
                 // Count generators
-                long count = generatorsDatabase.getAllLocations().stream().filter(loc -> loc.getWorld().equals(world)).count();
+                long count = placedGenerators.getAllLocations().stream().filter(loc -> loc.getWorld().equals(world)).count();
 
                 // Return count
                 return String.valueOf(count);
@@ -59,7 +59,7 @@ public class GeneratorsPlaceholders implements Placeholder {
             if (world == null) return "world doesn't exist";
 
             // Count generators
-            long count = generatorsDatabase.getAllLocations().stream().filter(loc -> loc.getWorld().equals(world)).count();
+            long count = placedGenerators.getAllLocations().stream().filter(loc -> loc.getWorld().equals(world)).count();
 
             // Return count
             return String.valueOf(count);

@@ -1,4 +1,4 @@
-package pl.ynfuien.ygenerators.generators;
+package pl.ynfuien.ygenerators.core.placedgenerators;
 
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;

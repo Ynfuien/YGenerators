@@ -15,6 +15,7 @@ import pl.ynfuien.ygenerators.commands.doubledrop.DoubledropCommand;
 import pl.ynfuien.ygenerators.commands.main.MainCommand;
 import pl.ynfuien.ygenerators.core.Doubledrop;
 import pl.ynfuien.ygenerators.core.Generators;
+import pl.ynfuien.ygenerators.core.placedgenerators.PlacedGenerators;
 import pl.ynfuien.ygenerators.hooks.Hooks;
 import pl.ynfuien.ygenerators.listeners.*;
 import pl.ynfuien.ygenerators.storage.Database;
@@ -32,6 +33,7 @@ public final class YGenerators extends JavaPlugin {
 
     private final Generators generators = new Generators(this);
     private final Doubledrop doubledrop = new Doubledrop(this);
+    private final PlacedGenerators placedGenerators = new PlacedGenerators(this);
 
     private Database database;
 
@@ -55,6 +57,12 @@ public final class YGenerators extends JavaPlugin {
         // Generators and doubledrop
         generators.load(config.getConfig(), configHandler.getConfig(ConfigName.GENERATORS));
         doubledrop.load(database);
+
+        // Placed generators (database)
+        if (!placedGenerators.load()) {
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
 
         // Load hooks
         Hooks.load(this);
@@ -107,8 +115,8 @@ public final class YGenerators extends JavaPlugin {
 
     private Database getDatabase(ConfigurationSection config) {
         String type = config.getString("type");
-        if (type.equalsIgnoreCase("sqlite")) return new SqliteDatabase();
-        else if (type.equalsIgnoreCase("mysql")) return new MysqlDatabase();
+        if (type.equalsIgnoreCase("sqlite")) return new SqliteDatabase(this);
+        else if (type.equalsIgnoreCase("mysql")) return new MysqlDatabase(this);
 
         YLogger.error("Database type is incorrect! Available database types: sqlite, mysql");
         return null;
@@ -172,6 +180,10 @@ public final class YGenerators extends JavaPlugin {
 
     public Doubledrop getDoubledrop() {
         return doubledrop;
+    }
+
+    public PlacedGenerators getPlacedGenerators() {
+        return placedGenerators;
     }
 
     public Database getDatabase() {
