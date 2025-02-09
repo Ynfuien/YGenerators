@@ -3,7 +3,6 @@ package pl.ynfuien.ygenerators.core;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.jetbrains.annotations.NotNull;
 import pl.ynfuien.ydevlib.messages.YLogger;
 
 public class InteractionOptions {
@@ -12,15 +11,13 @@ public class InteractionOptions {
     private Action click = Action.RIGHT_CLICK_BLOCK;
 
     public InteractionOptions(ConfigurationSection config) {
-        // Sneak
         sneak = config.getBoolean("sneak");
-        // Empty hand
         emptyHand = config.getBoolean("empty-hand");
 
         // Click
         // l - left
         // r - right
-        String clickType = config.getString("click");
+        String clickType = config.getString("click").toLowerCase();
         if (clickType.startsWith("l")) {
             click = Action.LEFT_CLICK_BLOCK;
             return;
@@ -28,7 +25,7 @@ public class InteractionOptions {
 
         // Log error if click type isn't left or right
         if (!clickType.startsWith("r")) {
-            logError("Click type is incorrect! Will be used right click type.");
+            logError(String.format("Click type '%s' is incorrect! Right click type will be used.", clickType));
         }
     }
 
@@ -36,31 +33,25 @@ public class InteractionOptions {
         YLogger.warn("[InteractionOptions] " + message);
     }
 
-    // Gets whether player must sneak to interact
     public boolean getSneak() {
         return sneak;
     }
 
-    // Gets whether player must have empty hand to interact
     public boolean getEmptyHand() {
         return emptyHand;
     }
 
-    // Gets click type
-    @NotNull
     public Action getClick() {
         return click;
     }
 
     // Check whether interaction from player is this interaction
-    public boolean isInteractionCorrect(PlayerInteractEvent e) {
-        // Return false if click isn't the same
-        if (!e.getAction().equals(click)) return false;
-
-        // Return false if sneak is needed but player isn't sneaking
-        if (sneak && !e.getPlayer().isSneaking()) return false;
-
-        // Return false if empty hand is needed but player doesn't have empty hand or return true otherwise
-        return emptyHand && e.getItem() == null;
+    public boolean isInteractionCorrect(PlayerInteractEvent event) {
+        // Click
+        if (!event.getAction().equals(click)) return false;
+        // Sneak
+        if (sneak && !event.getPlayer().isSneaking()) return false;
+        // Empty hand
+        return emptyHand && event.getItem() == null;
     }
 }
