@@ -109,22 +109,101 @@ public abstract class Database {
         }
     }
 
-    public boolean setGenerators(List<PlacedGenerator> placedGenerators) {
-        int saved = 0;
+//    public boolean setGenerators(List<PlacedGenerator> placedGenerators) {
+//        int saved = 0;
+//
+//        for (PlacedGenerator generator : placedGenerators) {
+//            String query = String.format("UPDATE `%s` SET durability=? WHERE world=? AND x=? AND y=? AND z=?", generatorsTableName);
+//
+//            Location location = generator.getLocation();
+//            try (Connection conn = dbSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+//                stmt.setFloat(1, (float) generator.getDurability());
+//                stmt.setString(2, location.getWorld().getName());
+//                stmt.setInt(3, location.getBlockX());
+//                stmt.setInt(4, location.getBlockY());
+//                stmt.setInt(5, location.getBlockZ());
+//
+//                stmt.execute();
+//                saved++;
+//            } catch (SQLException e) {
+//                logError(String.format(
+//                        "Couldn't save generator %s (%s, %s %s %s) to the table '%s')!",
+//                        generator.getGenerator().getName(),
+//                        location.getWorld().getName(),
+//                        location.getBlockX(),
+//                        location.getBlockY(),
+//                        location.getBlockZ(),
+//                        generatorsTableName));
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        return saved == placedGenerators.size();
+//    }
 
-        for (PlacedGenerator generator : placedGenerators) {
-            String query = String.format("UPDATE `%s` SET durability=? WHERE world=? AND x=? AND y=? AND z=?", generatorsTableName);
+    public boolean removeGenerators(List<Location> placedGenerators) {
+        int removed = 0;
 
-            Location location = generator.getLocation();
+        for (Location location : placedGenerators) {
+            String query = String.format("REMOVE FROM `%s` WHERE world=? AND x=? AND y=? AND z=?", generatorsTableName);
+
             try (Connection conn = dbSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
-                stmt.setFloat(1, (float) generator.getDurability());
-                stmt.setString(2, location.getWorld().getName());
-                stmt.setInt(3, location.getBlockX());
-                stmt.setInt(4, location.getBlockY());
-                stmt.setInt(5, location.getBlockZ());
+                stmt.setString(1, location.getWorld().getName());
+                stmt.setInt(2, location.getBlockX());
+                stmt.setInt(3, location.getBlockY());
+                stmt.setInt(4, location.getBlockZ());
 
                 stmt.execute();
-                saved++;
+                removed++;
+            } catch (SQLException e) {
+                logError(String.format(
+                        "Couldn't remove generator (%s, %s %s %s) from the table '%s')!",
+                        location.getWorld().getName(),
+                        location.getBlockX(),
+                        location.getBlockY(),
+                        location.getBlockZ(),
+                        generatorsTableName));
+                e.printStackTrace();
+            }
+        }
+
+        return removed == placedGenerators.size();
+    }
+
+    public boolean updateGenerators(List<PlacedGenerator> placedGenerators) {
+        int updated = 0;
+
+        for (PlacedGenerator generator : placedGenerators) {
+            // Update existing generator
+            String query = String.format("UPDATE `%s` SET name=?, durability=? WHERE world=? AND x=? AND y=? AND z=?", generatorsTableName);
+
+            Location location = generator.getLocation();
+            try (Connection conn = dbSource.getConnection(); PreparedStatement uStmt = conn.prepareStatement(query)) {
+                uStmt.setString(1, generator.getGenerator().getName());
+                uStmt.setFloat(2, (float) generator.getDurability());
+                uStmt.setString(3, location.getWorld().getName());
+                uStmt.setInt(4, location.getBlockX());
+                uStmt.setInt(5, location.getBlockY());
+                uStmt.setInt(6, location.getBlockZ());
+
+                if (uStmt.executeUpdate() != 0) {
+                    updated++;
+                    continue;
+                }
+
+                // Or insert a new one, if it doesn't exist already
+                query = String.format("INSERT INTO `%s`(name, durability, world, x, y, z) VALUES(?, ?, ?, ?, ?, ?)", generatorsTableName);
+                PreparedStatement iStmt = conn.prepareStatement(query);
+
+                iStmt.setString(1, generator.getGenerator().getName());
+                iStmt.setFloat(2, (float) generator.getDurability());
+                iStmt.setString(3, location.getWorld().getName());
+                iStmt.setInt(4, location.getBlockX());
+                iStmt.setInt(5, location.getBlockY());
+                iStmt.setInt(6, location.getBlockZ());
+
+                iStmt.execute();
+                updated++;
             } catch (SQLException e) {
                 logError(String.format(
                         "Couldn't save generator %s (%s, %s %s %s) to the table '%s')!",
@@ -138,71 +217,7 @@ public abstract class Database {
             }
         }
 
-        return saved == placedGenerators.size();
-    }
-
-    public boolean removeGenerators(List<PlacedGenerator> placedGenerators) {
-        int removed = 0;
-
-        for (PlacedGenerator generator : placedGenerators) {
-            String query = String.format("REMOVE FROM `%s` WHERE world=? AND x=? AND y=? AND z=?", generatorsTableName);
-
-            Location location = generator.getLocation();
-            try (Connection conn = dbSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
-                stmt.setString(1, location.getWorld().getName());
-                stmt.setInt(2, location.getBlockX());
-                stmt.setInt(3, location.getBlockY());
-                stmt.setInt(4, location.getBlockZ());
-
-                stmt.execute();
-                removed++;
-            } catch (SQLException e) {
-                logError(String.format(
-                        "Couldn't remove generator %s (%s, %s %s %s) from the table '%s')!",
-                        generator.getGenerator().getName(),
-                        location.getWorld().getName(),
-                        location.getBlockX(),
-                        location.getBlockY(),
-                        location.getBlockZ(),
-                        generatorsTableName));
-                e.printStackTrace();
-            }
-        }
-
-        return removed == placedGenerators.size();
-    }
-
-    public boolean addGenerators(List<PlacedGenerator> placedGenerators) {
-        int added = 0;
-
-        for (PlacedGenerator generator : placedGenerators) {
-            String query = String.format("INSERT INTO `%s`(name, durability, world, x, y, z) VALUES(?, ?, ?, ?, ?, ?)", generatorsTableName);
-
-            Location location = generator.getLocation();
-            try (Connection conn = dbSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
-                stmt.setString(1, generator.getGenerator().getName());
-                stmt.setFloat(2, (float) generator.getDurability());
-                stmt.setString(3, location.getWorld().getName());
-                stmt.setInt(4, location.getBlockX());
-                stmt.setInt(5, location.getBlockY());
-                stmt.setInt(6, location.getBlockZ());
-
-                stmt.execute();
-                added++;
-            } catch (SQLException e) {
-                logError(String.format(
-                        "Couldn't add generator %s (%s, %s %s %s) to the table '%s')!",
-                        generator.getGenerator().getName(),
-                        location.getWorld().getName(),
-                        location.getBlockX(),
-                        location.getBlockY(),
-                        location.getBlockZ(),
-                        generatorsTableName));
-                e.printStackTrace();
-            }
-        }
-
-        return added == placedGenerators.size();
+        return updated == placedGenerators.size();
     }
 
 

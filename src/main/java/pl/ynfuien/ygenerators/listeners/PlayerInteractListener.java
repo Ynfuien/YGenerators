@@ -18,6 +18,7 @@ import pl.ynfuien.ygenerators.core.Generators;
 import pl.ynfuien.ygenerators.core.InteractionOptions;
 import pl.ynfuien.ygenerators.core.generator.Generator;
 import pl.ynfuien.ygenerators.core.placedgenerators.PlacedGenerator;
+import pl.ynfuien.ygenerators.core.placedgenerators.PlacedGenerators;
 import pl.ynfuien.ygenerators.hooks.superiorskyblock2.SuperiorSkyblock2Hook;
 
 import java.util.ArrayList;
@@ -30,13 +31,13 @@ public class PlayerInteractListener implements Listener {
 
     private final YGenerators instance;
     private final Generators generators;
-//    private final Database database;
+    private final PlacedGenerators placedGenerators;
 
     private static final DoubleFormatter df = DoubleFormatter.DEFAULT;
     public PlayerInteractListener(YGenerators instance) {
         this.instance = instance;
         generators = instance.getGenerators();
-//        database = instance.getDatabase();
+        placedGenerators = instance.getPlacedGenerators();
     }
 
     public static List<UUID> pickupCooldown = new ArrayList<>();
@@ -67,7 +68,7 @@ public class PlayerInteractListener implements Listener {
         Location location = b.getLocation();
 
         // Return if clicked block isn't generator
-        if (!database.has(location)) return;
+        if (!placedGenerators.has(location)) return;
 
         // If SuperiorSkyblock2 is enabled
         if (SuperiorSkyblock2Hook.isEnabled()) {
@@ -97,13 +98,13 @@ public class PlayerInteractListener implements Listener {
         }, 3);
 
         // Get placed generator
-        PlacedGenerator generator = database.get(location);
+        PlacedGenerator generator = placedGenerators.get(location);
 
         // Cancel event
         e.setCancelled(true);
 
         // Remove placed generator from database
-        database.remove(location);
+        placedGenerators.remove(location);
         // Destroy generator and give player it's item
         generator.destroy(p);
     }
@@ -125,7 +126,7 @@ public class PlayerInteractListener implements Listener {
         Location location = e.getClickedBlock().getLocation();
 
         // Return if clicked block isn't generator
-        if (!database.has(location)) return;
+        if (!placedGenerators.has(location)) return;
 
         // Get UUID
         UUID uuid = p.getUniqueId();
@@ -139,7 +140,7 @@ public class PlayerInteractListener implements Listener {
         }, 5);
 
         // Get placed generator
-        PlacedGenerator gene = database.get(location);
+        PlacedGenerator gene = placedGenerators.get(location);
         // Get generator
         Generator generator = gene.getGenerator();
 
@@ -162,7 +163,7 @@ public class PlayerInteractListener implements Listener {
         if (durability == -1) message = Lang.Message.GENERATOR_INFO_INFINITE;
 
         // Send message
-        Messages.sendActionBar(p, message.get(placeholders));
+        p.sendActionBar(message.getComponent(p, placeholders));
 
         // Cancel event
         e.setCancelled(true);

@@ -21,7 +21,7 @@ public class Doubledrop {
     private ScheduledTask intervalTask = null;
 
     public Doubledrop(YGenerators instance) {
-        this.instance = YGenerators.getInstance();
+        this.instance = instance;
     }
 
     public boolean load(Database database) {
@@ -78,7 +78,7 @@ public class Doubledrop {
 
         save();
         if (timeLeft < 1) {
-            cancelInterval();
+            stopInterval();
             return;
         }
         if (intervalTask != null) return;
@@ -86,7 +86,7 @@ public class Doubledrop {
         intervalTask = Bukkit.getAsyncScheduler().runAtFixedRate(instance, (task) -> {
             // Cancel interval
             if (this.timeLeft < 1) {
-                cancelInterval();
+                stopInterval();
                 return;
             }
 
@@ -96,7 +96,7 @@ public class Doubledrop {
 
             // Cancel interval and broadcast message about it
             if (this.timeLeft < 1) {
-                cancelInterval();
+                stopInterval();
 
                 Lang.Message.DOUBLEDROP_END.send(Bukkit.getConsoleSender());
                 for (Player p : Bukkit.getOnlinePlayers()) Lang.Message.DOUBLEDROP_END.send(p);
@@ -104,14 +104,11 @@ public class Doubledrop {
         }, 1, 1, TimeUnit.MINUTES);
     }
 
-    // Cancels interval
-    public boolean cancelInterval() {
-        if (intervalTask == null) return false;
+    public void stopInterval() {
+        if (intervalTask == null) return;
 
         intervalTask.cancel();
         intervalTask = null;
-
-        return true;
     }
 
     public void removeTime(int time) {

@@ -43,6 +43,7 @@ public final class YGenerators extends JavaPlugin {
 
         // Set logger prefix
         YLogger.setup("<dark_aqua>[<aqua>Y<blue>Generators<dark_aqua>] <white>", getComponentLogger());
+        YLogger.setDebugging(true);
 
         // Configuration
         loadConfigs();
@@ -59,7 +60,7 @@ public final class YGenerators extends JavaPlugin {
         doubledrop.load(database);
 
         // Placed generators (database)
-        if (!placedGenerators.load()) {
+        if (!placedGenerators.load(database)) {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
@@ -78,6 +79,10 @@ public final class YGenerators extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        doubledrop.stopInterval();
+        placedGenerators.stopUpdateInterval();
+        placedGenerators.save();
+
         if (database != null) database.close();
 
         YLogger.info("Plugin successfully <red>disabled<white>!");
@@ -133,7 +138,6 @@ public final class YGenerators extends JavaPlugin {
         Lang.loadLang(config);
     }
 
-    // Reloads generators
     public boolean reloadGenerators() {
         // Remove current generator recipes
         this.generators.removeRecipes();
@@ -149,21 +153,21 @@ public final class YGenerators extends JavaPlugin {
     }
 
     public boolean reloadPlugin() {
-        doubledrop.cancelInterval();
+        boolean fullSuccess = true;
 
-//        database.stopUpdateInterval();
-//        database.saveToFile();
+        // Stop intervals
+        doubledrop.stopInterval();
+        placedGenerators.stopUpdateInterval();
 
-//        // Reload all configs
-//        configManager.reloadConfigs();
-//
-//        reloadGenerators();
-//        reloadLang();
+        // Reload configs
+        if (!configHandler.reloadAll()) fullSuccess = false;
 
-//        database.loadFromFile();
-//        database.startUpdateInterval(instance.getConfig().getInt("database-update-interval"));
+        if (!reloadGenerators()) fullSuccess = false;
+        loadLang();
 
-        return true;
+
+        placedGenerators.startUpdateInterval(config.getConfig().getInt("database.update-interval"));
+        return fullSuccess;
     }
 
     public static YGenerators getInstance() {

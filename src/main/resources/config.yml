@@ -24,8 +24,8 @@ database:
   # Password to db account
   password: 'password'
 
-# Database update interval in seconds
-database-update-interval: 60
+  # Database update interval in seconds
+  update-interval: 60
 
 # General generators configuration
 generators:

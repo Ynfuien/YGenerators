@@ -1,30 +1,33 @@
 package pl.ynfuien.ygenerators.core.placedgenerators;
 
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitTask;
 import pl.ynfuien.ydevlib.messages.YLogger;
 import pl.ynfuien.ygenerators.YGenerators;
-import pl.ynfuien.ygenerators.core.Generators;
 import pl.ynfuien.ygenerators.storage.Database;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class PlacedGenerators {
     private final YGenerators instance;
-    private final Database database;
+    private Database database;
 
     private final HashMap<Location, PlacedGenerator> placedGenerators = new HashMap<>();
 
-    private BukkitTask interval = null;
+    private final Set<Location> modifiedGenerators = new HashSet<>();
+
+    private ScheduledTask saveTask = null;
 
     public PlacedGenerators(YGenerators instance) {
         this.instance = instance;
-        this.database = instance.getDatabase();
     }
 
-    public boolean load() {
+    public boolean load(Database database) {
         logInfo("Loading generators from the database...");
+        this.database = database;
 
         HashMap<Location, PlacedGenerator> generators = database.getGenerators();
         if (generators == null) {
@@ -46,101 +49,75 @@ public class PlacedGenerators {
         YLogger.error("[Generators-Database] " + message);
     }
 
-    // Starts interval which updates database every x seconds
     public void startUpdateInterval(int period) {
-        // Cancel current interval if it is running
-        if (interval != null) interval.cancel();
+        if (saveTask != null) saveTask.cancel();
 
-        // Run new interval
-        interval = Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
-            saveToFile();
-        }, period, period);
+
+        saveTask = Bukkit.getAsyncScheduler().runAtFixedRate(instance, (task) -> {
+            save();
+        }, period, period, TimeUnit.SECONDS);
     }
 
-    // Stops update interval
     public void stopUpdateInterval() {
-        // Cancel interval if it is running
-        if (interval != null) interval.cancel();
+        if (saveTask != null) saveTask.cancel();
     }
 
-    // Saves database to file
-    public boolean saveToFile() {
-        // File name
-        String fileName = "database.yml";
+    public boolean save() {
+        if (modifiedGenerators.isEmpty()) return true;
 
-//        // Get database config
-//        FileConfiguration database = configManager.getConfig("database.yml");
+        List<Location> toRemove = new ArrayList<>();
+        List<PlacedGenerator> toUpdate = new ArrayList<>();
 
-        // Create list for placed generators
-        List<String> generatorsList = new ArrayList<>();
+        synchronized (modifiedGenerators) {
+            for (Location location : modifiedGenerators) {
+                if (!placedGenerators.containsKey(location)) {
+                    toRemove.add(location);
+                    continue;
+                }
 
-        // Loop through placed generators
-        for (PlacedGenerator gene : placedGenerators.values()) {
-            // Get placed generator location
-            Location loc = gene.getLocation();
-            // Create args array
-            String[] args = new String[] {
-                    gene.getGenerator().getName(),
-                    String.valueOf(gene.getDurability()),
-                    loc.getWorld().getName(),
-                    String.valueOf(loc.getX()),
-                    String.valueOf(loc.getY()),
-                    String.valueOf(loc.getZ())
-            };
-            // Join args into string
-            String generator = String.join("|", args);
+                toUpdate.add(placedGenerators.get(location));
+            }
 
-            // Add generator to list
-            generatorsList.add(generator);
+            modifiedGenerators.clear();
         }
 
-//        // Set list in database config
-//        database.set("generators", generatorsList);
-//
-//        // Save database to file
-//        try {
-//            database.save(new File(instance.getDataFolder(), fileName));
-//        } catch (IOException e) {
-//            YLogger.error("An error occurred while saving generators database to file! Error:");
-//            e.printStackTrace();
-//            return false;
-//        }
+        boolean removeResult = database.removeGenerators(toRemove);
+        boolean updateResult = database.updateGenerators(toUpdate);
 
+        YLogger.debug(String.format("RemoveResult: %b (%d); UpdateResult: %b (%d);", removeResult, toRemove.size(), updateResult, toUpdate.size()));
         return true;
     }
 
-    // Gets placed generator
-    public PlacedGenerator get(Location location) {
-        return placedGenerators.get(location);
-    }
-
-    // Gets all placed generators
-    public HashMap<Location, PlacedGenerator> getAll() {
-        return placedGenerators;
-    }
-
-    // Gets all placed generator locations
-    public Set<Location> getAllLocations() {
-        return placedGenerators.keySet();
-    }
-
-    // Gets all placed generators
-    public Collection<PlacedGenerator> getAllPlacedGenerators() {
-        return placedGenerators.values();
-    }
-
-    // Gets whether in location is placed generator
     public boolean has(Location location) {
         return placedGenerators.containsKey(location);
     }
 
-    // Adds placed generator to hashmap
-    public void add(PlacedGenerator placedGenerator) {
-        placedGenerators.put(placedGenerator.getLocation(), placedGenerator);
+    public PlacedGenerator get(Location location) {
+        modifiedGenerators.add(location);
+        return placedGenerators.get(location);
     }
 
-    // Removes placed generator from hashmap and returns it
+    public void add(PlacedGenerator placedGenerator) {
+        Location location = placedGenerator.getLocation();
+        placedGenerators.put(location, placedGenerator);
+
+        modifiedGenerators.add(location);
+    }
+
     public PlacedGenerator remove(Location location) {
+        modifiedGenerators.add(location);
         return placedGenerators.remove(location);
+    }
+
+    public HashMap<Location, PlacedGenerator> getAll() {
+        return placedGenerators;
+    }
+
+    public Set<Location> getAllLocations() {
+        return placedGenerators.keySet();
+    }
+
+    public Collection<PlacedGenerator> getAllPlacedGenerators() {
+        return placedGenerators.values();
     }
 }
