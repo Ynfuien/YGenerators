@@ -90,7 +90,7 @@ public class GiveSubcommand implements Subcommand {
             ItemStack item = generatorItem.getItemStack(p);
             Items.giveItems(p, item);
 
-            Lang.Message.COMMAND_GIVE_SUCCESS_NOSELF.send(sender, placeholders);
+            Lang.Message.COMMAND_GIVE_SUCCESS_PLAYER.send(sender, placeholders);
             return;
         }
 
@@ -138,7 +138,7 @@ public class GiveSubcommand implements Subcommand {
             ItemStack[] items = generatorItem.getItemStacks(p, amount);
             Items.giveItems(p, items);
 
-            Lang.Message.COMMAND_GIVE_SUCCESS_NOSELF_MANY.send(sender, placeholders);
+            Lang.Message.COMMAND_GIVE_SUCCESS_PLAYER_MANY.send(sender, placeholders);
             return;
         }
 
@@ -158,7 +158,7 @@ public class GiveSubcommand implements Subcommand {
         ItemStack[] items = generatorItem.getItemStacks(p, amount, durability);
         Items.giveItems(p, items);
 
-        Lang.Message.COMMAND_GIVE_SUCCESS_NOSELF_DURABILITY.send(sender, placeholders);
+        Lang.Message.COMMAND_GIVE_SUCCESS_PLAYER_DURABILITY.send(sender, placeholders);
     }
 
     @Override

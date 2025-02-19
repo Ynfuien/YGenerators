@@ -21,6 +21,7 @@ import pl.ynfuien.ygenerators.listeners.*;
 import pl.ynfuien.ygenerators.storage.Database;
 import pl.ynfuien.ygenerators.storage.MysqlDatabase;
 import pl.ynfuien.ygenerators.storage.SqliteDatabase;
+import pl.ynfuien.ygenerators.utils.NBTTags;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +41,7 @@ public final class YGenerators extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        NBTTags.setInstance(this);
 
         // Set logger prefix
         YLogger.setup("<dark_aqua>[<aqua>Y<blue>Generators<dark_aqua>] <white>", getComponentLogger());
