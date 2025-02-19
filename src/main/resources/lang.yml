@@ -51,8 +51,8 @@ command-give-success-player-many: '{prefix} <green>Successfully <aqua>gave <dark
 command-give-success-player-durability: '{prefix} <green>Successfully <aqua>gave <dark_aqua>x{amount} {name}</dark_aqua> generator(s) with durability <dark_aqua>{durability}</dark_aqua> to <yellow>{player}</yellow>!'
 
 command-doubledrop-usage: '{prefix} <red>Command usage: /{command} <add | remove | set | set-multiplayer> <time | multiplayer>'
-command-doubledrop-time-active: '{prefix} <aqua>Double drop time left: <dark_aqua>{time}'
-command-doubledrop-time-active-multiplayer: '{prefix} <aqua>Double drop (<dark_aqua>x{multiplayer}</dark_aqua>) time left: <dark_aqua>{time}'
+command-doubledrop-time-active: '{prefix} <aqua>Double drop time left: <dark_aqua>{time-left}'
+command-doubledrop-time-active-multiplayer: '{prefix} <aqua>Double drop (<dark_aqua>x{multiplayer}</dark_aqua>) time left: <dark_aqua>{time-left}'
 command-doubledrop-time-inactive: '{prefix} <aqua>Double drop is currently <red>inactive</red>!'
 command-doubledrop-fail-incorrect-time: '{prefix} <red>Provided time is incorrect!'
 command-doubledrop-add-success: '{prefix} <aqua>Successfully <green>added</green> <dark_aqua>{time}</dark_aqua> to double drop, it will end in <dark_aqua>{time-left}</dark_aqua>!'
