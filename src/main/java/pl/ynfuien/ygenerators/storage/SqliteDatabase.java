@@ -58,7 +58,7 @@ public class SqliteDatabase extends Database {
 
         try (Connection conn = dbSource.getConnection()) {
             // Generators table
-            String query = String.format("CREATE TABLE IF NOT EXISTS `%s` (id INT PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, durability FLOAT NOT NULL, world TEXT NOT NULL, x INT NOT NULL, y INT NOT NULL, z INT NOT NULL)", tableName);
+            String query = String.format("CREATE TABLE IF NOT EXISTS `%s` (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, durability FLOAT NOT NULL, world TEXT NOT NULL, x INT NOT NULL, y INT NOT NULL, z INT NOT NULL)", tableName);
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.execute();
@@ -76,18 +76,18 @@ public class SqliteDatabase extends Database {
         }
 
         // Doubledrop data row
-//        String query = String.format("SELECT COUNT(*) as count FROM `%s`", tableName);
-        String query = String.format("SELECT * FROM `%s`", tableName);
+        String query = String.format("SELECT COUNT(*) as count FROM `%s`", tableName);
+//        String query = String.format("SELECT * FROM `%s`", tableName);
         try (Connection conn = dbSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
             ResultSet result = stmt.executeQuery();
-            if (result.first()) return true;
+            if (result.getInt("count") != 0) return true;
         } catch (SQLException e) {
             logError(String.format("Couldn't check whether '%s' table has any data!", tableName));
             e.printStackTrace();
             return false;
         }
 
-        query = String.format("INSERT INTO `%s`() VALUES ()", tableName);
+        query = String.format("INSERT INTO `%s` DEFAULT VALUES", tableName);
         try (Connection conn = dbSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.execute();
         } catch (SQLException e) {
