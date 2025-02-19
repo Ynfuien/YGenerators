@@ -17,7 +17,7 @@ public class BlockPistonExtendListener implements Listener {
 
     private final PlacedGenerators placedGenerators;
     public BlockPistonExtendListener(YGenerators instance) {
-        placedGenerators = instance.getDatabase();
+        placedGenerators = instance.getPlacedGenerators();
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)

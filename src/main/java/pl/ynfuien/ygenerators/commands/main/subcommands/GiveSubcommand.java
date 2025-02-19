@@ -115,7 +115,7 @@ public class GiveSubcommand implements Subcommand {
         // - provided amount is higher than 128
         // - generator item can't be stackable
         // - sender is player
-        if (amount > 128 && !generatorItem.stackable() && isSenderPlayer) {
+        if (amount > 128 && !generatorItem.isStackable() && isSenderPlayer) {
             UUID uuid = ((Player) sender).getUniqueId();
             if (!confirmationCooldown.contains(uuid)) {
                 confirmationCooldown.add(uuid);

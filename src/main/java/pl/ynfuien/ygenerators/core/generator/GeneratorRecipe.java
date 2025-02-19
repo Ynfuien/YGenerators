@@ -214,7 +214,7 @@ public class GeneratorRecipe {
                     }
 
                     // Set material to generator item material
-                    material = generators.get(ingredientGeneName).getItem().material();
+                    material = generators.get(ingredientGeneName).getItem().getMaterial();
                 } else {
                     material = Material.valueOf(ingredient);
                 }
@@ -247,7 +247,7 @@ public class GeneratorRecipe {
                 }
 
                 // Set material to generator item material
-                material = generators.get(ingredientGeneName).getItem().material();
+                material = generators.get(ingredientGeneName).getItem().getMaterial();
             } else {
                 material = Material.valueOf(ingredient);
             }

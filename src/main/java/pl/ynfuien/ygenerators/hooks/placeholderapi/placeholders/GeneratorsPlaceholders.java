@@ -3,13 +3,17 @@ package pl.ynfuien.ygenerators.hooks.placeholderapi.placeholders;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
+import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.core.placedgenerators.PlacedGenerators;
 import pl.ynfuien.ygenerators.hooks.placeholderapi.Placeholder;
 
 public class GeneratorsPlaceholders implements Placeholder {
+    private final YGenerators instance;
     private final PlacedGenerators placedGenerators;
-    public GeneratorsPlaceholders(PlacedGenerators placedGenerators) {
-        this.placedGenerators = placedGenerators;
+
+    public GeneratorsPlaceholders(YGenerators instance) {
+        this.instance = instance;
+        this.placedGenerators = instance.getPlacedGenerators();
     }
 
     @Override

@@ -18,8 +18,13 @@ public class BlockFormListener implements Listener {
     // This listener handles forming stone and cobblestone from vanilla generators
 
     private final YGenerators instance;
+    private final Generators generators;
+    private final Doubledrop doubledrop;
+
     public BlockFormListener(YGenerators instance) {
         this.instance = instance;
+        generators = instance.getGenerators();
+        doubledrop = instance.getDoubledrop();
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
@@ -32,8 +37,6 @@ public class BlockFormListener implements Listener {
         // Return if type isn't cobblestone or stone
         if (!newBlockStateType.equals(Material.COBBLESTONE) && !newBlockStateType.equals(Material.STONE)) return;
 
-        // Get generators
-        Generators generators = instance.getGenerators();
         // Get vanilla generator settings
         VanillaGenerators vanilla = generators.getVanillaGenerators();
         // Return if feature isn't enabled
@@ -43,9 +46,6 @@ public class BlockFormListener implements Listener {
         double multiplayer = 1;
         // If vanilla generators use double drop
         if (vanilla.getUseDoubledrop()) {
-            // Get double drop
-            Doubledrop doubledrop = generators.getDoubledrop();
-
             // If double drop is active, set multiplayer to double drop multiplayer
             if (doubledrop.isActive()) multiplayer = doubledrop.getMultiplayer();
         }

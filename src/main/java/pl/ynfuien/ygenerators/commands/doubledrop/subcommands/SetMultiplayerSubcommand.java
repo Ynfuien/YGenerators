@@ -12,11 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class SetMultiplayerSubcommand implements Subcommand {
-    private final Generators generators;
+    private final Doubledrop doubledrop;
     private final static DoubleFormatter df = DoubleFormatter.DEFAULT;
 
-    public SetMultiplayerSubcommand(Generators generators) {
-        this.generators = generators;
+    public SetMultiplayerSubcommand(Doubledrop doubledrop) {
+        this.doubledrop = doubledrop;
     }
 
     @Override
@@ -41,9 +41,9 @@ public class SetMultiplayerSubcommand implements Subcommand {
         placeholders.put("multiplayer", arg1);
 
         // Parse number
-        double multiplayer;
+        float multiplayer;
         try {
-            multiplayer = Double.parseDouble(arg1);
+            multiplayer = Float.parseFloat(arg1);
             placeholders.put("multiplayer", df.format(multiplayer));
         } catch (NumberFormatException e) {
             Lang.Message.COMMAND_DOUBLEDROP_SET_MULTIPLAYER_FAIL_INCORRECT_MULTIPLAYER.send(sender, placeholders);
@@ -57,7 +57,6 @@ public class SetMultiplayerSubcommand implements Subcommand {
         }
 
         // Set multiplayer
-        Doubledrop doubledrop = generators.getDoubledrop();
         doubledrop.setMultiplayer(multiplayer);
 
         // Success message

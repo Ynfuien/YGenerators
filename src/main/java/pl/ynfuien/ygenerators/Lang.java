@@ -6,6 +6,7 @@ import pl.ynfuien.ydevlib.messages.LangBase;
 import pl.ynfuien.ydevlib.messages.Messenger;
 import pl.ynfuien.ydevlib.messages.colors.ColorFormatter;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class Lang extends LangBase {
@@ -135,5 +136,40 @@ public class Lang extends LangBase {
         public void send(CommandSender sender, HashMap<String, Object> placeholders) {
             Lang.sendMessage(sender, this, placeholders);
         }
+    }
+
+    // In polish there is something like this:
+    // Została 1 strona
+    // Zostały 2/3/4 strony
+    // Zostało 5-21 stron
+    // Zostały 22-24 strony
+    // Zostało 25-31 stron
+    // etc.
+    // When in english it's just:
+    // 1 page is left
+    // 2-99999 pages are left
+    // So that's why this thing is there
+    public static WordType getWordType(double number) {
+        // If number is one
+        if (number == 1) return WordType.SINGULAR;
+        // If number have decimal numbers
+        if (number != (int) number) return WordType.PLURAL;
+
+        // If number is lower than 10 or higher than 20
+        if (number < 10 || number > 20) {
+            // If number ends with 2, 3 or 4
+            String string = String.valueOf((int) number);
+            if (Arrays.asList("2", "3", "4").contains(string.substring(string.length() -1))) {
+                return WordType.PLURAL_2_4;
+            }
+        }
+
+        return WordType.PLURAL;
+    }
+
+    public enum WordType {
+        SINGULAR,
+        PLURAL,
+        PLURAL_2_4
     }
 }

@@ -25,19 +25,20 @@ import java.util.List;
 
 public class DoubledropCommand implements CommandExecutor, TabCompleter {
     private final YGenerators instance;
-    private final Generators generators;
+    private final Doubledrop doubledrop;
+
     private final Subcommand[] subcommands;
     private final static DoubleFormatter df = DoubleFormatter.DEFAULT;
 
     public DoubledropCommand(YGenerators instance) {
         this.instance = instance;
-        this.generators = instance.getGenerators();
+        this.doubledrop = instance.getDoubledrop();
 
         this.subcommands = new Subcommand[] {
-                new AddSubcommand(generators),
-                new SetSubcommand(generators),
-                new RemoveSubcommand(generators),
-                new SetMultiplayerSubcommand(generators)
+                new AddSubcommand(doubledrop),
+                new SetSubcommand(doubledrop),
+                new RemoveSubcommand(doubledrop),
+                new SetMultiplayerSubcommand(doubledrop)
         };
     }
 
@@ -74,8 +75,6 @@ public class DoubledropCommand implements CommandExecutor, TabCompleter {
     }
 
     private void sendTimeLeft(CommandSender sender, HashMap<String, Object> placeholders) {
-        Doubledrop doubledrop = generators.getDoubledrop();
-
         double multiplayer = doubledrop.getMultiplayer();
         placeholders.put("multiplayer", df.format(multiplayer));
 

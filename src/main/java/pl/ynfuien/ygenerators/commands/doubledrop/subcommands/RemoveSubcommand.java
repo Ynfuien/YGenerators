@@ -11,10 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 
 public class RemoveSubcommand implements Subcommand {
-    private final Generators generators;
+    private final Doubledrop doubledrop;
 
-    public RemoveSubcommand(Generators generators) {
-        this.generators = generators;
+    public RemoveSubcommand(Doubledrop doubledrop) {
+        this.doubledrop = doubledrop;
     }
 
     @Override
@@ -63,7 +63,6 @@ public class RemoveSubcommand implements Subcommand {
         }
 
         // Remove time
-        Doubledrop doubledrop = generators.getDoubledrop();
         doubledrop.removeTime(time * multiplayer);
 
         // Deactivated message

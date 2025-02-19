@@ -11,10 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 
 public class AddSubcommand implements Subcommand {
-    private final Generators generators;
+    private final Doubledrop doubledrop;
 
-    public AddSubcommand(Generators generators) {
-        this.generators = generators;
+    public AddSubcommand(Doubledrop doubledrop) {
+        this.doubledrop = doubledrop;
     }
 
     @Override
@@ -63,7 +63,6 @@ public class AddSubcommand implements Subcommand {
         }
 
         // Add time
-        Doubledrop doubledrop = generators.getDoubledrop();
         doubledrop.addTime(time * multiplayer);
 
         placeholders.put("time", time + lastChar);

@@ -11,10 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 
 public class SetSubcommand implements Subcommand {
-    private final Generators generators;
+    private final Doubledrop doubledrop;
 
-    public SetSubcommand(Generators generators) {
-        this.generators = generators;
+    public SetSubcommand(Doubledrop doubledrop) {
+        this.doubledrop = doubledrop;
     }
 
     @Override
@@ -57,7 +57,6 @@ public class SetSubcommand implements Subcommand {
 
         // Set time
         time *= multiplayer;
-        Doubledrop doubledrop = generators.getDoubledrop();
         doubledrop.setTimeLeft(time);
 
         // Deactivate message

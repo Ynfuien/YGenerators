@@ -234,7 +234,7 @@ public class PrepareItemCraftListener implements Listener {
             Generator generator = generators.get(geneName);
 
             // Prevent crafting if generator can't be used to craft vanilla items
-            if (!generator.getItem().getCanBeUsedInCrafting()) return true;
+            if (!generator.getItem().canBeUsedInCrafting()) return true;
         }
 
         return false;

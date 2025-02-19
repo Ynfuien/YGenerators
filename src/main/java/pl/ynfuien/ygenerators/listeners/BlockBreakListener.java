@@ -12,8 +12,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
+import pl.ynfuien.ydevlib.utils.DoubleFormatter;
 import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.YGenerators;
+import pl.ynfuien.ygenerators.core.Doubledrop;
 import pl.ynfuien.ygenerators.core.Generators;
 import pl.ynfuien.ygenerators.core.generator.Generator;
 import pl.ynfuien.ygenerators.core.placedgenerators.PlacedGenerators;
@@ -30,11 +32,16 @@ public class BlockBreakListener implements Listener {
 
     private final YGenerators instance;
     private final Generators generators;
+    private final Doubledrop doubledrop;
+
     private final PlacedGenerators placedGenerators;
+    private final static DoubleFormatter df = DoubleFormatter.DEFAULT;
+
     public BlockBreakListener(YGenerators instance) {
         this.instance = instance;
         generators = instance.getGenerators();
-        placedGenerators = instance.getDatabase();
+        doubledrop = instance.getDoubledrop();
+        placedGenerators = instance.getPlacedGenerators();
     }
 
     // List for deny messages cooldown
@@ -121,7 +128,7 @@ public class BlockBreakListener implements Listener {
 
         // Set amount of durability to decrease
         double amount = 1d;
-        if (generators.getDoubledrop().isActive()) amount = generator.getDoubledropDurabilityDecrease();
+        if (doubledrop.isActive()) amount = generator.getDoubledropDurabilityDecrease();
         placedGenerator.decreaseDurability(amount);
 
         // Create hashmap for placeholders in messages
@@ -154,13 +161,13 @@ public class BlockBreakListener implements Listener {
 
             // Set word by word type
             Lang.Message word = Lang.Message.GENERATOR_ALERT_DURABILITY_WORD_PLURAL;
-            if (wordType.equals(Lang.WordType.PLURAR_2_4)) word = Lang.Message.GENERATOR_ALERT_DURABILITY_WORD_PLURAL_2_4;
+            if (wordType.equals(Lang.WordType.PLURAL_2_4)) word = Lang.Message.GENERATOR_ALERT_DURABILITY_WORD_PLURAL_2_4;
             else if (wordType.equals(Lang.WordType.SINGULAR)) word = Lang.Message.GENERATOR_ALERT_DURABILITY_WORD_SINGULAR;
 
             // Add word placeholder
             placeholders.put("word", word.get());
             // Add durability-left placeholder
-            placeholders.put("durability-left", Util.formatDouble(durability));
+            placeholders.put("durability-left", df.format(durability));
             // Send message
             Lang.Message.GENERATOR_ALERT_LOW_DURABILITY.send(p, placeholders);
         }

@@ -69,31 +69,31 @@ public class GeneratorItem {
         YLogger.warn(String.format("[GeneratorItem-%s] %s", generator.getName(), message));
     }
 
-    public Generator generator() {
+    public Generator getGenerator() {
         return generator;
     }
 
-    public Material material() {
+    public Material getMaterial() {
         return material;
     }
 
-    public String displayName() {
+    public String getDisplayName() {
         return displayName;
     }
 
-    public boolean enchanted() {
+    public boolean isEnchanted() {
         return enchanted;
     }
 
-    public List<String> lore() {
+    public List<String> getLore() {
         return lore;
     }
 
-    public boolean stackable() {
+    public boolean isStackable() {
         return stackable;
     }
 
-    public boolean getCanBeUsedInCrafting() {
+    public boolean canBeUsedInCrafting() {
         return canBeUsedInCrafting;
     }
 

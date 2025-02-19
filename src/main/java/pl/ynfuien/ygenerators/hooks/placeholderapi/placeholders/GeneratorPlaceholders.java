@@ -83,25 +83,25 @@ public class GeneratorPlaceholders implements Placeholder {
             // Placeholder: %ygenerators_generator_<name>_item_material%
             // Returns: generator item's material
             if (id.equals("material")) {
-                return item.material().name();
+                return item.getMaterial().name();
             }
 
             // Placeholder: %ygenerators_generator_<name>_item_displayname%
             // Returns: generator item's displayname
             if (id.equals("displayname")) {
-                return item.getDisplayname(p.getPlayer());
+                return item.getDisplayName();
             }
 
             // Placeholder: %ygenerators_generator_<name>_item_enchanted%
             // Returns: true / false
             if (id.equals("enchanted")) {
-                return String.valueOf(item.enchanted());
+                return String.valueOf(item.isEnchanted());
             }
 
             // Placeholder: %ygenerators_generator_<name>_item_lore%
             // Returns: generator item's lore
             if (id.equals("lore")) {
-                return String.join("\n", item.getParsedLore(p.getPlayer()));
+                return String.join("\n", item.getLore());
             }
 
             return null;

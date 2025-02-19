@@ -15,7 +15,7 @@ public class EntityExplodeListener implements Listener {
 
     private final PlacedGenerators placedGenerators;
     public EntityExplodeListener(YGenerators instance) {
-        placedGenerators = instance.getDatabase();
+        placedGenerators = instance.getPlacedGenerators();
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)

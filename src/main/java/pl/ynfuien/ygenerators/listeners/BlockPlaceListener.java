@@ -33,7 +33,7 @@ public class BlockPlaceListener implements Listener {
     public BlockPlaceListener(YGenerators instance) {
         this.instance = instance;
         generators = instance.getGenerators();
-        placedGenerators = instance.getDatabase();
+        placedGenerators = instance.getPlacedGenerators();
     }
 
     // List for deny messages cooldown

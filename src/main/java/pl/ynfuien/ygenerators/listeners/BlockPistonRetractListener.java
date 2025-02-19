@@ -17,7 +17,7 @@ public class BlockPistonRetractListener implements Listener {
 
     private final PlacedGenerators placedGenerators;
     public BlockPistonRetractListener(YGenerators instance) {
-        placedGenerators = instance.getDatabase();
+        placedGenerators = instance.getPlacedGenerators();
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
