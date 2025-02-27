@@ -144,18 +144,11 @@ public class PlayerInteractListener implements Listener {
         // Get generator
         Generator generator = gene.getGenerator();
 
-        // Create hashmap for placeholders in message
-        HashMap<String, Object> placeholders = new HashMap<>();
-
         // Get durability
         double durability = gene.getDurability();
 
-        // Add placeholders
-        placeholders.put("name", generator.getName());
-        placeholders.put("displayname", generator.getDisplayName());
-        placeholders.put("cooldown", generator.getCooldown());
-        placeholders.put("remaining-durability", df.format(durability));
-        placeholders.put("full-durability", df.format(generator.getDurability()));
+        // Placeholders
+        HashMap<String, Object> placeholders = new HashMap<>(generator.getPlaceholders(durability));
 
         // Get message
         Lang.Message message = Lang.Message.GENERATOR_INFO;

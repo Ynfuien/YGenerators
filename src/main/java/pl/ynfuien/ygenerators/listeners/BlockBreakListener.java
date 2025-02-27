@@ -67,7 +67,7 @@ public class BlockBreakListener implements Listener {
             // Cancel event
             e.setCancelled(true);
 
-            // If player's gamemode is creative
+            // If player's game mode is creative
             if (p.getGameMode().equals(GameMode.CREATIVE)) {
                 // Remove generator from database
                 placedGenerators.remove(location);
@@ -132,7 +132,7 @@ public class BlockBreakListener implements Listener {
         placedGenerator.decreaseDurability(amount);
 
         // Create hashmap for placeholders in messages
-        HashMap<String, Object> placeholders = new HashMap<>();
+        HashMap<String, Object> placeholders = new HashMap<>(generator.getDefaultPlaceholders());
 
         // Get durability
         double durability = placedGenerator.getDurability();
@@ -144,8 +144,6 @@ public class BlockBreakListener implements Listener {
             // Destroy placed generator
             placedGenerator.destroy();
 
-            // Add name placeholder
-            placeholders.put("name", generator.getDisplayName());
             // Send message
             Lang.Message.GENERATOR_ALERT_BROKEN.send(p, placeholders);
             return;

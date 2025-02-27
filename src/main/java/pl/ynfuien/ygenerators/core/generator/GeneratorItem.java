@@ -109,7 +109,7 @@ public class GeneratorItem {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
 
-        placeholders.put("remaining-durability", durability);
+        placeholders.put("remaining-durability", df.format(durability));
         if (displayName != null) {
             meta.displayName(Messenger.parseMessage(player, displayName, placeholders));
         }

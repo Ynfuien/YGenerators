@@ -61,6 +61,12 @@ public class Generator {
             return false;
         }
 
+        // Placeholders
+        placeholders.put("name", name);
+        placeholders.put("display-name", displayName);
+        placeholders.put("cooldown", cooldown);
+        placeholders.put("full-durability", df.format(durability));
+
         // Generator item
         ConfigurationSection itemConfig = config.getConfigurationSection("item");
         item = new GeneratorItem(this);
@@ -90,12 +96,6 @@ public class Generator {
         if (config.contains("crafting-repair")) craftingRepair = config.getBoolean("crafting-repair");
         if (config.contains("max-in-chunk")) maxInChunk = config.getInt("max-in-chunk");
         if (config.contains("disabled-worlds")) disabledWorlds = config.getStringList("disabled-worlds");
-
-        // Placeholders
-        placeholders.put("name", name);
-        placeholders.put("display-name", displayName);
-        placeholders.put("cooldown", cooldown);
-        placeholders.put("full-durability", durability);
 
         // Blocks
         if (config.contains("blocks")) {
