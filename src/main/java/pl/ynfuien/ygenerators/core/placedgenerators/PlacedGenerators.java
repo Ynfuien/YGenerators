@@ -36,6 +36,7 @@ public class PlacedGenerators {
         }
 
         placedGenerators.putAll(generators);
+        startUpdateInterval();
 
         logInfo(String.format("Successfully loaded generators from the database! You have %d placed generator(s) on the server!", placedGenerators.size()));
         return true;
@@ -49,13 +50,13 @@ public class PlacedGenerators {
         YLogger.error("[Generators-Database] " + message);
     }
 
-    public void startUpdateInterval(int period) {
+    public void startUpdateInterval() {
         if (saveTask != null) saveTask.cancel();
 
-
+        int updateInterval = database.getUpdateInterval();
         saveTask = Bukkit.getAsyncScheduler().runAtFixedRate(instance, (task) -> {
             save();
-        }, period, period, TimeUnit.SECONDS);
+        }, updateInterval, updateInterval, TimeUnit.SECONDS);
     }
 
     public void stopUpdateInterval() {

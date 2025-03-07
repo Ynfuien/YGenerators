@@ -40,6 +40,8 @@ public class MysqlDatabase extends Database {
 
         generatorsTableName = config.getString("generators-table");
         doubledropTableName = config.getString("doubledrop-table");
+
+        updateInterval = config.getInt("update-interval");
         return true;
     }
 

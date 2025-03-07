@@ -24,8 +24,11 @@ public abstract class Database {
 
     protected HikariDataSource dbSource;
     protected String dbName;
+
     protected String generatorsTableName = "ygene_generators";
     protected String doubledropTableName = "ygene_doubledrop";
+
+    protected int updateInterval = 60;
 
     public Database(YGenerators instance) {
         this.instance = instance;
@@ -85,7 +88,7 @@ public abstract class Database {
                 }
 
                 float durability = result.getFloat("durability");
-                String worldName = result.getString("name");
+                String worldName = result.getString("world");
                 World world = Bukkit.getWorld(worldName);
                 if (world == null) {
                     logWarn(String.format("[Generators] There is no world with the name '%s'. Generator placed in this world won't be loaded.", worldName));
@@ -145,7 +148,7 @@ public abstract class Database {
         int removed = 0;
 
         for (Location location : placedGenerators) {
-            String query = String.format("REMOVE FROM `%s` WHERE world=? AND x=? AND y=? AND z=?", generatorsTableName);
+            String query = String.format("DELETE FROM `%s` WHERE world=? AND x=? AND y=? AND z=?", generatorsTableName);
 
             try (Connection conn = dbSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
                 stmt.setString(1, location.getWorld().getName());
@@ -231,7 +234,7 @@ public abstract class Database {
 
     public abstract boolean createTables();
 
-    public boolean isSetup() {
-        return dbSource != null;
+    public int getUpdateInterval() {
+        return updateInterval;
     }
 }

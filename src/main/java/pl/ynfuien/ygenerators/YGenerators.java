@@ -168,7 +168,7 @@ public final class YGenerators extends JavaPlugin {
         loadLang();
 
 
-        placedGenerators.startUpdateInterval(config.getConfig().getInt("database.update-interval"));
+        placedGenerators.startUpdateInterval();
         return fullSuccess;
     }
 
