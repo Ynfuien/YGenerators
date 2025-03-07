@@ -1,8 +1,11 @@
 package pl.ynfuien.ygenerators.core;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import pl.ynfuien.ydevlib.messages.YLogger;
 
 public class InteractionOptions {
@@ -50,8 +53,9 @@ public class InteractionOptions {
         // Click
         if (!event.getAction().equals(click)) return false;
         // Sneak
-        if (sneak && !event.getPlayer().isSneaking()) return false;
+        Player p = event.getPlayer();
+        if (sneak && !p.isSneaking()) return false;
         // Empty hand
-        return emptyHand && event.getItem() == null;
+        return emptyHand && p.getEquipment().getItemInMainHand().isEmpty();
     }
 }
