@@ -188,24 +188,20 @@ public class BlockPlaceListener implements Listener {
         b.getRelative(BlockFace.UP).setType(generator.getDefaultBlock());
     }
 
-    private void sendDenyMessage(Player p, Lang.Message message) {
-        sendDenyMessage(p, message, null);
+    private void sendDenyMessage(Player player, Lang.Message message) {
+        sendDenyMessage(player, message, null);
     }
 
-    private void sendDenyMessage(Player p, Lang.Message message, HashMap<String, Object> placeholders) {
-        // Get player's uuid
-        UUID uuid = p.getUniqueId();
+    private void sendDenyMessage(Player player, Lang.Message message, HashMap<String, Object> placeholders) {
+        UUID uuid = player.getUniqueId();
 
-        // Return if cooldown list has player's uuid
         if (denyMessageCooldown.contains(uuid)) return;
-        // Add uuid to cooldown list
         denyMessageCooldown.add(uuid);
-        // Remove uuid from cooldown list after cooldown
+
         Bukkit.getScheduler().runTaskLater(instance, () -> {
             denyMessageCooldown.remove(uuid);
         }, 30);
 
-        // Send deny message to player
-        message.send(p, placeholders);
+        message.send(player, placeholders);
     }
 }
