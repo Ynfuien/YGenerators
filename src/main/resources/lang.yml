@@ -70,6 +70,7 @@ command-doubledrop-set-multiplayer-fail-no-multiplayer: '{prefix} <red>You must 
 
 generator-deny-disabled-world: '{prefix} <red>You can''t place this generator in this world!'
 generator-deny-unknown-name: '{prefix} <red>This generator has a name, that doesn''t exist in plugin configuration! Contact the server administrator.'
+generator-deny-durability-not-set: '{prefix} <red>This generator doesn''t have any durability set! Contact the server administrator.'
 generator-deny-place-above: '{prefix} <red>You can''t place generator above another!'
 generator-deny-place-under: '{prefix} <red>You can''t place generator under another!'
 generator-deny-limit-global: '{prefix} <red>There is a limit of {limit} generators on a chunk!'

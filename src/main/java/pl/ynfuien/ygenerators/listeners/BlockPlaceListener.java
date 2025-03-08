@@ -10,14 +10,15 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.core.Generators;
 import pl.ynfuien.ygenerators.core.generator.Generator;
-import pl.ynfuien.ygenerators.core.placedgenerators.PlacedGenerators;
+import pl.ynfuien.ygenerators.core.generator.GeneratorItem;
 import pl.ynfuien.ygenerators.core.placedgenerators.PlacedGenerator;
-import pl.ynfuien.ygenerators.utils.NBTTags;
+import pl.ynfuien.ygenerators.core.placedgenerators.PlacedGenerators;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,7 +46,8 @@ public class BlockPlaceListener implements Listener {
         ItemStack item = e.getItemInHand();
 
         // Get generator name from item
-        String geneName = (String) NBTTags.get(item, PersistentDataType.STRING, "generator");
+        PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
+        String geneName = pdc.get(GeneratorItem.NSKey.GENERATOR, PersistentDataType.STRING);
 
         // Return if item isn't generator
         if (geneName == null) return;
@@ -176,7 +178,13 @@ public class BlockPlaceListener implements Listener {
         }
 
         // Get generator durability
-        double durability = (double) NBTTags.get(item, PersistentDataType.DOUBLE, "durability");
+        Double durability = pdc.get(GeneratorItem.NSKey.DURABILITY, PersistentDataType.DOUBLE);
+        if (durability == null) {
+            e.setCancelled(true);
+
+            sendDenyMessage(p, Lang.Message.GENERATOR_DENY_DURABILITY_NOT_SET);
+            return;
+        }
 
         // Create placed generator
         PlacedGenerator placedGenerator = new PlacedGenerator(generator, location, durability);

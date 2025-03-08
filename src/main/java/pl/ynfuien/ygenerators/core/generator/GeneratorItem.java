@@ -1,18 +1,22 @@
 package pl.ynfuien.ygenerators.core.generator;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import pl.ynfuien.ydevlib.messages.Messenger;
 import pl.ynfuien.ydevlib.messages.YLogger;
+import pl.ynfuien.ydevlib.messages.colors.ColorFormatter;
 import pl.ynfuien.ydevlib.utils.DoubleFormatter;
-import pl.ynfuien.ygenerators.utils.NBTTags;
+import pl.ynfuien.ygenerators.YGenerators;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,32 +115,31 @@ public class GeneratorItem {
 
         placeholders.put("remaining-durability", df.format(durability));
         if (displayName != null) {
-            meta.displayName(Messenger.parseMessage(player, displayName, placeholders));
+            Component parsed = Messenger.parseMessage(player, displayName, placeholders);
+            meta.displayName(parsed.decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE));
         }
 
         // Set item lore
         List<Component> itemLore = new ArrayList<>();
         for (String line : lore) {
-            itemLore.add(Messenger.parseMessage(player, line, placeholders));
+            Component parsed = Messenger.parseMessage(player, line, placeholders);
+            itemLore.add(ColorFormatter.negateUnsetDecoration(parsed, TextDecoration.ITALIC));
         }
         meta.lore(itemLore);
-
-        item.setItemMeta(meta);
 
         // Set glow effect
         if (enchanted) {
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            item.setItemMeta(meta);
-            item.addUnsafeEnchantment(Enchantment.ARROW_INFINITE, 0);
+            meta.addEnchant(Enchantment.ARROW_INFINITE, 0, true);
         }
 
-        NBTTags.set(item, PersistentDataType.STRING, "generator", generator.getName());
-        NBTTags.set(item, PersistentDataType.DOUBLE, "durability", durability);
+        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+        pdc.set(NSKey.GENERATOR, PersistentDataType.STRING, generator.getName());
+        pdc.set(NSKey.DURABILITY, PersistentDataType.DOUBLE, durability);
 
-        if (!stackable) {
-            NBTTags.set(item, PersistentDataType.STRING, "id", UUID.randomUUID().toString());
-        }
+        if (!stackable) pdc.set(NSKey.RANDOM_ID, PersistentDataType.STRING, UUID.randomUUID().toString());
 
+        item.setItemMeta(meta);
         return item;
     }
 
@@ -161,7 +164,14 @@ public class GeneratorItem {
 
         // Generate uuid for every generator
         for (int i = 0; i < amount; i++) {
-            items[i] = NBTTags.set(item.clone(), PersistentDataType.STRING, "id", UUID.randomUUID().toString());
+            ItemStack clone = item.clone();
+
+            ItemMeta meta = clone.getItemMeta();
+            PersistentDataContainer pdc = meta.getPersistentDataContainer();
+            pdc.set(NSKey.RANDOM_ID, PersistentDataType.STRING, UUID.randomUUID().toString());
+            clone.setItemMeta(meta);
+
+            items[i] = clone;
         }
 
         return items;
@@ -176,4 +186,17 @@ public class GeneratorItem {
 
         return result;
     }
+
+    public static class NSKey {
+        public static NamespacedKey GENERATOR;
+        public static NamespacedKey DURABILITY;
+        public static NamespacedKey RANDOM_ID;
+
+        public static void setup(YGenerators instance) {
+            GENERATOR = new NamespacedKey(instance, "generator");
+            DURABILITY = new NamespacedKey(instance, "durability");
+            RANDOM_ID = new NamespacedKey(instance, "random-id");
+        }
+    }
+
 }

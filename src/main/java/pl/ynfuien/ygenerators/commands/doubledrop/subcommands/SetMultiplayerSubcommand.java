@@ -6,7 +6,6 @@ import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.commands.Subcommand;
 import pl.ynfuien.ygenerators.commands.doubledrop.DoubledropCommand;
 import pl.ynfuien.ygenerators.core.Doubledrop;
-import pl.ynfuien.ygenerators.core.Generators;
 
 import java.util.HashMap;
 import java.util.List;

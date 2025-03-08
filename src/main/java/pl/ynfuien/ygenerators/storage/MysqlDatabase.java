@@ -3,7 +3,6 @@ package pl.ynfuien.ygenerators.storage;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.bukkit.configuration.ConfigurationSection;
-import pl.ynfuien.ydevlib.messages.YLogger;
 import pl.ynfuien.ygenerators.YGenerators;
 
 import java.sql.Connection;
@@ -69,7 +68,6 @@ public class MysqlDatabase extends Database {
         }
 
         // Doubledrop data row
-//        String query = String.format("SELECT COUNT(*) as count FROM `%s`", tableName);
         String query = String.format("SELECT * FROM `%s`", tableName);
         try (Connection conn = dbSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
             ResultSet result = stmt.executeQuery();

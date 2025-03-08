@@ -155,10 +155,17 @@
         </dependency>
 
         <!--        Dev library -->
+<!--        <dependency>-->
+<!--            <groupId>com.github.Ynfuien</groupId>-->
+<!--            <artifactId>YDevLib</artifactId>-->
+<!--            <version>1.0.4</version>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
+
         <dependency>
-            <groupId>com.github.Ynfuien</groupId>
+            <groupId>pl.ynfuien</groupId>
             <artifactId>YDevLib</artifactId>
-            <version>1.0.4</version>
+            <version>1.0.5</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

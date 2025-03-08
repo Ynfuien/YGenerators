@@ -18,8 +18,8 @@ import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.core.Doubledrop;
 import pl.ynfuien.ygenerators.core.Generators;
 import pl.ynfuien.ygenerators.core.generator.Generator;
-import pl.ynfuien.ygenerators.core.placedgenerators.PlacedGenerators;
 import pl.ynfuien.ygenerators.core.placedgenerators.PlacedGenerator;
+import pl.ynfuien.ygenerators.core.placedgenerators.PlacedGenerators;
 import pl.ynfuien.ygenerators.utils.Util;
 
 import java.util.*;

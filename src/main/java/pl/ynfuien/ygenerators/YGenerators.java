@@ -15,13 +15,13 @@ import pl.ynfuien.ygenerators.commands.doubledrop.DoubledropCommand;
 import pl.ynfuien.ygenerators.commands.main.MainCommand;
 import pl.ynfuien.ygenerators.core.Doubledrop;
 import pl.ynfuien.ygenerators.core.Generators;
+import pl.ynfuien.ygenerators.core.generator.GeneratorItem;
 import pl.ynfuien.ygenerators.core.placedgenerators.PlacedGenerators;
 import pl.ynfuien.ygenerators.hooks.Hooks;
 import pl.ynfuien.ygenerators.listeners.*;
 import pl.ynfuien.ygenerators.storage.Database;
 import pl.ynfuien.ygenerators.storage.MysqlDatabase;
 import pl.ynfuien.ygenerators.storage.SqliteDatabase;
-import pl.ynfuien.ygenerators.utils.NBTTags;
 
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +41,6 @@ public final class YGenerators extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        NBTTags.setInstance(this);
 
         // Set logger prefix
         YLogger.setup("<dark_aqua>[<aqua>Y<blue>Generators<dark_aqua>] <white>", getComponentLogger());
@@ -58,6 +57,7 @@ public final class YGenerators extends JavaPlugin {
         if (database != null && database.setup(dbConfig)) database.createTables();
 
         // Generators and doubledrop
+        GeneratorItem.NSKey.setup(this);
         generators.load(config.getConfig(), configHandler.getConfig(ConfigName.GENERATORS));
         doubledrop.load(database);
 
