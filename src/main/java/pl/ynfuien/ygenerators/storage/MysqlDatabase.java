@@ -50,7 +50,7 @@ public class MysqlDatabase extends Database {
 
         try (Connection conn = dbSource.getConnection()) {
             // Generators table
-            String query = String.format("CREATE TABLE IF NOT EXISTS `%s` (id INT NOT NULL AUTO_INCREMENT, name TEXT NOT NULL, durability FLOAT NOT NULL, world TEXT NOT NULL, x INT NOT NULL, y INT NOT NULL, z INT NOT NULL, PRIMARY KEY (id))", tableName);
+            String query = String.format("CREATE TABLE IF NOT EXISTS `%s` (name TEXT NOT NULL, durability FLOAT NOT NULL, world TEXT NOT NULL, x INT NOT NULL, y INT NOT NULL, z INT NOT NULL)", tableName);
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.execute();

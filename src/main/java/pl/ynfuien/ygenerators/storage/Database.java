@@ -112,38 +112,6 @@ public abstract class Database {
         }
     }
 
-//    public boolean setGenerators(List<PlacedGenerator> placedGenerators) {
-//        int saved = 0;
-//
-//        for (PlacedGenerator generator : placedGenerators) {
-//            String query = String.format("UPDATE `%s` SET durability=? WHERE world=? AND x=? AND y=? AND z=?", generatorsTableName);
-//
-//            Location location = generator.getLocation();
-//            try (Connection conn = dbSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
-//                stmt.setFloat(1, (float) generator.getDurability());
-//                stmt.setString(2, location.getWorld().getName());
-//                stmt.setInt(3, location.getBlockX());
-//                stmt.setInt(4, location.getBlockY());
-//                stmt.setInt(5, location.getBlockZ());
-//
-//                stmt.execute();
-//                saved++;
-//            } catch (SQLException e) {
-//                logError(String.format(
-//                        "Couldn't save generator %s (%s, %s %s %s) to the table '%s')!",
-//                        generator.getGenerator().getName(),
-//                        location.getWorld().getName(),
-//                        location.getBlockX(),
-//                        location.getBlockY(),
-//                        location.getBlockZ(),
-//                        generatorsTableName));
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        return saved == placedGenerators.size();
-//    }
-
     public boolean removeGenerators(List<Location> placedGenerators) {
         int removed = 0;
 

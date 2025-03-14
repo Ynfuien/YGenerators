@@ -46,7 +46,7 @@ public class SqliteDatabase extends Database {
 
         try (Connection conn = dbSource.getConnection()) {
             // Generators table
-            String query = String.format("CREATE TABLE IF NOT EXISTS `%s` (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, durability FLOAT NOT NULL, world TEXT NOT NULL, x INT NOT NULL, y INT NOT NULL, z INT NOT NULL)", tableName);
+            String query = String.format("CREATE TABLE IF NOT EXISTS `%s` (name TEXT NOT NULL, durability FLOAT NOT NULL, world TEXT NOT NULL, x INT NOT NULL, y INT NOT NULL, z INT NOT NULL)", tableName);
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.execute();
