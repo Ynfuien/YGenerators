@@ -36,15 +36,21 @@ public class PlacedGenerator {
         defaultBlock = generator.getDefaultBlock();
         blocks = generator.getBlocks();
         doubledrop = generator.getGenerators().getInstance().getDoubledrop();
+
+        generateDefaultBlock();
     }
 
-    public boolean generateBlock() {
-        return generateBlock(false);
+    /**
+     * Generates the default block
+     */
+    public void generateDefaultBlock() {
+        generateBlock(defaultBlock);
     }
 
-    public boolean generateBlock(boolean force) {
-        if (!force && !canGenerate()) return false;
-
+    /**
+     * Generates a block based on given chances
+     */
+    public void generateBlock() {
         // Multiplayer
         double multiplayer = 1;
         if (doubledrop.isActive() && generator.getDoubledropUseMultiplayer()) multiplayer = doubledrop.getMultiplayer();
@@ -53,38 +59,27 @@ public class PlacedGenerator {
         Material blockToGenerate = ChanceSystem.getBlockToGenerate(blocks, multiplayer);
         if (blockToGenerate == null) blockToGenerate = defaultBlock;
 
-        // Actual generation
-        blockAbove.setType(blockToGenerate);
+        generateBlock(blockToGenerate);
+    }
+
+    /**
+     * Generates given type of block
+     * @param type A block type to generate
+     */
+    public void generateBlock(Material type) {
+        if (!canGenerate()) return;
+        if (!type.isBlock()) return;
+
+        blockAbove.setType(type);
 
         // Handle block placing on SuperiorSkyblock2 islands
         if (SuperiorSkyblock2Hook.isEnabled()) {
             Island island = SuperiorSkyblockAPI.getIslandAt(location);
-            if (island == null) return true;
+            if (island == null) return;
+
             island.handleBlockPlace(blockAbove);
         }
-
-        return true;
     }
-
-
-//    public boolean generateBlock(Material block) {
-//        return generateBlock(block, false);
-//    }
-//
-//    public boolean generateBlock(Material block, boolean force) {
-//        if (!block.isBlock()) return false;
-//        if (!force && !canGenerate()) return false;
-//
-//        blockAbove.setType(block);
-//
-//        // Handle placing block in SuperiorSkyblock2 islands
-//        if (SuperiorSkyblock2Hook.isEnabled()) {
-//            Island island = SuperiorSkyblockAPI.getIslandAt(location);
-//            if (island == null) return true;
-//            island.handleBlockPlace(blockAbove);
-//        }
-//        return true;
-//    }
 
     private boolean canGenerate() {
         return blockAbove.isEmpty() || blockAbove.isLiquid();

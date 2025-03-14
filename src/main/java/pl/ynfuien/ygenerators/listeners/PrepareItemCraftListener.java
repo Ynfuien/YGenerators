@@ -10,7 +10,6 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import pl.ynfuien.ygenerators.YGenerators;
@@ -25,126 +24,92 @@ import java.util.HashMap;
 public class PrepareItemCraftListener implements Listener {
     // This listener handles:
     // - crafting generators
-    // - combine generators to repair these
+    // - combining generators to repair them
 
     private final YGenerators instance;
     private final Generators generators;
+
     public PrepareItemCraftListener(YGenerators instance) {
         this.instance = instance;
         generators = instance.getGenerators();
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
-    public void onPrepareItemCraft(PrepareItemCraftEvent e) {
-        // Return if event fired on tool repair
-        if (e.isRepair()) return;
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPrepareItemCraft(PrepareItemCraftEvent event) {
+        if (event.isRepair()) return;
 
-        // Get crafting
-        CraftingInventory crafting = e.getInventory();
-
-        // Return if crafting is empty
+        CraftingInventory crafting = event.getInventory();
         if (crafting.isEmpty()) return;
 
-        // Get player
-        Player p = (Player) e.getView().getPlayer();
+        Player player = (Player) event.getView().getPlayer();
 
-        // Check for crafting repair of generator
-        boolean isRepair = checkGeneratorsRepair(crafting, p);
-        // Return if crafting is repair generator
-        if (isRepair) return;
+        // Generator repair
+        boolean success = handleGeneratorRepair(crafting, player);
+        if (success) return;
 
 
-
-        // Get recipe
-        Recipe recipe = e.getRecipe();
-
-        // Return if recipe doesn't exist
+        Recipe recipe = event.getRecipe();
         if (recipe == null) return;
 
-        // Get recipe namespaced key
+        // Check for generators that can't be used as ingredients
         NamespacedKey namespacedKey = ((Keyed) recipe).getKey();
-
-        // Return if namespace of key isn't from this plugin
         if (!namespacedKey.getNamespace().equalsIgnoreCase(instance.getName())) {
-            if (preventGeneratorUsageInCrafting(crafting)) crafting.setResult(null);
+            preventUsingGeneratorInCrafting(crafting);
             return;
         }
 
-        // Get generator name
-        String geneName = namespacedKey.getKey();
+        // Generator crafting
+        String generatorName = namespacedKey.getKey();
 
-        // Return if generator with that name doesn't exist
-        if (!generators.has(geneName)) {
-            if (preventGeneratorUsageInCrafting(crafting)) crafting.setResult(null);
+        Generator generator = generators.get(generatorName);
+        if (generator == null) {
+            preventUsingGeneratorInCrafting(crafting);
             return;
         }
 
-        // Get generator
-        Generator gene = generators.get(geneName);
+        GeneratorRecipe generatorRecipe = generator.getRecipe();
+        if (generatorRecipe == null) return;
 
-        // Get generator recipe
-        GeneratorRecipe geneRecipe = gene.getRecipe();
-
-        // Return if generator doesn't have recipe
-        if (geneRecipe == null) return;
-
-        // Get crafting matrix
         ItemStack[] matrix = crafting.getMatrix().clone();
+        HashMap<Character, String> ingredients = generatorRecipe.getIngredients();
 
-        // Get ingredients
-        HashMap<Character, String> ingredients = geneRecipe.getIngredients();
-
-        // Set crafted generator durability
-        double durability = gene.getDurability();
+        double durability = generator.getDurability();
 
         // Whether crafted generator durability should be reduced by used durability of ingredient generators
-        if (geneRecipe.getReduceDurabilityByAlreadyUsed()) {
+        if (generatorRecipe.getReduceDurabilityByAlreadyUsed()) {
             double usedDurability = 0;
-//            double fullDurability = 0;
 
-            // Loop through generator recipe ingredients
             for (String value : ingredients.values()) {
-                // Skip ingredient if it isn't generator
                 if (!value.startsWith("generator:")) continue;
 
                 // Get generator name
                 String name = value.substring(10);
 
-                // Loop through crafting items and search for generator
                 boolean found = false;
                 for (int i = 0; i < matrix.length; i++) {
                     ItemStack item = matrix[i];
                     if (item == null) continue;
 
                     // Get generator name from item
-                    ItemMeta meta = item.getItemMeta();
-                    PersistentDataContainer pdc = meta.getPersistentDataContainer();
-                    String itemGeneName = pdc.get(GeneratorItem.NSKey.GENERATOR, PersistentDataType.STRING);
+                    PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
+                    String ingredientGeneratorName = pdc.get(GeneratorItem.NSKey.GENERATOR, PersistentDataType.STRING);
 
-                    // Skip item if it isn't generator
-                    if (itemGeneName == null) continue;
+                    if (ingredientGeneratorName == null) continue;
+                    if (!name.equals(ingredientGeneratorName)) continue;
 
-                    // Skip item if it's generator name isn't needed name
-                    if (!name.equals(itemGeneName)) continue;
-
-                    // Set crafting item in matrix to null
                     matrix[i] = null;
-                    // Set fount o true
                     found = true;
-                    // Get durability from generator
+
                     Double ingredientGeneDurability = pdc.get(GeneratorItem.NSKey.DURABILITY, PersistentDataType.DOUBLE);
                     if (ingredientGeneDurability == null) continue;
 
-                    // Get ingredient generator
-                    Generator ingredientGene = generators.get(itemGeneName);
-                    if (ingredientGene == null) continue;
+                    Generator ingredientGenerator = generators.get(ingredientGeneratorName);
+                    if (ingredientGenerator == null) continue;
 
-                    // Increase used durability by this generator used durability
-                    usedDurability += ingredientGene.getDurability() - ingredientGeneDurability;
+                    usedDurability += ingredientGenerator.getDurability() - ingredientGeneDurability;
                     break;
                 }
 
-                // Clear crafting result and return if ingredient generator wasn't found
                 if (!found) {
                     crafting.setResult(null);
                     return;
@@ -157,88 +122,63 @@ public class PrepareItemCraftListener implements Listener {
         }
 
         // Set crafting result to generator item's item stack
-        crafting.setResult(gene.getItem().getItemStack(p, durability));
+        crafting.setResult(generator.getItem().getItemStack(player, durability));
     }
 
-    private boolean checkGeneratorsRepair(CraftingInventory crafting, Player p) {
-        // Get crafting matrix
-        ItemStack[] matrixItems = Arrays.stream(crafting.getMatrix()).filter(item -> item != null).toArray(ItemStack[]::new);
-        // Combine
-        // Return if in crafting aren't two items
-        if (matrixItems.length != 2) return false;
+    private boolean handleGeneratorRepair(CraftingInventory crafting, Player player) {
+        ItemStack[] ingredients = Arrays.stream(crafting.getMatrix()).filter(item -> item != null).toArray(ItemStack[]::new);
+        if (ingredients.length != 2) return false;
 
-        // Get first item
-        ItemStack first = matrixItems[0];
+        // First item
+        ItemStack first = ingredients[0];
         PersistentDataContainer firstPdc = first.getItemMeta().getPersistentDataContainer();
         String firstGene = firstPdc.get(GeneratorItem.NSKey.GENERATOR, PersistentDataType.STRING);
-        // Return if item doesn't have generator nbt tag
         if (firstGene == null) return false;
 
-        // Get second item
-        ItemStack second = matrixItems[1];
+        // Second item
+        ItemStack second = ingredients[1];
         PersistentDataContainer secondPdc = second.getItemMeta().getPersistentDataContainer();
         String secondGene = secondPdc.get(GeneratorItem.NSKey.GENERATOR, PersistentDataType.STRING);
-        // Return if item isn't generator
         if (secondGene == null) return false;
 
         // Return if first and second generators aren't the same
         if (!firstGene.equals(secondGene)) return false;
 
-        // Return if generator with that name doesn't exist
-        if (!generators.has(firstGene)) return false;
-
-        // Get generator
-        Generator gene = generators.get(firstGene);
-
-        // Return if combining generators to repair is disabled for this generator
-        if (!gene.getCraftingRepair()) return false;
+        Generator generator = generators.get(firstGene);
+        if (generator == null) return false;
+        if (!generator.getCraftingRepair()) return false;
 
         Double firstDurability = firstPdc.get(GeneratorItem.NSKey.DURABILITY, PersistentDataType.DOUBLE);
         if (firstDurability == null) return false;
         Double secondDurability = secondPdc.get(GeneratorItem.NSKey.DURABILITY, PersistentDataType.DOUBLE);
         if (secondDurability == null) return false;
 
-        // Get total durability from both generators
-        double total = firstDurability + secondDurability;
+        double totalDurability = firstDurability + secondDurability;
+        double durability = Math.min(totalDurability, generator.getDurability());
 
-        // Set durability of result generator
-        double durability = Math.min(total, gene.getDurability());
+        ItemStack resultGenerator = generator.getItem().getItemStack(player, durability);
 
-        // Get result generator item stack
-        ItemStack resultGenerator = gene.getItem().getItemStack(p, durability);
-
-        // Set result of crafting
         crafting.setResult(resultGenerator);
-
         return true;
     }
 
-    private boolean preventGeneratorUsageInCrafting(CraftingInventory crafting) {
-        // Get matrix
+    private void preventUsingGeneratorInCrafting(CraftingInventory crafting) {
         ItemStack[] matrix = crafting.getMatrix();
 
-        // Loop through items in crafting
         for (ItemStack item : matrix) {
-            // Continue if item is null
             if (item == null) continue;
 
-            // Get generator name from item
             PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
-            String geneName = pdc.get(GeneratorItem.NSKey.GENERATOR, PersistentDataType.STRING);
+            String generatorName = pdc.get(GeneratorItem.NSKey.GENERATOR, PersistentDataType.STRING);
+            if (generatorName == null) continue;
 
-            // Continue if item isn't generator
-            if (geneName == null) continue;
+            Generator generator = generators.get(generatorName);
+            if (generator == null) continue;
 
-            // Continue if generator with that name doesn't exist
-            if (!generators.has(geneName)) continue;
-
-            // Get generator
-            Generator generator = generators.get(geneName);
-
-            // Prevent crafting if generator can't be used to craft vanilla items
-            if (!generator.getItem().canBeUsedInCrafting()) return true;
+            if (!generator.getItem().canBeUsedInCrafting()) {
+                crafting.setResult(null);
+                return;
+            }
         }
-
-        return false;
     }
 }

@@ -1,6 +1,7 @@
 package pl.ynfuien.ygenerators.listeners;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -26,174 +27,143 @@ import java.util.List;
 import java.util.UUID;
 
 public class BlockPlaceListener implements Listener {
-    // This listener handles placing generators
+    // This listener handles:
+    // - placing a generator
+    // - placing a block above the generator
 
     private final YGenerators instance;
     private final Generators generators;
     private final PlacedGenerators placedGenerators;
+
     public BlockPlaceListener(YGenerators instance) {
         this.instance = instance;
         generators = instance.getGenerators();
         placedGenerators = instance.getPlacedGenerators();
     }
 
-    // List for deny messages cooldown
-    private List<UUID> denyMessageCooldown = new ArrayList<>();
+    private final List<UUID> denyMessageCooldown = new ArrayList<>();
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
-    public void onBlockPlace(BlockPlaceEvent e) {
-        // Get item
-        ItemStack item = e.getItemInHand();
+    public void onBlockPlace(BlockPlaceEvent event) {
+        ItemStack item = event.getItemInHand();
+        Block block = event.getBlock();
+        Player player = event.getPlayer();
 
-        // Get generator name from item
+        // Block under is a generator
+        Location locUnder = block.getRelative(BlockFace.DOWN).getLocation();
+        if (placedGenerators.has(locUnder)) {
+            event.setCancelled(true);
+            sendDenyMessage(player, Lang.Message.GENERATOR_DENY_PLACE_ABOVE);
+
+            return;
+        }
+
         PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
-        String geneName = pdc.get(GeneratorItem.NSKey.GENERATOR, PersistentDataType.STRING);
-
-        // Return if item isn't generator
-        if (geneName == null) return;
-
-        // Get player
-        Player p = e.getPlayer();
+        String name = pdc.get(GeneratorItem.NSKey.GENERATOR, PersistentDataType.STRING);
+        if (name == null) return;
 
         // Cancel event if generator with that name doesn't exist
-        if (!generators.has(geneName)) {
-            // Cancel event
-            e.setCancelled(true);
+        Generator generator = generators.get(name);
+        if (generator == null) {
+            event.setCancelled(true);
 
-            // Send deny message
-            sendDenyMessage(p, Lang.Message.GENERATOR_DENY_UNKNOWN_NAME);
+            sendDenyMessage(player, Lang.Message.GENERATOR_DENY_UNKNOWN_NAME);
             return;
         }
 
-        // Get block
-        Block b = e.getBlock();
-        // Get location
-        Location location = b.getLocation();
+        Location location = block.getLocation();
 
-        // Cancel event if generator is disabled in block's location
-        if (generators.isDisabledInLocation(geneName, location)) {
-            // Cancel event
-            e.setCancelled(true);
+        // Cancel event if generator is disabled in that location
+        if (generators.isDisabledInLocation(name, location)) {
+            event.setCancelled(true);
 
-            // Send deny message
-            sendDenyMessage(p, Lang.Message.GENERATOR_DENY_DISABLED_WORLD);
+            sendDenyMessage(player, Lang.Message.GENERATOR_DENY_DISABLED_WORLD);
             return;
         }
 
-        // If option generators.place-on-top in config is enabled
+        // Check for placing generators on top of each other
         if (!instance.getConfig().getBoolean("generators.place-on-top")) {
-            // Cancel event if block above is generator
-            Location locAbove = b.getRelative(BlockFace.UP).getLocation();
+            // Block above is a generator
+            Location locAbove = block.getRelative(BlockFace.UP).getLocation();
             if (placedGenerators.has(locAbove)) {
-                e.setCancelled(true);
+                event.setCancelled(true);
+                sendDenyMessage(player, Lang.Message.GENERATOR_DENY_PLACE_UNDER);
 
-                sendDenyMessage(p, Lang.Message.GENERATOR_DENY_PLACE_UNDER);
-                return;
-            }
-
-            // Cancel event if block under is generator
-            Location locUnder = b.getRelative(BlockFace.DOWN).getLocation();
-            if (placedGenerators.has(locUnder)) {
-                e.setCancelled(true);
-
-                sendDenyMessage(p, Lang.Message.GENERATOR_DENY_PLACE_ABOVE);
                 return;
             }
         }
 
-        // Get generator
-        Generator generator = generators.get(geneName);
 
-
-        // Get global limit for generators in chunk
-        int globalMaxInChunk = generators.getMaxInChunk();
-
-        // Get generator's  limit for it in chunk
-        int geneMaxInChunk = generator.getMaxInChunk();
-
-        // Get chunk key for chunk for location of placed block
-        long chunkKey = location.getChunk().getChunkKey();
+//        long chunkKey = location.getChunk().getChunkKey();
+        Chunk chunk = location.getChunk();
 
         HashMap<String, Object> placeholders = new HashMap<>();
 
-        // If global limit is enabled
-        if (globalMaxInChunk > -1) {
+        // If limit for all generators is enabled
+        int maxInChunk = generators.getMaxInChunk();
+        if (maxInChunk > -1) {
+            // Count already placed generators in this chunk
             int generatorsInChunk = 0;
             for (Location loc : placedGenerators.getAllLocations()) {
-                // Skip value if chunk isn't loaded
                 if (!loc.isChunkLoaded()) continue;
 
-                // Increase value of generatorsInChunk if location's chunk's key is same as placed block's chunk key
-                if (loc.getChunk().getChunkKey() == chunkKey) generatorsInChunk++;
+                if (loc.getChunk().equals(chunk)) generatorsInChunk++;
             }
 
-            // If count of generators in chunk is higher than limit
-            if (generatorsInChunk >= globalMaxInChunk) {
-                // Cancel event
-                e.setCancelled(true);
-                // Add limit placeholder
-                placeholders.put("limit", globalMaxInChunk);
-                // Send deny message
-                sendDenyMessage(p, Lang.Message.GENERATOR_DENY_LIMIT_GLOBAL, placeholders);
+            // Cancel event if limit is already reached
+            if (generatorsInChunk >= maxInChunk) {
+                event.setCancelled(true);
+
+                placeholders.put("limit", maxInChunk);
+                sendDenyMessage(player, Lang.Message.GENERATOR_DENY_LIMIT_ALL, placeholders);
                 return;
             }
         }
 
-        // If single generator limit is enabled
-        if (geneMaxInChunk > -1) {
+        // If limit for this generator is enabled
+        maxInChunk = generator.getMaxInChunk();
+        if (maxInChunk > -1) {
+            // Count already placed generators in this chunk
             int generatorsInChunk = 0;
             for (PlacedGenerator gene : placedGenerators.getAllPlacedGenerators()) {
-                // Skip placed generator if it isn't this generator
                 if (!gene.getGenerator().equals(generator)) continue;
 
-                // Get location
                 Location loc = gene.getLocation();
-
-                // Skip value if chunk isn't loaded
                 if (!loc.isChunkLoaded()) continue;
 
-                // Increase value of generatorsInChunk if location's chunk's key is same as placed block's chunk key
-                if (loc.getChunk().getChunkKey() == chunkKey) generatorsInChunk++;
+                if (loc.getChunk().equals(chunk)) generatorsInChunk++;
             }
 
-            // If count of generators in chunk is higher than limit
-            if (generatorsInChunk >= geneMaxInChunk) {
-                // Cancel event
-                e.setCancelled(true);
-                // Add limit placeholder
-                placeholders.put("limit", geneMaxInChunk);
-                // Send deny message
-                sendDenyMessage(p, Lang.Message.GENERATOR_DENY_LIMIT_SINGLE, placeholders);
+            // Cancel event if limit is already reached
+            if (generatorsInChunk >= maxInChunk) {
+                event.setCancelled(true);
+
+                placeholders.put("limit", maxInChunk);
+                sendDenyMessage(player, Lang.Message.GENERATOR_DENY_LIMIT_SINGLE, placeholders);
                 return;
             }
         }
 
-        // Get player's uuid
-        UUID uuid = p.getUniqueId();
-        // Return if player pick up generator a while ago
+        // Cancel if player picked up generator a second ago
+        UUID uuid = player.getUniqueId();
         if (PlayerInteractListener.pickupCooldown.contains(uuid)) {
-            e.setCancelled(true);
-            sendDenyMessage(p, Lang.Message.GENERATOR_DENY_COOLDOWN, placeholders);
+            event.setCancelled(true);
+            sendDenyMessage(player, Lang.Message.GENERATOR_DENY_COOLDOWN, placeholders);
+
             return;
         }
 
         // Get generator durability
         Double durability = pdc.get(GeneratorItem.NSKey.DURABILITY, PersistentDataType.DOUBLE);
         if (durability == null) {
-            e.setCancelled(true);
+            event.setCancelled(true);
+            sendDenyMessage(player, Lang.Message.GENERATOR_DENY_DURABILITY_NOT_SET);
 
-            sendDenyMessage(p, Lang.Message.GENERATOR_DENY_DURABILITY_NOT_SET);
             return;
         }
 
-        // Create placed generator
         PlacedGenerator placedGenerator = new PlacedGenerator(generator, location, durability);
-
-        // Add placed generator to database
         placedGenerators.add(placedGenerator);
-
-        // Set block above generator to default block
-        b.getRelative(BlockFace.UP).setType(generator.getDefaultBlock());
     }
 
     private void sendDenyMessage(Player player, Lang.Message message) {

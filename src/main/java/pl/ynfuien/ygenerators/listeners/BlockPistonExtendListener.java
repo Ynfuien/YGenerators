@@ -16,30 +16,26 @@ public class BlockPistonExtendListener implements Listener {
     // - generator's generated blocks
 
     private final PlacedGenerators placedGenerators;
+
     public BlockPistonExtendListener(YGenerators instance) {
         placedGenerators = instance.getPlacedGenerators();
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-    public void onBlockPistonExtend(BlockPistonExtendEvent e) {
-        // Loop through pushed blocks
-        for (Block b : e.getBlocks()) {
-            // Get block's location
-            Location loc = b.getLocation();
+    public void onBlockPistonExtend(BlockPistonExtendEvent event) {
+        for (Block block : event.getBlocks()) {
+            Location location = block.getLocation();
 
-            // If in location is generator
-            if (placedGenerators.has(loc)) {
-                // Cancel event and return
-                e.setCancelled(true);
+            // Generator was pushed
+            if (placedGenerators.has(location)) {
+                event.setCancelled(true);
                 return;
             }
 
-            // Get location under block
-            Location locUnder = b.getRelative(BlockFace.DOWN).getLocation();
-            // If location under block is generator
+            // Block above the generator was pushed
+            Location locUnder = block.getRelative(BlockFace.DOWN).getLocation();
             if (placedGenerators.has(locUnder)) {
-                // Cancel event and return
-                e.setCancelled(true);
+                event.setCancelled(true);
                 return;
             }
         }

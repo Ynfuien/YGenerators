@@ -7,11 +7,13 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import pl.ynfuien.ydevlib.messages.YLogger;
 
 public class InteractionOptions {
+    private final boolean enabled;
     private final boolean sneak;
     private final boolean emptyHand;
     private Action click = Action.RIGHT_CLICK_BLOCK;
 
     public InteractionOptions(ConfigurationSection config) {
+        enabled = config.getBoolean("enabled");
         sneak = config.getBoolean("sneak");
         emptyHand = config.getBoolean("empty-hand");
 
@@ -34,6 +36,10 @@ public class InteractionOptions {
         YLogger.warn("[InteractionOptions] " + message);
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
     public boolean getSneak() {
         return sneak;
     }
@@ -48,6 +54,8 @@ public class InteractionOptions {
 
     // Check whether interaction from player is this interaction
     public boolean isInteractionCorrect(PlayerInteractEvent event) {
+        if (!enabled) return false;
+
         // Click
         if (!event.getAction().equals(click)) return false;
         // Sneak

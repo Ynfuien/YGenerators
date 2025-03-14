@@ -8,6 +8,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import pl.ynfuien.ydevlib.config.ConfigHandler;
 import pl.ynfuien.ydevlib.config.ConfigObject;
 import pl.ynfuien.ydevlib.messages.YLogger;
@@ -178,6 +179,11 @@ public final class YGenerators extends JavaPlugin {
 
     public ConfigHandler getConfigHandler() {
         return configHandler;
+    }
+
+    @Override
+    public @NotNull FileConfiguration getConfig() {
+        return config.getConfig();
     }
 
     public Generators getGenerators() {

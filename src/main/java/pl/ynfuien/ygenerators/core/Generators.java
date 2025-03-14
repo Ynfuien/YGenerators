@@ -44,15 +44,11 @@ public class Generators {
 
         // Pick up
         ConfigurationSection pickUpSection = settings.getConfigurationSection("pick-up");
-        if (pickUpSection.getBoolean("enabled")) {
-            pickUp = new InteractionOptions(pickUpSection);
-        }
+        pickUp = new InteractionOptions(pickUpSection);
 
         // Check status
         ConfigurationSection checkStatusSection = settings.getConfigurationSection("check-status");
-        if (checkStatusSection.getBoolean("enabled")) {
-            checkStatus = new InteractionOptions(checkStatusSection);
-        }
+        checkStatus = new InteractionOptions(checkStatusSection);
 
         // Get vanilla generators settings
         ConfigurationSection vanillaGeneSettings = config.getConfigurationSection("vanilla-generators");
@@ -136,12 +132,10 @@ public class Generators {
         return alertDurability;
     }
 
-    @Nullable
     public InteractionOptions getPickUp() {
         return pickUp;
     }
 
-    @Nullable
     public InteractionOptions getCheckStatus() {
         return checkStatus;
     }
@@ -188,17 +182,12 @@ public class Generators {
         }
     }
 
-    // Gets whether generator is disabled in provided location
-    public boolean isDisabledInLocation(String geneName, Location loc) {
-        // Return true if generators are globally disabled in location's world
-        if (disabledWorlds.contains(loc.getWorld().getName())) return true;
+    public boolean isDisabledInLocation(String generatorName, Location location) {
+        if (disabledWorlds.contains(location.getWorld().getName())) return true;
 
-        // Get generator by name
-        Generator gene = get(geneName);
-        // Return false if generator doesn't exist
-        if (gene == null) return false;
+        Generator generator = get(generatorName);
+        if (generator == null) return false;
 
-        // Return whether generator is disabled in provided location
-        return gene.isDisabledInLocation(loc);
+        return generator.isDisabledInLocation(location);
     }
 }

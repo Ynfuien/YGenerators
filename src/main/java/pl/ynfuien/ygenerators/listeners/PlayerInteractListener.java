@@ -27,7 +27,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class PlayerInteractListener implements Listener {
-    // This event handles interaction with generator to pick up it
+    // This event handles interaction with generator to:
+    // - pick it up
+    // - check status
 
     private final YGenerators instance;
     private final Generators generators;
@@ -44,121 +46,79 @@ public class PlayerInteractListener implements Listener {
     public static List<UUID> checkStatusCooldown = new ArrayList<>();
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
-    public void onPlayerInteract(PlayerInteractEvent e) {
-        // Get pick up interaction options
+    public void onPlayerInteract(PlayerInteractEvent event) {
         InteractionOptions pickUpInteraction = generators.getPickUp();
 
-        // Return if pick up is disabled
-        if (pickUpInteraction == null) return;
-
-        // If interaction isn't pick up interaction
-        if (!pickUpInteraction.isInteractionCorrect(e)) {
-            // Check status interaction
-            checkStatusInteraction(e);
+        // If interaction isn't a pick up interaction
+        if (!pickUpInteraction.isInteractionCorrect(event)) {
+            checkStatusInteraction(event);
             return;
         }
 
-        // Get player
-        Player p = e.getPlayer();
+        Player player = event.getPlayer();
+        Block block = event.getClickedBlock();
+        Location location = block.getLocation();
 
-        // Get clicked block
-        Block b = e.getClickedBlock();
-
-        // Get location
-        Location location = b.getLocation();
-
-        // Return if clicked block isn't generator
         if (!placedGenerators.has(location)) return;
 
         // If SuperiorSkyblock2 is enabled
         if (SuperiorSkyblock2Hook.isEnabled()) {
-            // Get island at block
             Island island = SuperiorSkyblockAPI.getIslandAt(location);
-            // If there is an island at block
-            if (island != null) {
-                // Get pick up generators privilege
-                IslandPrivilege privilege = IslandPrivilege.getByName("PICK_UP_GENERATORS");
 
-                // Return if player doesn't have privilege
-                if (!island.hasPermission(p, privilege)) {
-                    return;
-                }
+            if (island != null) {
+                IslandPrivilege privilege = IslandPrivilege.getByName("PICK_UP_GENERATORS");
+                if (!island.hasPermission(player, privilege)) return;
             }
         }
 
-        // Get UUID
-        UUID uuid = p.getUniqueId();
-        // Return if player has cooldown
+        // Check for a cooldown
+        UUID uuid = player.getUniqueId();
         if (pickupCooldown.contains(uuid)) return;
         pickupCooldown.add(uuid);
 
-        // Create task to remove player's uuid from cooldown list after 3 ticks
         Bukkit.getScheduler().runTaskLaterAsynchronously(instance, () -> {
             pickupCooldown.remove(uuid);
-        }, 3);
+        }, 5);
 
-        // Get placed generator
-        PlacedGenerator generator = placedGenerators.get(location);
 
-        // Cancel event
-        e.setCancelled(true);
+        PlacedGenerator placedGenerator = placedGenerators.get(location);
 
-        // Remove placed generator from database
         placedGenerators.remove(location);
-        // Destroy generator and give player it's item
-        generator.destroy(p);
+        placedGenerator.destroy(player);
+
+        event.setCancelled(true);
     }
 
-    private void checkStatusInteraction(PlayerInteractEvent e) {
-        // Get check status interaction options
+    private void checkStatusInteraction(PlayerInteractEvent event) {
         InteractionOptions checkStatusInteraction = generators.getCheckStatus();
+        if (!checkStatusInteraction.isInteractionCorrect(event)) return;
 
-        // If check status isn't enabled
-        if (checkStatusInteraction == null) return;
+        Player player = event.getPlayer();
+        Location location = event.getClickedBlock().getLocation();
 
-        // If interaction isn't check status interaction
-        if (!checkStatusInteraction.isInteractionCorrect(e)) return;
-
-        // Get player
-        Player p = e.getPlayer();
-
-        // Get clicked block location
-        Location location = e.getClickedBlock().getLocation();
-
-        // Return if clicked block isn't generator
         if (!placedGenerators.has(location)) return;
 
-        // Get UUID
-        UUID uuid = p.getUniqueId();
-        // Return if player has cooldown
+        // Check for a cooldown
+        UUID uuid = player.getUniqueId();
         if (checkStatusCooldown.contains(uuid)) return;
         checkStatusCooldown.add(uuid);
 
-        // Create task to remove player's uuid from cooldown list after 5 ticks
         Bukkit.getScheduler().runTaskLaterAsynchronously(instance, () -> {
             checkStatusCooldown.remove(uuid);
         }, 5);
 
-        // Get placed generator
-        PlacedGenerator gene = placedGenerators.get(location);
-        // Get generator
-        Generator generator = gene.getGenerator();
+        // Send status action bar
+        PlacedGenerator placedGenerator = placedGenerators.get(location);
+        Generator generator = placedGenerator.getGenerator();
 
-        // Get durability
-        double durability = gene.getDurability();
+        double durability = placedGenerator.getDurability();
 
-        // Placeholders
         HashMap<String, Object> placeholders = new HashMap<>(generator.getPlaceholders(durability));
 
-        // Get message
         Lang.Message message = Lang.Message.GENERATOR_INFO;
-        // Get another message if generator is infinite
         if (durability == -1) message = Lang.Message.GENERATOR_INFO_INFINITE;
 
-        // Send message
-        p.sendActionBar(message.getComponent(p, placeholders));
-
-        // Cancel event
-        e.setCancelled(true);
+        player.sendActionBar(message.getComponent(player, placeholders));
+        event.setCancelled(true);
     }
 }
