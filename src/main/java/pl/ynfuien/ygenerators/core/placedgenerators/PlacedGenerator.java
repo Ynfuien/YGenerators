@@ -109,6 +109,13 @@ public class PlacedGenerator {
 
         durability -= amount;
         if (durability < 0) durability = 0;
+
+        // Round to the second decimal place
+        if (durability % 1 != 0) {
+            durability = durability * 100d;
+            long tmp = Math.round(durability);
+            durability = (double) tmp / 100d;
+        }
     }
 
     public Generator getGenerator() {

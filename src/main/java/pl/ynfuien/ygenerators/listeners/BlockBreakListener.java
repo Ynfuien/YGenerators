@@ -12,6 +12,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
+import pl.ynfuien.ydevlib.messages.YLogger;
 import pl.ynfuien.ydevlib.utils.DoubleFormatter;
 import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.YGenerators;
@@ -109,8 +110,13 @@ public class BlockBreakListener implements Listener {
         if (placedGenerator.isInfinite()) return;
 
         double amount = 1d;
+//        YLogger.debug("=========== Durability reduction ============");
+//        YLogger.debug(String.format("Before: %f - %f", amount, placedGenerator.getDurability()));
+//        YLogger.debug(String.format("Before: %g - %g", amount, placedGenerator.getDurability()));
         if (doubledrop.isActive()) amount = generator.getDoubledropDurabilityDecrease();
         placedGenerator.decreaseDurability(amount);
+//        YLogger.debug(String.format("After: %f - %f", amount, placedGenerator.getDurability()));
+//        YLogger.debug(String.format("After: %g - %g", amount, placedGenerator.getDurability()));
 
         HashMap<String, Object> placeholders = new HashMap<>(generator.getDefaultPlaceholders());
 
