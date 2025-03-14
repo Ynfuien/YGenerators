@@ -20,7 +20,7 @@ cobblestone:
       - '<yellow>Durability: <green>{remaining-durability}/{full-durability}'
       - '<yellow>Cooldown: <green>{cooldown}'
       - ''
-      - '<gray>To pick up generator right click it'
+      - '<gray>To pick up a generator right click it'
       - '<gray>with a hand while sneaking.'
     # Whether item should be stackable. When false, every item has its own id in NBT tag,
     # to prevent stacking it
@@ -117,7 +117,7 @@ stone:
       - '<yellow>Durability: <green>{remaining-durability}/{full-durability}'
       - '<yellow>Cooldown: <green>{cooldown}'
       - ''
-      - '<gray>To pick up generator right click it'
+      - '<gray>To pick up a generator right click it'
       - '<gray>with a hand while sneaking.'
     stackable: false
     can-be-used-in-crafting: false
@@ -157,7 +157,7 @@ infinite:
       - '<yellow>Durability: <green>infinite'
       - '<yellow>Cooldown: <green>{cooldown}'
       - ''
-      - '<gray>To pick up generator right click it'
+      - '<gray>To pick up a generator right click it'
       - '<gray>with a hand while sneaking.'
     stackable: false
     can-be-used-in-crafting: false
