@@ -16,9 +16,7 @@ public class MysqlDatabase extends Database {
     }
 
     @Override
-    public boolean setup(ConfigurationSection config) {
-        close();
-
+    protected boolean setupSpecific(ConfigurationSection config) {
         dbName = config.getString("name");
 
         HikariConfig dbConfig = new HikariConfig();
@@ -37,10 +35,6 @@ public class MysqlDatabase extends Database {
             return false;
         }
 
-        generatorsTableName = config.getString("generators-table");
-        doubledropTableName = config.getString("doubledrop-table");
-
-        updateInterval = config.getInt("update-interval");
         return true;
     }
 

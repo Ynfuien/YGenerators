@@ -34,6 +34,7 @@ public class PlacedGenerators {
             return false;
         }
 
+        placedGenerators.clear();
         placedGenerators.putAll(generators);
         startUpdateInterval();
 
@@ -53,13 +54,19 @@ public class PlacedGenerators {
         if (saveTask != null) saveTask.cancel();
 
         int updateInterval = database.getUpdateInterval();
-        saveTask = Bukkit.getAsyncScheduler().runAtFixedRate(instance, (task) -> {
-            save();
-        }, updateInterval, updateInterval, TimeUnit.SECONDS);
+        saveTask = Bukkit.getAsyncScheduler().runAtFixedRate(
+                instance,
+                (task) -> save(),
+                updateInterval, updateInterval,
+                TimeUnit.SECONDS
+        );
     }
 
     public void stopUpdateInterval() {
-        if (saveTask != null) saveTask.cancel();
+        if (saveTask == null) return;
+
+        saveTask.cancel();
+        saveTask = null;
     }
 
     public boolean save() {

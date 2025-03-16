@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import pl.ynfuien.ydevlib.config.ConfigHandler;
 import pl.ynfuien.ydevlib.config.ConfigObject;
 import pl.ynfuien.ydevlib.messages.YLogger;
+import pl.ynfuien.ydevlib.utils.YamlComparer;
 import pl.ynfuien.ygenerators.commands.doubledrop.DoubledropCommand;
 import pl.ynfuien.ygenerators.commands.main.MainCommand;
 import pl.ynfuien.ygenerators.core.Doubledrop;
@@ -53,9 +54,10 @@ public final class YGenerators extends JavaPlugin {
         config = configHandler.getConfigObject(ConfigName.CONFIG);
 
         // Database
-        ConfigurationSection dbConfig = config.getConfig().getConfigurationSection("database");
-        database = getDatabase(dbConfig);
-        if (database != null && database.setup(dbConfig)) database.createTables();
+        if (!loadDatabase()) {
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
 
         // Generators and doubledrop
         GeneratorItem.NSKey.setup(this);
@@ -141,9 +143,22 @@ public final class YGenerators extends JavaPlugin {
         Lang.loadLang(config);
     }
 
+    private boolean loadDatabase() {
+        ConfigurationSection dbConfig = config.getConfig().getConfigurationSection("database");
+        database = getDatabase(dbConfig);
+
+        if (database == null) return false;
+        if (!database.setup(dbConfig)) return false;
+
+        return database.createTables();
+    }
+
     public boolean reloadGenerators() {
         // Remove current generator recipes
         this.generators.removeRecipes();
+
+
+        generators.load(config.getConfig(), configHandler.getConfig(ConfigName.GENERATORS));
 
 //        FileConfiguration generators = configManager.getConfig("generators.yml");
 
@@ -158,18 +173,55 @@ public final class YGenerators extends JavaPlugin {
     public boolean reloadPlugin() {
         boolean fullSuccess = true;
 
+//        configHandler.reloadAll();
+//
+//        ConfigurationSection oldConfig = database.getConfig();
+//        ConfigurationSection newConfig = config.getConfig().getConfigurationSection("database");
+//
+//        YLogger.debug("Old Config:");
+//        for (String key : oldConfig.getKeys(false)) {
+//            YLogger.debug(key + " - " + oldConfig.get(key));
+//        }
+//
+//        YLogger.debug("New Config:");
+//        for (String key : newConfig.getKeys(false)) {
+//            YLogger.debug(key + " - " + oldConfig.get(key));
+//        }
+//
+//        HashMap<String, Object> result = YamlComparer.getChangedFields(oldConfig, newConfig);
+//        YLogger.debug("Results:");
+//        for (String key : result.keySet()) {
+//            YLogger.debug(key + " - " + result.get(key));
+//        }
+
+
         // Stop intervals
         doubledrop.stopInterval();
         placedGenerators.stopUpdateInterval();
 
+        // Save data
+        placedGenerators.save();
+
         // Reload configs
         if (!configHandler.reloadAll()) fullSuccess = false;
-
-        if (!reloadGenerators()) fullSuccess = false;
         loadLang();
 
+        // Database reload if needed
+        ConfigurationSection oldConfig = database.getConfig();
+        ConfigurationSection newConfig = config.getConfig().getConfigurationSection("database");
+        HashMap<String, Object> changes = YamlComparer.getChangedFields(oldConfig, newConfig);
+        if (!changes.isEmpty()) {
+            if (changes.size() == 1 && changes.containsKey("update-interval")) {
+                database.setUpdateInterval(newConfig.getInt("update-interval"));
+            } else {
+                loadDatabase();
+            }
+        }
 
-        placedGenerators.startUpdateInterval();
+        if (!reloadGenerators()) fullSuccess = false;
+
+        doubledrop.load(database);
+        placedGenerators.load(database);
         return fullSuccess;
     }
 

@@ -22,6 +22,7 @@ public abstract class Database {
     private final YGenerators instance;
     private final Generators generators;
 
+    private ConfigurationSection config;
     protected HikariDataSource dbSource;
     protected String dbName;
 
@@ -35,7 +36,17 @@ public abstract class Database {
         this.generators = instance.getGenerators();
     }
 
-    public abstract boolean setup(ConfigurationSection config);
+    public boolean setup(ConfigurationSection config) {
+        this.config = config;
+
+        generatorsTableName = config.getString("generators-table");
+        doubledropTableName = config.getString("doubledrop-table");
+        updateInterval = config.getInt("update-interval");
+
+        return setupSpecific(config);
+    }
+
+    protected abstract boolean setupSpecific(ConfigurationSection config);
 
     public void close() {
         if (dbSource != null) dbSource.close();
@@ -202,7 +213,15 @@ public abstract class Database {
 
     public abstract boolean createTables();
 
+    public ConfigurationSection getConfig() {
+        return config;
+    }
+
     public int getUpdateInterval() {
         return updateInterval;
+    }
+
+    public void setUpdateInterval(int updateInterval) {
+        this.updateInterval = updateInterval;
     }
 }

@@ -16,7 +16,7 @@ public class SqliteDatabase extends Database {
     }
 
     @Override
-    public boolean setup(ConfigurationSection config) {
+    protected boolean setupSpecific(ConfigurationSection config) {
         close();
 
         dbName = config.getString("path");
@@ -33,10 +33,6 @@ public class SqliteDatabase extends Database {
             return false;
         }
 
-        generatorsTableName = config.getString("generators-table");
-        doubledropTableName = config.getString("doubledrop-table");
-
-        updateInterval = config.getInt("update-interval");
         return true;
     }
 
