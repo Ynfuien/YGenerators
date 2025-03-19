@@ -61,7 +61,7 @@ public final class YGenerators extends JavaPlugin {
 
         // Generators and doubledrop
         GeneratorItem.NSKey.setup(this);
-        generators.load(config.getConfig(), configHandler.getConfig(ConfigName.GENERATORS));
+        loadGenerators();
         doubledrop.load(database);
 
         // Placed generators (database)
@@ -153,47 +153,14 @@ public final class YGenerators extends JavaPlugin {
         return database.createTables();
     }
 
-    public boolean reloadGenerators() {
-        // Remove current generator recipes
-        this.generators.removeRecipes();
-
-
+    public void loadGenerators() {
+        generators.removeRecipes();
         generators.load(config.getConfig(), configHandler.getConfig(ConfigName.GENERATORS));
-
-//        FileConfiguration generators = configManager.getConfig("generators.yml");
-
-        // Load generators from config
-//        this.generators.load(generators, getConfig());
-
-        // Load generator recipes
-        this.generators.loadRecipes();
-        return true;
+        generators.loadRecipes();
     }
 
     public boolean reloadPlugin() {
         boolean fullSuccess = true;
-
-//        configHandler.reloadAll();
-//
-//        ConfigurationSection oldConfig = database.getConfig();
-//        ConfigurationSection newConfig = config.getConfig().getConfigurationSection("database");
-//
-//        YLogger.debug("Old Config:");
-//        for (String key : oldConfig.getKeys(false)) {
-//            YLogger.debug(key + " - " + oldConfig.get(key));
-//        }
-//
-//        YLogger.debug("New Config:");
-//        for (String key : newConfig.getKeys(false)) {
-//            YLogger.debug(key + " - " + oldConfig.get(key));
-//        }
-//
-//        HashMap<String, Object> result = YamlComparer.getChangedFields(oldConfig, newConfig);
-//        YLogger.debug("Results:");
-//        for (String key : result.keySet()) {
-//            YLogger.debug(key + " - " + result.get(key));
-//        }
-
 
         // Stop intervals
         doubledrop.stopInterval();
@@ -218,7 +185,7 @@ public final class YGenerators extends JavaPlugin {
             }
         }
 
-        if (!reloadGenerators()) fullSuccess = false;
+        loadGenerators();
 
         doubledrop.load(database);
         placedGenerators.load(database);

@@ -32,6 +32,7 @@ public class MysqlDatabase extends Database {
             dbSource = new HikariDataSource(dbConfig);
         } catch (Exception e) {
             logError("Plugin couldn't connect to a database! Check connection data, because plugin can't work without the database!");
+            e.printStackTrace();
             return false;
         }
 
@@ -62,10 +63,11 @@ public class MysqlDatabase extends Database {
         }
 
         // Doubledrop data row
-        String query = String.format("SELECT * FROM `%s`", tableName);
+        String query = String.format("SELECT COUNT(*) as count FROM `%s`", tableName);
         try (Connection conn = dbSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
             ResultSet result = stmt.executeQuery();
-            if (result.first()) return true;
+            result.next();
+            if (result.getInt("count") != 0) return true;
         } catch (SQLException e) {
             logError(String.format("Couldn't check whether '%s' table has any data!", tableName));
             e.printStackTrace();

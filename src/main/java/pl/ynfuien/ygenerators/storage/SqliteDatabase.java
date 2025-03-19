@@ -30,6 +30,7 @@ public class SqliteDatabase extends Database {
             dbSource = new HikariDataSource(dbConfig);
         } catch (Exception e) {
             logError("Plugin couldn't connect to a database! Check connection data, because plugin can't work without the database!");
+            e.printStackTrace();
             return false;
         }
 
@@ -61,7 +62,6 @@ public class SqliteDatabase extends Database {
 
         // Doubledrop data row
         String query = String.format("SELECT COUNT(*) as count FROM `%s`", tableName);
-//        String query = String.format("SELECT * FROM `%s`", tableName);
         try (Connection conn = dbSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
             ResultSet result = stmt.executeQuery();
             if (result.getInt("count") != 0) return true;

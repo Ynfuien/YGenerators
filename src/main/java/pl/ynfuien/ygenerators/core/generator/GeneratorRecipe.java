@@ -183,7 +183,7 @@ public class GeneratorRecipe {
         // Create recipe result item
         ItemStack recipeResultItem = item.getItemStack();
         // Create namespaced key
-        NamespacedKey namespacedKey = new NamespacedKey(YGenerators.getInstance(), generator.getName());
+        NamespacedKey namespacedKey = new NamespacedKey(generators.getInstance(), generator.getName());
 
         // If recipe is shaped
         if (shaped) {

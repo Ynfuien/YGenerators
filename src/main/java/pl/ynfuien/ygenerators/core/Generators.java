@@ -177,7 +177,7 @@ public class Generators {
 
             if (recipe == null) continue;
 
-            NamespacedKey namespacedKey = new NamespacedKey(YGenerators.getInstance(), gene.getName());
+            NamespacedKey namespacedKey = new NamespacedKey(instance, gene.getName());
             Bukkit.removeRecipe(namespacedKey);
         }
     }
