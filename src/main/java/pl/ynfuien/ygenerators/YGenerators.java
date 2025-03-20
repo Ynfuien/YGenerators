@@ -179,7 +179,7 @@ public final class YGenerators extends JavaPlugin {
         HashMap<String, Object> changes = YamlComparer.getChangedFields(oldConfig, newConfig);
         if (!changes.isEmpty()) {
             if (changes.size() == 1 && changes.containsKey("update-interval")) {
-                database.setUpdateInterval(newConfig.getInt("update-interval"));
+                database.setConfig(newConfig);
             } else {
                 loadDatabase();
             }

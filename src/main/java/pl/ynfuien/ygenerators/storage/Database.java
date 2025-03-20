@@ -37,12 +37,7 @@ public abstract class Database {
     }
 
     public boolean setup(ConfigurationSection config) {
-        this.config = config;
-
-        generatorsTableName = config.getString("generators-table");
-        doubledropTableName = config.getString("doubledrop-table");
-        updateInterval = config.getInt("update-interval");
-
+        setConfig(config);
         return setupSpecific(config);
     }
 
@@ -213,15 +208,19 @@ public abstract class Database {
 
     public abstract boolean createTables();
 
+    public void setConfig(ConfigurationSection config) {
+        this.config = config;
+
+        generatorsTableName = config.getString("generators-table");
+        doubledropTableName = config.getString("doubledrop-table");
+        updateInterval = config.getInt("update-interval");
+    }
+
     public ConfigurationSection getConfig() {
         return config;
     }
 
     public int getUpdateInterval() {
         return updateInterval;
-    }
-
-    public void setUpdateInterval(int updateInterval) {
-        this.updateInterval = updateInterval;
     }
 }
