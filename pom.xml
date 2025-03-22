@@ -165,7 +165,7 @@
         <dependency>
             <groupId>pl.ynfuien</groupId>
             <artifactId>YDevLib</artifactId>
-            <version>1.0.5</version>
+            <version>1.0.6</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

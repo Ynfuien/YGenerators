@@ -5,13 +5,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import pl.ynfuien.ydevlib.utils.DoubleFormatter;
+import pl.ynfuien.ydevlib.utils.ItemGiver;
 import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.commands.Subcommand;
 import pl.ynfuien.ygenerators.core.Generators;
 import pl.ynfuien.ygenerators.core.generator.Generator;
 import pl.ynfuien.ygenerators.core.generator.GeneratorItem;
-import pl.ynfuien.ygenerators.utils.Items;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -67,7 +67,7 @@ public class GiveSubcommand implements Subcommand {
 
             Player p = (Player) sender;
             ItemStack item = generatorItem.getItemStack(p);
-            Items.giveItems(p, item);
+            ItemGiver.giveItems(p, item);
 
             Lang.Message.COMMAND_GIVE_SUCCESS_SELF.send(sender, placeholders);
             return;
@@ -88,7 +88,7 @@ public class GiveSubcommand implements Subcommand {
 
         if (args.length == 2) {
             ItemStack item = generatorItem.getItemStack(p);
-            Items.giveItems(p, item);
+            ItemGiver.giveItems(p, item);
 
             Lang.Message.COMMAND_GIVE_SUCCESS_PLAYER.send(sender, placeholders);
             return;
@@ -136,7 +136,7 @@ public class GiveSubcommand implements Subcommand {
 
         if (args.length == 3) {
             ItemStack[] items = generatorItem.getItemStacks(p, amount);
-            Items.giveItems(p, items);
+            ItemGiver.giveItems(p, items);
 
             Lang.Message.COMMAND_GIVE_SUCCESS_PLAYER_MANY.send(sender, placeholders);
             return;
@@ -156,7 +156,7 @@ public class GiveSubcommand implements Subcommand {
         placeholders.put("durability", df.format(durability));
 
         ItemStack[] items = generatorItem.getItemStacks(p, amount, durability);
-        Items.giveItems(p, items);
+        ItemGiver.giveItems(p, items);
 
         Lang.Message.COMMAND_GIVE_SUCCESS_PLAYER_DURABILITY.send(sender, placeholders);
     }

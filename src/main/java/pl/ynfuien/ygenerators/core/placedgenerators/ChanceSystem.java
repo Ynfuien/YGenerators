@@ -3,7 +3,6 @@ package pl.ynfuien.ygenerators.core.placedgenerators;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pl.ynfuien.ygenerators.utils.Util;
 
 import java.util.HashMap;
 
@@ -19,10 +18,10 @@ public class ChanceSystem {
 //        YLogger.warn("allBlockChances: " + allBlockChances + ", with multi: " + (allBlockChances * multiplayer));
 
         // Return no block to generate if chance of is false
-        if (!Util.chanceOf(allBlockChances * multiplayer)) return null;
+        if (!chanceOf(allBlockChances * multiplayer)) return null;
 
         // Get random number between 0 and summed block chances
-        double random = Util.getRandomNumber(0, allBlockChances);
+        double random = getRandomNumber(0, allBlockChances);
 
 //        YLogger.warn("random: " + random);
 
@@ -43,5 +42,15 @@ public class ChanceSystem {
 
         // Return no block to generate
         return null;
+    }
+
+    // Chance of provided chance to return true
+    public static boolean chanceOf(double chance) {
+        return Math.random() < (chance / 100);
+    }
+
+    // Gets random number between two double values
+    public static double getRandomNumber(double min, double max) {
+        return (Math.random() * (max - min)) + min;
     }
 }

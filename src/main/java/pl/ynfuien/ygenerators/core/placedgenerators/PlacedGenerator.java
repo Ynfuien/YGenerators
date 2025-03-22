@@ -8,11 +8,11 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import pl.ynfuien.ydevlib.utils.BlockBreaker;
+import pl.ynfuien.ydevlib.utils.ItemGiver;
 import pl.ynfuien.ygenerators.core.Doubledrop;
 import pl.ynfuien.ygenerators.core.generator.Generator;
 import pl.ynfuien.ygenerators.hooks.superiorskyblock2.SuperiorSkyblock2Hook;
-import pl.ynfuien.ygenerators.utils.Items;
-import pl.ynfuien.ygenerators.utils.Util;
 
 import java.util.HashMap;
 
@@ -92,17 +92,16 @@ public class PlacedGenerator {
         Block block = location.getBlock();
 
         // Break
-//        if (!block.isEmpty()) Util.breakNaturally(block);
-        if (!block.isEmpty()) Util.breakNaturally(block);
+        if (!block.isEmpty()) BlockBreaker.breakStrikingly(block);
 
         // Give item to the player
         if (player != null) {
             ItemStack item = generator.getItem().getItemStack(player, durability);
-            Items.giveItems(player, item);
+            ItemGiver.giveItems(player, item);
         }
 
         // Destroy block above if it is a default block
-        if (blockAbove.getType().equals(defaultBlock)) Util.breakNaturally(blockAbove);
+        if (blockAbove.getType().equals(defaultBlock)) BlockBreaker.breakStrikingly(blockAbove);
     }
 
     public void decreaseDurability(double amount) {
