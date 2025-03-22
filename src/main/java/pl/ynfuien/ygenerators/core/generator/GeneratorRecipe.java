@@ -10,7 +10,6 @@ import org.bukkit.inventory.ShapelessRecipe;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pl.ynfuien.ydevlib.messages.YLogger;
-import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.core.Generators;
 
 import java.util.HashMap;
@@ -177,49 +176,36 @@ public class GeneratorRecipe {
         return true;
     }
 
-    public boolean registerRecipe(Generators generators) {
-        // Get generator item
+    public boolean registerRecipe() {
+        Generators generators = generator.getGenerators();
+
         GeneratorItem item = generator.getItem();
-        // Create recipe result item
         ItemStack recipeResultItem = item.getItemStack();
-        // Create namespaced key
         NamespacedKey namespacedKey = new NamespacedKey(generators.getInstance(), generator.getName());
 
-        // If recipe is shaped
         if (shaped) {
-            // Create shaped recipe
             ShapedRecipe shapedRecipe = new ShapedRecipe(namespacedKey, recipeResultItem);
-
-            // Set shape of recipe
             shapedRecipe.shape(
                     firstRow,
                     secondRow,
                     thirdRow
             );
 
-            // Loop through ingredients
             for (Character character : ingredients.keySet()) {
-                // Get ingredient under char
                 String ingredient = ingredients.get(character);
 
-                Material material;
+                Material material = Material.matchMaterial(ingredient);
                 // If ingredient is generator item
                 if (ingredient.startsWith("generator:")) {
-                    // Get ingredient generator name
                     String ingredientGeneName = ingredient.substring(10);
-                    // Skip recipe if provided generator doesn't exist
                     if (!generators.has(ingredientGeneName)) {
                         logError(String.format("Generator '%s' provided in ingredient for character '%s' doesn't exist!", ingredientGeneName, character));
                         return false;
                     }
 
-                    // Set material to generator item material
                     material = generators.get(ingredientGeneName).getItem().getMaterial();
-                } else {
-                    material = Material.valueOf(ingredient);
                 }
 
-                // Set shaped recipe ingredient
                 shapedRecipe.setIngredient(character, material);
             }
 
@@ -233,26 +219,19 @@ public class GeneratorRecipe {
 
         ShapelessRecipe shapelessRecipe = new ShapelessRecipe(namespacedKey, recipeResultItem);
 
-        // Loop through ingredients
         for (String ingredient : ingredients.values()) {
-            Material material;
+            Material material = Material.matchMaterial(ingredient);
             // If ingredient is generator item
             if (ingredient.startsWith("generator:")) {
-                // Get ingredient generator name
                 String ingredientGeneName = ingredient.substring(10);
-                // Skip recipe if provided generator doesn't exist
                 if (!generators.has(ingredientGeneName)) {
                     logError(String.format("Generator '%s' provided in ingredient doesn't exist!", ingredientGeneName));
                     return false;
                 }
 
-                // Set material to generator item material
                 material = generators.get(ingredientGeneName).getItem().getMaterial();
-            } else {
-                material = Material.valueOf(ingredient);
             }
 
-            // Set shaped recipe ingredient
             shapelessRecipe.addIngredient(material);
         }
 

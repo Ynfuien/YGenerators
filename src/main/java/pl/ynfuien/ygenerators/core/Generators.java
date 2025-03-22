@@ -157,7 +157,7 @@ public class Generators {
             // Skip if generator doesn't have recipe
             if (recipe == null) continue;
 
-            boolean success = recipe.registerRecipe(this);
+            boolean success = recipe.registerRecipe();
             if (!success) {
                 YLogger.warn(String.format("[Generator-Recipes] Recipe for generator '%s' couldn't be loaded!", gene.getName()));
                 continue;

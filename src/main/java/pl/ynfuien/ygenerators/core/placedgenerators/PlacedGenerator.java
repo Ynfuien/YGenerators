@@ -92,6 +92,7 @@ public class PlacedGenerator {
         Block block = location.getBlock();
 
         // Break
+//        if (!block.isEmpty()) Util.breakNaturally(block);
         if (!block.isEmpty()) Util.breakNaturally(block);
 
         // Give item to the player
