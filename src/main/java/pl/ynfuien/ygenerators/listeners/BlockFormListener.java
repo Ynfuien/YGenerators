@@ -7,10 +7,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFormEvent;
 import pl.ynfuien.ygenerators.YGenerators;
+import pl.ynfuien.ygenerators.core.BlockLottery;
 import pl.ynfuien.ygenerators.core.Doubledrop;
 import pl.ynfuien.ygenerators.core.Generators;
 import pl.ynfuien.ygenerators.core.VanillaGenerators;
-import pl.ynfuien.ygenerators.core.placedgenerators.ChanceSystem;
 
 import java.util.HashMap;
 
@@ -43,7 +43,7 @@ public class BlockFormListener implements Listener {
         Material defaultBlock = vanilla.getDefaultBlock();
         HashMap<Material, Double> blocks = vanilla.getBlocks();
 
-        Material blockToGenerate = ChanceSystem.getBlockToGenerate(blocks, multiplayer);
+        Material blockToGenerate = BlockLottery.drawABlock(blocks, multiplayer);
 
         if (blockToGenerate == null) {
             if (defaultBlock == null) return;

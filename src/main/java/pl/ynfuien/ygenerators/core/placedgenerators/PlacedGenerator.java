@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import pl.ynfuien.ydevlib.utils.BlockBreaker;
 import pl.ynfuien.ydevlib.utils.ItemGiver;
+import pl.ynfuien.ygenerators.core.BlockLottery;
 import pl.ynfuien.ygenerators.core.Doubledrop;
 import pl.ynfuien.ygenerators.core.generator.Generator;
 import pl.ynfuien.ygenerators.hooks.superiorskyblock2.SuperiorSkyblock2Hook;
@@ -56,7 +57,7 @@ public class PlacedGenerator {
         if (doubledrop.isActive() && generator.getDoubledropUseMultiplayer()) multiplayer = doubledrop.getMultiplayer();
 
         // Block to set
-        Material blockToGenerate = ChanceSystem.getBlockToGenerate(blocks, multiplayer);
+        Material blockToGenerate = BlockLottery.drawABlock(blocks, multiplayer);
         if (blockToGenerate == null) blockToGenerate = defaultBlock;
 
         generateBlock(blockToGenerate);
