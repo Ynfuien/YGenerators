@@ -18,7 +18,7 @@ public class AddSubcommand implements Subcommand {
 
     @Override
     public String permission() {
-        return "ygenerators.command.doubledrop."+name();
+        return "ygenerators.doubledrop."+name();
     }
 
     @Override

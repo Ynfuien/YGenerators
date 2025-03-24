@@ -10,8 +10,9 @@
     <packaging>jar</packaging>
 
     <name>YGenerators</name>
-
     <description>Custom generators!</description>
+    <url>https://modrinth.com/project/ygenerators</url>
+
     <properties>
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -1,70 +1,24 @@
-name: YGenerators
+name: '${project.name}'
 version: '${project.version}'
 main: pl.ynfuien.ygenerators.YGenerators
-api-version: 1.20
+api-version: '1.20'
 softdepend: [ PlaceholderAPI ]
 loadbefore: [ SuperiorSkyblock2 ]
 authors: [ Ynfuien ]
-website: https://github.com/Ynfuien/YGenerators
-description: Custom generators!
+description: '${project.description}'
+website: '${project.url}'
 
 commands:
-  doubledrop:
-    description: Checks double drop's time left
-    permission: ygenerators.command.doubledrop
-    aliases: [ dd ]
-
   ygenerators:
-    description: Command to manage plugin
-    permission: ygenerators.command.main
+    description: Admin command with reload and give subcommands
+    permission: ygenerators.admin
     aliases: [ ygene ]
 
+  doubledrop:
+    description: Checks time left of the double drop
+    permission: ygenerators.doubledrop
+    aliases: [ dd ]
+
 permissions:
-  # Permission to all commands
-  ygenerators.command.*:
-    description: Gives access to all plugin commands
-    children:
-      ygenerators.command.doubledrop.*: true
-      ygenerators.command.main.*: true
-
-  # Permission to all double drop commands
-  ygenerators.command.doubledrop.*:
-    description: Allows to use all double drop commands
-    children:
-      ygenerators.command.doubledrop: true
-      ygenerators.command.doubledrop.add: true
-      ygenerators.command.doubledrop.remove: true
-      ygenerators.command.doubledrop.set: true
-      ygenerators.command.doubledrop.setmultiplayer: true
-  ygenerators.command.doubledrop:
-    description: Allows to check double drop's time left
+  ygenerators.doubledrop:
     default: true
-  ygenerators.command.doubledrop.add:
-    description: Allows to add time to double drop
-    default: op
-  ygenerators.command.doubledrop.remove:
-    description: Allows to remove time from double drop
-    default: op
-  ygenerators.command.doubledrop.set:
-    description: Allows to set double drop time
-    default: op
-  ygenerators.command.doubledrop.setmultiplayer:
-    description: Allows to set double drop multiplayer
-    default: op
-
-  # Permission to all main commands
-  ygenerators.command.main.*:
-    description: Gives access to all plugin manage commands
-    children:
-      ygenerators.command.main: true
-      ygenerators.command.main.reload: true
-      ygenerators.command.main.give: true
-  ygenerators.command.main:
-    description: Allows to main plugin command
-    default: op
-  ygenerators.command.main.reload:
-    description: Allows to reload plugin
-    default: op
-  ygenerators.command.main.give:
-    description: Allows to use give generator command
-    default: op

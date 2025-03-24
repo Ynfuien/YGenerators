@@ -53,7 +53,7 @@ public class PlaceholderAPIHook extends PlaceholderExpansion {
     // %ygenerators_generator_<generator>_cooldown%
 
     // %ygenerators_generator_<generator>_item_material%
-    // %ygenerators_generator_<generator>_item_displayname%
+    // %ygenerators_generator_<generator>_item_display-name%
     // %ygenerators_generator_<generator>_item_enchanted%
     // %ygenerators_generator_<generator>_item_lore%
 

@@ -20,7 +20,7 @@ public class SetMultiplayerSubcommand implements Subcommand {
 
     @Override
     public String permission() {
-        return "ygenerators.command.doubledrop."+name();
+        return "ygenerators.doubledrop."+name();
     }
 
     @Override

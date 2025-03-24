@@ -30,7 +30,7 @@ public class GiveSubcommand implements Subcommand {
 
     @Override
     public String permission() {
-        return "ygenerators.command."+name();
+        return "ygenerators.admin."+name();
     }
 
     @Override

@@ -62,7 +62,7 @@ public class GeneratorPlaceholders implements Placeholder {
 
         // Placeholders:
         // - %ygenerators_generator_<name>_item_material%
-        // - %ygenerators_generator_<name>_item_displayname%
+        // - %ygenerators_generator_<name>_item_display-name%
         // - %ygenerators_generator_<name>_item_enchanted%
         // - %ygenerators_generator_<name>_item_lore%
         if (id.startsWith("item_")) {
@@ -76,9 +76,9 @@ public class GeneratorPlaceholders implements Placeholder {
             // Returns: generator item's material
             if (id.equals("material")) return item.getMaterial().name();
 
-            // Placeholder: %ygenerators_generator_<name>_item_displayname%
-            // Returns: generator item's displayname
-            if (id.equals("displayname")) return item.getDisplayName();
+            // Placeholder: %ygenerators_generator_<name>_item_display-name%
+            // Returns: generator item's display name
+            if (id.equals("display-name")) return item.getDisplayName();
 
             // Placeholder: %ygenerators_generator_<name>_item_enchanted%
             // Returns: true / false
