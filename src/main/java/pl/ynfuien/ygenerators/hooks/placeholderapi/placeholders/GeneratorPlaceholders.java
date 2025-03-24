@@ -43,30 +43,22 @@ public class GeneratorPlaceholders implements Placeholder {
         }
 
         // Return if generator with provided name doesn't exist
-        if (gene == null) {
-            return "generator doesn't exist";
-        }
+        if (gene == null) return "generator doesn't exist";
 
         // Set id to provided properties after generator name
         id = id.substring(gene.getName().length() + 1).toLowerCase();
 
         // Placeholder: %ygenerators_generator_<name>_default-block%
         // Returns: generator's default block
-        if (id.equals("default-block")) {
-            return gene.getDefaultBlock().name();
-        }
+        if (id.equals("default-block")) return gene.getDefaultBlock().name();
 
         // Placeholder: %ygenerators_generator_<name>_durability%
         // Returns: generator's durability
-        if (id.equals("durability")) {
-            return df.format(gene.getDurability());
-        }
+        if (id.equals("durability")) return df.format(gene.getDurability());
 
         // Placeholder: %ygenerators_generator_<name>_cooldown%
         // Returns: generator's cooldown in ticks
-        if (id.equals("cooldown")) {
-            return String.valueOf(gene.getCooldown());
-        }
+        if (id.equals("cooldown")) return String.valueOf(gene.getCooldown());
 
         // Placeholders:
         // - %ygenerators_generator_<name>_item_material%
@@ -82,27 +74,19 @@ public class GeneratorPlaceholders implements Placeholder {
 
             // Placeholder: %ygenerators_generator_<name>_item_material%
             // Returns: generator item's material
-            if (id.equals("material")) {
-                return item.getMaterial().name();
-            }
+            if (id.equals("material")) return item.getMaterial().name();
 
             // Placeholder: %ygenerators_generator_<name>_item_displayname%
             // Returns: generator item's displayname
-            if (id.equals("displayname")) {
-                return item.getDisplayName();
-            }
+            if (id.equals("displayname")) return item.getDisplayName();
 
             // Placeholder: %ygenerators_generator_<name>_item_enchanted%
             // Returns: true / false
-            if (id.equals("enchanted")) {
-                return String.valueOf(item.isEnchanted());
-            }
+            if (id.equals("enchanted")) return String.valueOf(item.isEnchanted());
 
             // Placeholder: %ygenerators_generator_<name>_item_lore%
             // Returns: generator item's lore
-            if (id.equals("lore")) {
-                return String.join("\n", item.getLore());
-            }
+            if (id.equals("lore")) return String.join("\n", item.getLore());
 
             return null;
         }
@@ -123,9 +107,7 @@ public class GeneratorPlaceholders implements Placeholder {
                 String bName = b.name().toLowerCase();
 
                 // Skip block if id doesn't start with its name
-                if (!id.startsWith(bName + "_")) {
-                    continue;
-                }
+                if (!id.startsWith(bName + "_")) continue;
 
                 // Set id to property after "<block>_"
                 id = id.substring(bName.length() + 1);
@@ -134,18 +116,14 @@ public class GeneratorPlaceholders implements Placeholder {
 
                 // Placeholder: %ygenerators_generator_<name>_blocks_<block>_normal%
                 // Returns: normal chance to generate block
-                if (id.equals("normal")) {
-                    return df.format(chance);
-                }
+                if (id.equals("normal")) return df.format(chance);
 
                 // Get double drop multiplayer
                 double multiplayer = doubledrop.getMultiplayer();
 
                 // Placeholder: %ygenerators_generator_<name>_blocks_<block>_doubledrop%
                 // Returns: chance to generate block with double drop
-                if (id.equals("doubledrop")) {
-                    return df.format(chance * multiplayer);
-                }
+                if (id.equals("doubledrop")) return df.format(chance * multiplayer);
 
                 // Placeholder: %ygenerators_generator_<name>_blocks_<block>_current%
                 // Returns: current chance to generate block

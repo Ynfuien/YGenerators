@@ -35,7 +35,7 @@ public class PlaceholderAPIHook extends PlaceholderExpansion {
 
     @Override @NotNull
     public String getVersion() {
-        return "1.0.0";
+        return instance.getPluginMeta().getVersion();
     }
 
     @Override
@@ -76,7 +76,7 @@ public class PlaceholderAPIHook extends PlaceholderExpansion {
 
         // Loop through placeholders and get that provided by name
         for (Placeholder ph : placeholders) {
-            if (params.startsWith(ph.name() + "_")) {
+            if (params.startsWith(ph.name() + "_") || params.equalsIgnoreCase(ph.name())) {
                 placeholder = ph;
                 break;
             }
@@ -84,9 +84,10 @@ public class PlaceholderAPIHook extends PlaceholderExpansion {
 
         // If provided placeholder is incorrect
         if (placeholder == null) return "incorrect placeholder";
+        String phName = placeholder.name();
 
         // Get placeholder properties from params
-        String id = params.substring(placeholder.name().length() + 1);
+        String id = !params.equalsIgnoreCase(phName) ? params.substring(phName.length() + 1) : "";
         // Get placeholder result
         String result = placeholder.getPlaceholder(id, p);
 

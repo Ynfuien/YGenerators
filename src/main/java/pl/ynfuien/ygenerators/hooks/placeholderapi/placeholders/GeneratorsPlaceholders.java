@@ -25,9 +25,7 @@ public class GeneratorsPlaceholders implements Placeholder {
     public String getPlaceholder(String id, OfflinePlayer p) {
         // Placeholder: %ygenerators_generators_all%
         // Returns: count of all generators placed on the server
-        if (id.equals("all")) {
-            return String.valueOf(placedGenerators.getAll().size());
-        }
+        if (id.equals("all")) return String.valueOf(placedGenerators.getAll().size());
 
         // Placeholders:
         // - %ygenerators_generators_inworld%
@@ -39,12 +37,8 @@ public class GeneratorsPlaceholders implements Placeholder {
                 // Return if player isn't online
                 if (!p.isOnline()) return "player is offline";
 
-                // Get world
                 World world = p.getPlayer().getWorld();
-                // Count generators
                 long count = placedGenerators.getAllLocations().stream().filter(loc -> loc.getWorld().equals(world)).count();
-
-                // Return count
                 return String.valueOf(count);
             }
 
@@ -62,10 +56,7 @@ public class GeneratorsPlaceholders implements Placeholder {
             // Return if provided world doesn't exist
             if (world == null) return "world doesn't exist";
 
-            // Count generators
             long count = placedGenerators.getAllLocations().stream().filter(loc -> loc.getWorld().equals(world)).count();
-
-            // Return count
             return String.valueOf(count);
         }
 

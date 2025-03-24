@@ -24,9 +24,9 @@ public class DoubledropPlaceholders implements Placeholder {
     }
 
     @Override
-    public String getPlaceholder(String id, OfflinePlayer p) {
-        // Get multiplayer
+    public String getPlaceholder(String id, OfflinePlayer player) {
         double multiplayer = doubledrop.getMultiplayer();
+        id = id.toLowerCase();
 
         // Placeholder: %ygenerators_doubledrop_active%
         // Returns: Lang DOUBLEDROP_PLACEHOLDER_INACTIVE / DOUBLEDROP_PLACEHOLDER_ACTIVE
@@ -61,30 +61,23 @@ public class DoubledropPlaceholders implements Placeholder {
         // - %ygenerators_doubledrop_status%
         // - %ygenerators_doubledrop_status_multiplayer%
         // - %ygenerators_doubledrop_status_multiplayer_always%
-        // Returns: Lang DOUBLEDROP_PLACEHOLDER_STATUS / DOUBLEDROP_PLACEHOLDER_STATUS_MULTIPLAYER
+        // Returns: Lang DOUBLEDROP_PLACEHOLDER_STATUS / DOUBLEDROP_PLACEHOLDER_STATUS_MULTIPLAYER / DOUBLEDROP_PLACEHOLDER_INACTIVE
         if (id.startsWith("status")) {
             // Get id after "status"
             id = id.substring(6);
 
-            // Create hashmap for placeholders to lang
             HashMap<String, Object> placeholders = new HashMap<>();
-            // Add placeholder time
             placeholders.put("time", doubledrop.getFormattedTimeLeft());
-            // Add placeholder multiplayer
             placeholders.put("multiplayer", df.format(multiplayer));
 
             // Return inactive message if double drop is... inactive
-            if (!doubledrop.isActive()) {
-                return Lang.Message.DOUBLEDROP_PLACEHOLDER_INACTIVE.get();
-            }
+            if (!doubledrop.isActive()) return Lang.Message.DOUBLEDROP_PLACEHOLDER_INACTIVE.get();
 
             // Get normal status message
             Lang.Message statusMessage = Lang.Message.DOUBLEDROP_PLACEHOLDER_STATUS;
 
             // If id was only "status"
-            if (id.equals("")) {
-                return statusMessage.get(placeholders);
-            }
+            if (id.isEmpty()) return statusMessage.get(placeholders);
 
             // If id was "status_multiplayer"
             if (id.equals("_multiplayer")) {
