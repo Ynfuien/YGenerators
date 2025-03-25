@@ -22,13 +22,13 @@ Custom generators with custom durability, recipe, item and more.
 - option to enable 1.16 ores drop instead of 1.17 raw ores
 - fully customizable messages with a lang file, supporting [PlaceholderAPI](https://github.com/PlaceholderAPI/PlaceholderAPI) and [MiniMessage](https://docs.advntr.dev/minimessage/index.html)
 - commands with tab completions
-- [API](https://github.com/Ynfuien/YVanish/wiki/4.-Developer-API) for developers
+- [API](https://github.com/Ynfuien/YGenerators/wiki/4.-Developer-API) for developers
 
 # Download
 You can download the plugin only on [Modrinth](https://modrinth.com/plugin/ygenerators) or compile it yourself.
 
 # Documentation
-You can read about plugin's [permissions](https://github.com/Ynfuien/YVanish/wiki/2.-Permissions), [placeholders](https://github.com/Ynfuien/YVanish/wiki/3.-Placeholders) etc. on the [wiki](https://github.com/Ynfuien/YVanish/wiki) page.
+You can read about plugin's [permissions](https://github.com/Ynfuien/YGenerators/wiki/2.-Permissions), [placeholders](https://github.com/Ynfuien/YGenerators/wiki/3.-Placeholders) etc. on the [wiki](https://github.com/Ynfuien/YGenerators/wiki) page.
 
 
 # Media - Example generators
