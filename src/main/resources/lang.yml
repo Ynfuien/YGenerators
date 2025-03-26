@@ -27,7 +27,7 @@
 # # - for things that can contain double quotes, and you want them in hover/click event
 
 # Prefix that will be used for {prefix} placeholder
-prefix: '<dark_aqua>[<aqua><bold>Y<blue><bold>Generators<dark_aqua>]<reset>'
+prefix: '<dark_aqua>[<aqua><bold>Y<gradient:gold:yellow>Generators</gradient></bold><dark_aqua>]<reset>'
 
 no-permission: '{prefix} <red>You don''t have permission to do this!'
 only-player: '{prefix} <red>This command can be used only by players!'

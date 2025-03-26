@@ -45,7 +45,7 @@ public final class YGenerators extends JavaPlugin {
         instance = this;
 
         // Set logger prefix
-        YLogger.setup("<dark_aqua>[<aqua>Y<blue>Generators<dark_aqua>] <white>", getComponentLogger());
+        YLogger.setup("<dark_aqua>[<aqua>Y<gradient:gold:yellow>Generators</gradient><dark_aqua>] <white>", getComponentLogger());
         YLogger.setDebugging(true);
 
         // Configuration
