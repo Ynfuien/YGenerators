@@ -52,7 +52,9 @@ public class InteractionOptions {
         return click;
     }
 
-    // Check whether interaction from player is this interaction
+    /**
+     * Checks whether interaction from the player is this interaction
+     */
     public boolean isInteractionCorrect(PlayerInteractEvent event) {
         if (!enabled) return false;
 

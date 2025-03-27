@@ -15,7 +15,6 @@ public class PlacedGenerators {
     private Database database;
 
     private final HashMap<Location, PlacedGenerator> placedGenerators = new HashMap<>();
-
     private final Set<Location> modifiedGenerators = new HashSet<>();
 
     private ScheduledTask saveTask = null;
@@ -24,6 +23,9 @@ public class PlacedGenerators {
         this.instance = instance;
     }
 
+    /**
+     * Internal method for loading this class.
+     */
     public boolean load(Database database) {
         logInfo("Loading generators from the database...");
         this.database = database;
@@ -50,6 +52,9 @@ public class PlacedGenerators {
         YLogger.error("[Generators-Database] " + message);
     }
 
+    /**
+     * Starts database update interval.
+     */
     public void startUpdateInterval() {
         if (saveTask != null) saveTask.cancel();
 
@@ -62,6 +67,9 @@ public class PlacedGenerators {
         );
     }
 
+    /**
+     * Stops database update interval.
+     */
     public void stopUpdateInterval() {
         if (saveTask == null) return;
 
@@ -69,6 +77,9 @@ public class PlacedGenerators {
         saveTask = null;
     }
 
+    /**
+     * Saves modified generators to the database.
+     */
     public boolean save() {
         if (modifiedGenerators.isEmpty()) return true;
 
@@ -95,15 +106,24 @@ public class PlacedGenerators {
         return true;
     }
 
+    /**
+     * @return Whether provided location has a placed generator
+     */
     public boolean has(Location location) {
         return placedGenerators.containsKey(location);
     }
 
+    /**
+     * @return Placed generator in the provided location, or null if none found
+     */
     public PlacedGenerator get(Location location) {
         modifiedGenerators.add(location);
         return placedGenerators.get(location);
     }
 
+    /**
+     * Adds a placed generator to the list.
+     */
     public void add(PlacedGenerator placedGenerator) {
         Location location = placedGenerator.getLocation();
         placedGenerators.put(location, placedGenerator);
@@ -111,19 +131,31 @@ public class PlacedGenerators {
         modifiedGenerators.add(location);
     }
 
+    /**
+     * Removes placed generator in provided location from the list.
+     */
     public PlacedGenerator remove(Location location) {
         modifiedGenerators.add(location);
         return placedGenerators.remove(location);
     }
 
+    /**
+     * @return The HashMap of all placed generators
+     */
     public HashMap<Location, PlacedGenerator> getAll() {
         return placedGenerators;
     }
 
+    /**
+     * @return All locations of the placed generators
+     */
     public Set<Location> getAllLocations() {
         return placedGenerators.keySet();
     }
 
+    /**
+     * @return All placed generators
+     */
     public Collection<PlacedGenerator> getAllPlacedGenerators() {
         return placedGenerators.values();
     }

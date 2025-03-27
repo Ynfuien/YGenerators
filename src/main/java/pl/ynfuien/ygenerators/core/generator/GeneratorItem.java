@@ -43,6 +43,9 @@ public class GeneratorItem {
         this.placeholders = generator.getDefaultPlaceholders();
     }
 
+    /**
+     * Internal method for loading this class.
+     */
     public boolean load(ConfigurationSection config) {
         if (!config.contains("material")) {
             logError("Missing key 'material'");
@@ -101,14 +104,23 @@ public class GeneratorItem {
         return canBeUsedInCrafting;
     }
 
+    /**
+     * @return New item stack of this generator's item
+     */
     public ItemStack getItemStack() {
         return getItemStack(null);
     }
 
+    /**
+     * @return New item stack of this generator's item, with parsed placeholders for provided player
+     */
     public ItemStack getItemStack(Player player) {
         return getItemStack(player, generator.getDurability());
     }
 
+    /**
+     * @return New item stack of this generator's item, with provided durability left and parsed placeholders for provided player
+     */
     public ItemStack getItemStack(Player player, double durability) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
@@ -143,10 +155,16 @@ public class GeneratorItem {
         return item;
     }
 
+    /**
+     * @return A provided amount of new item stacks
+     */
     public ItemStack[] getItemStacks(Player player, int amount) {
         return getItemStacks(player, amount, generator.getDurability());
     }
 
+    /**
+     * @return A provided amount of new item stacks of provided durability
+     */
     public ItemStack[] getItemStacks(Player player, int amount, double durability) {
         ItemStack item = getItemStack(player, durability);
         ItemStack[] items = new ItemStack[amount];

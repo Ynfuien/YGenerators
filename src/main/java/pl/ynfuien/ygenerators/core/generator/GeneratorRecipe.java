@@ -32,6 +32,9 @@ public class GeneratorRecipe {
         this.generator = generator;
     }
 
+    /**
+     * Internal method for loading this class.
+     */
     public boolean load(ConfigurationSection config) {
         if (!config.contains("ingredients")) {
             logError("Recipe doesn't contain ingredients key!");

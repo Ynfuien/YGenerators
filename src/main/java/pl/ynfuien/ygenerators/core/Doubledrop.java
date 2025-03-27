@@ -3,7 +3,6 @@ package pl.ynfuien.ygenerators.core;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.storage.Database;
@@ -24,6 +23,9 @@ public class Doubledrop {
         this.instance = instance;
     }
 
+    /**
+     * Internal method for loading this class.
+     */
     public boolean load(Database database) {
         this.database = database;
 
@@ -41,15 +43,23 @@ public class Doubledrop {
         return database.setDoubledrop(timeLeft, multiplayer);
     }
 
+    /**
+     * Checks whether doubledrop is active.
+     */
     public boolean isActive() {
         return timeLeft == -1 || timeLeft > 0;
     }
 
+    /**
+     * @return Time left in minutes
+     */
     public long getTimeLeft() {
         return timeLeft;
     }
 
-    @NotNull
+    /**
+     * @return DOUBLEDROP_TIME or DOUBLEDROP_TIME_INFINITY message with replaced {hours} and {minutes} placeholders
+     */
     public String getFormattedTimeLeft() {
         if (timeLeft == -1) return Lang.Message.DOUBLEDROP_TIME_INFINITY.get();
 
@@ -63,15 +73,26 @@ public class Doubledrop {
         return Lang.Message.DOUBLEDROP_TIME.get(placeholders);
     }
 
+    /**
+     * @return Current doubledrop multiplayer
+     */
     public double getMultiplayer() {
         return multiplayer;
     }
 
+    /**
+     * Adds provided to the current doubledrop time.
+     * @param time Time in minutes
+     */
     public void addTime(int time) {
         if (timeLeft == -1) return;
         setTimeLeft(timeLeft + time);
     }
 
+    /**
+     * Sets the time of the doubledrop.
+     * @param timeLeft Time in minutes
+     */
     public void setTimeLeft(int timeLeft) {
         if (timeLeft < -1) timeLeft = -1;
         this.timeLeft = timeLeft;
@@ -104,6 +125,9 @@ public class Doubledrop {
         }, 1, 1, TimeUnit.MINUTES);
     }
 
+    /**
+     * Stops interval decreasing the time left.
+     */
     public void stopInterval() {
         if (intervalTask == null) return;
 
@@ -111,12 +135,19 @@ public class Doubledrop {
         intervalTask = null;
     }
 
+    /**
+     * Removes provided time from the time left. It will be set to 0 if removed time is greater than current time left.
+     * @param time Time in minutes.
+     */
     public void removeTime(int time) {
         if (timeLeft == -1) return;
         if (timeLeft - time < 0) time = timeLeft;
         setTimeLeft(timeLeft - time);
     }
 
+    /**
+     * Sets doubledrop multiplayer.
+     */
     public void setMultiplayer(float multiplayer) {
         if (multiplayer < 0) multiplayer = 0;
         this.multiplayer = multiplayer;
@@ -124,5 +155,8 @@ public class Doubledrop {
         save();
     }
 
+    /**
+     * Values record with time left and multiplayer. Used only between this class and Database.
+     */
     public record Values(int timeLeft, float multiplayer) {};
 }

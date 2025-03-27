@@ -52,15 +52,7 @@ public class PlacedGenerator {
      * Generates a block based on given chances
      */
     public void generateBlock() {
-        // Multiplayer
-        double multiplayer = 1;
-        if (doubledrop.isActive() && generator.getDoubledropUseMultiplayer()) multiplayer = doubledrop.getMultiplayer();
-
-        // Block to set
-        Material blockToGenerate = BlockLottery.drawABlock(blocks, multiplayer);
-        if (blockToGenerate == null) blockToGenerate = defaultBlock;
-
-        generateBlock(blockToGenerate);
+        generateBlock(drawABlock());
     }
 
     /**
@@ -82,13 +74,31 @@ public class PlacedGenerator {
         }
     }
 
+    public Material drawABlock() {
+        double multiplayer = 1;
+        if (doubledrop.isActive() && generator.getDoubledropUseMultiplayer()) multiplayer = doubledrop.getMultiplayer();
+
+        Material blockToGenerate = BlockLottery.drawABlock(blocks, multiplayer);
+        return blockToGenerate == null ? defaultBlock : blockToGenerate;
+    }
+
+    /**
+     * @return Whether the block above the generator is empty
+     */
     private boolean canGenerate() {
         return blockAbove.isEmpty() || blockAbove.isLiquid();
     }
 
+    /**
+     * Destroys this generator.
+     */
     public void destroy() {
         destroy(null);
     }
+
+    /**
+     * Destroys this generator, giving it to the provided player.
+     */
     public void destroy(Player player) {
         Block block = location.getBlock();
 
@@ -105,6 +115,9 @@ public class PlacedGenerator {
         if (blockAbove.getType().equals(defaultBlock)) BlockBreaker.breakStrikingly(blockAbove);
     }
 
+    /**
+     * Decreases durability by provided amount.
+     */
     public void decreaseDurability(double amount) {
         if (durability == -1) return;
 
@@ -131,8 +144,16 @@ public class PlacedGenerator {
         return durability;
     }
 
+    public Block getBlockAbove() {
+        return blockAbove;
+    }
+
     public boolean isInfinite() {
         return durability == -1;
+    }
+
+    public boolean isUsedUp() {
+        return durability == 0;
     }
 
     public void setDurability(double durability) {

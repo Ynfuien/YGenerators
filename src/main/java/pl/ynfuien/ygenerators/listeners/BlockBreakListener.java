@@ -15,9 +15,9 @@ import org.bukkit.inventory.ItemStack;
 import pl.ynfuien.ydevlib.utils.DoubleFormatter;
 import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.YGenerators;
-import pl.ynfuien.ygenerators.core.Doubledrop;
+import pl.ynfuien.ygenerators.api.event.GeneratorUseEvent;
+import pl.ynfuien.ygenerators.api.event.GeneratorUsedUpEvent;
 import pl.ynfuien.ygenerators.core.Generators;
-import pl.ynfuien.ygenerators.core.generator.Generator;
 import pl.ynfuien.ygenerators.core.placedgenerators.PlacedGenerator;
 import pl.ynfuien.ygenerators.core.placedgenerators.PlacedGenerators;
 
@@ -31,7 +31,6 @@ public class BlockBreakListener implements Listener {
 
     private final YGenerators instance;
     private final Generators generators;
-    private final Doubledrop doubledrop;
 
     private final PlacedGenerators placedGenerators;
     private final static DoubleFormatter df = DoubleFormatter.DEFAULT;
@@ -39,7 +38,6 @@ public class BlockBreakListener implements Listener {
     public BlockBreakListener(YGenerators instance) {
         this.instance = instance;
         generators = instance.getGenerators();
-        doubledrop = instance.getDoubledrop();
         placedGenerators = instance.getPlacedGenerators();
     }
 
@@ -92,30 +90,25 @@ public class BlockBreakListener implements Listener {
 
         // Block above the generator was broken
         PlacedGenerator placedGenerator = placedGenerators.get(locUnder);
-        Generator generator = placedGenerator.getGenerator();
 
+        // API Event
+        GeneratorUseEvent apiUseEvent = new GeneratorUseEvent(player, placedGenerator);
+        Bukkit.getPluginManager().callEvent(apiUseEvent);
 
-        // Create task for generating block
-        Bukkit.getScheduler().runTaskLater(instance, () -> {
-            if (!placedGenerators.has(locUnder)) return;
+        if (apiUseEvent.isCancelled()) {
+            event.setCancelled(true);
+            return;
+        }
 
-            placedGenerator.generateBlock();
-        }, generator.getCooldown());
-
-
-        // Reduce generator's durability
-        if (placedGenerator.isInfinite()) return;
-
-        double amount = 1d;
-        if (doubledrop.isActive()) amount = generator.getDoubledropDurabilityDecrease();
-        placedGenerator.decreaseDurability(amount);
-
-        HashMap<String, Object> placeholders = new HashMap<>(generator.getDefaultPlaceholders());
-
-        double durability = placedGenerator.getDurability();
+        placedGenerator.decreaseDurability(apiUseEvent.getUsedDurability());
 
         // Generator has been used up
-        if (durability == 0) {
+        HashMap<String, Object> placeholders = new HashMap<>(placedGenerator.getGenerator().getDefaultPlaceholders());
+        if (placedGenerator.isUsedUp()) {
+            // API Event
+            GeneratorUsedUpEvent apiUsedUpEvent = new GeneratorUsedUpEvent(player, placedGenerator);
+            Bukkit.getPluginManager().callEvent(apiUsedUpEvent);
+
             placedGenerators.remove(locUnder);
             placedGenerator.destroy();
 
@@ -126,6 +119,7 @@ public class BlockBreakListener implements Listener {
         // Send durability alerts
         List<Double> alertDurability = generators.getAlertDurability();
 
+        double durability = placedGenerator.getDurability();
         if (alertDurability.contains(durability)) {
             // Multi-language support stuff
             Lang.WordType wordType = Lang.getWordType(durability);
@@ -137,6 +131,13 @@ public class BlockBreakListener implements Listener {
             placeholders.put("durability-left", df.format(durability));
             Lang.Message.GENERATOR_ALERT_LOW_DURABILITY.send(player, placeholders);
         }
+
+        // Task for generating a new block
+        Bukkit.getScheduler().runTaskLater(instance, () -> {
+            if (!placedGenerators.has(locUnder)) return;
+
+            placedGenerator.generateBlock(apiUseEvent.getBlockToGenerate());
+        }, apiUseEvent.getCooldown());
     }
 
     private static final List<Material> ORES = Arrays.asList(

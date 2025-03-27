@@ -1,5 +1,6 @@
-package pl.ynfuien.ygenerators;
+package pl.ynfuien.ygenerators.api;
 
+import pl.ynfuien.ygenerators.YGenerators;
 import pl.ynfuien.ygenerators.core.Doubledrop;
 import pl.ynfuien.ygenerators.core.Generators;
 import pl.ynfuien.ygenerators.core.placedgenerators.PlacedGenerators;
@@ -12,23 +13,23 @@ public class YGeneratorsAPI {
     }
 
     /**
-     * @return Double drop instance
+     * @return Doubledrop instance with which you can get / set / modify time left and multiplayer.
      */
     public static Doubledrop getDoubledrop() {
         return instance.getDoubledrop();
     }
 
     /**
-     * @return Generators instance
+     * @return Generators instance which contains loaded generators from generators.yml and also some values from config.yml.
      */
     public static Generators getGenerators() {
         return instance.getGenerators();
     }
 
     /**
-     * @return Generators database instance
+     * @return PlacedGenerators instance with all placed generators over the worlds.
      */
-    public static PlacedGenerators getDatabase() {
+    public static PlacedGenerators getPlacedGenerators() {
         return instance.getPlacedGenerators();
     }
 }

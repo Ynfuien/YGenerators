@@ -15,6 +15,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.YGenerators;
+import pl.ynfuien.ygenerators.api.event.GeneratorPlaceEvent;
 import pl.ynfuien.ygenerators.core.Generators;
 import pl.ynfuien.ygenerators.core.generator.Generator;
 import pl.ynfuien.ygenerators.core.generator.GeneratorItem;
@@ -94,7 +95,6 @@ public class BlockPlaceListener implements Listener {
         }
 
 
-//        long chunkKey = location.getChunk().getChunkKey();
         Chunk chunk = location.getChunk();
 
         HashMap<String, Object> placeholders = new HashMap<>();
@@ -159,6 +159,14 @@ public class BlockPlaceListener implements Listener {
             event.setCancelled(true);
             sendDenyMessage(player, Lang.Message.GENERATOR_DENY_DURABILITY_NOT_SET);
 
+            return;
+        }
+
+        // API Event
+        GeneratorPlaceEvent apiEvent = new GeneratorPlaceEvent(player, generator, block, item, durability);
+        Bukkit.getPluginManager().callEvent(apiEvent);
+        if (apiEvent.isCancelled()) {
+            event.setCancelled(true);
             return;
         }
 

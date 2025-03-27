@@ -32,6 +32,9 @@ public class Generators {
         this.instance = instance;
     }
 
+    /**
+     * Internal method for loading this class.
+     */
     public boolean load(FileConfiguration config, FileConfiguration generatorsConfig) {
         if (config == null) return false;
         if (generatorsConfig == null) return false;
@@ -100,28 +103,47 @@ public class Generators {
         YLogger.info("[Generators] " + message);
     }
 
+    /**
+     * Gets a Generator instance by its name.
+     * @return Generator or null if not found
+     */
     @Nullable
     public Generator get(String name) {
         return generators.get(name);
     }
 
+    /**
+     * Checks whether generator with provided name exists.
+     */
     public boolean has(String name) {
         return generators.containsKey(name);
     }
 
+    /**
+     * @return All generators in a hashmap
+     */
     @NotNull
     public HashMap<String, Generator> getAll() {
         return generators;
     }
 
+    /**
+     * @return Plugin instance
+     */
     public YGenerators getInstance() {
         return instance;
     }
 
+    /**
+     * @return Max amount of any generators placed in a single chunk. Loaded from config.yml
+     */
     public int getMaxInChunk() {
         return maxInChunk;
     }
 
+    /**
+     * @return List of the disabled worlds in which generators can't be placed
+     */
     @NotNull
     public List<String> getDisabledWorlds() {
         return disabledWorlds;
@@ -132,21 +154,32 @@ public class Generators {
         return alertDurability;
     }
 
+    /**
+     * @return Pickup interaction for the generators, configured in config.yml
+     */
     public InteractionOptions getPickUp() {
         return pickUp;
     }
 
+    /**
+     * @return Check status interaction for the generators, configured in config.yml
+     */
     public InteractionOptions getCheckStatus() {
         return checkStatus;
     }
 
+    /**
+     * @return Loaded settings about vanilla generators
+     */
     @NotNull
     public VanillaGenerators getVanillaGenerators() {
         return vanillaGenerators;
     }
 
 
-    // Loads generator recipes
+    /**
+     * Loads recipes for the generator items.
+     */
     public void loadRecipes() {
         YLogger.info("[Generator-Recipes] Loading generator recipes...");
 
@@ -170,7 +203,9 @@ public class Generators {
         YLogger.info("[Generator-Recipes] Generator recipes successfully loaded!");
     }
 
-    // Remove generator recipes
+    /**
+     * Removes recipes of the generator items.
+     */
     public void removeRecipes() {
         for (Generator gene : generators.values()) {
             GeneratorRecipe recipe = gene.getRecipe();
@@ -182,6 +217,9 @@ public class Generators {
         }
     }
 
+    /**
+     * @return Whether provided generator is disabled in provided location
+     */
     public boolean isDisabledInLocation(String generatorName, Location location) {
         if (disabledWorlds.contains(location.getWorld().getName())) return true;
 

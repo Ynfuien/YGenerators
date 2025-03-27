@@ -42,6 +42,9 @@ public class Generator {
         this.displayName = StringUtils.capitalize(name);
     }
 
+    /**
+     * Internal method for loading this class.
+     */
     public boolean load(ConfigurationSection config) {
         // Return if config doesn't have default-block or item key
         for (String key : Arrays.asList("item", "default-block")) {
@@ -154,17 +157,26 @@ public class Generator {
         return true;
     }
 
-    public boolean isDisabledInLocation(Location loc) {
-        String worldName = loc.getWorld().getName();
+    /**
+     * @return Whether this generator is disabled in provided location
+     */
+    public boolean isDisabledInLocation(Location location) {
+        String worldName = location.getWorld().getName();
 
         if (generators.getDisabledWorlds().contains(worldName)) return true;
         return disabledWorlds.contains(worldName);
     }
 
+    /**
+     * @return Placeholders used in messages
+     */
     public HashMap<String, Object> getDefaultPlaceholders() {
         return new HashMap<>(placeholders);
     }
 
+    /**
+     * @return Placeholders used in messages
+     */
     public HashMap<String, Object> getPlaceholders(double remainingDurability) {
         HashMap<String, Object> phs = new HashMap<>(placeholders);
         phs.put("remaining-durability", df.format(remainingDurability));

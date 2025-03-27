@@ -33,17 +33,17 @@ You can read about plugin's [permissions](https://github.com/Ynfuien/YGenerators
 
 # Media - Example generators
 #### Items
-![Cobblestone generator item](https://i.imgur.com/7XCybJy.png)
-![Stone generator item](https://i.imgur.com/eyJVDJL.png)
+![](https://i.imgur.com/7XCybJy.png)
+![](https://i.imgur.com/eyJVDJL.png)
 #### Crafting
-![Cobblestone generator item crafting](https://i.imgur.com/RZ61mTI.png)
-![Stone generator item crafting](https://i.imgur.com/Q6ya7cH.png)
+![](https://i.imgur.com/RZ61mTI.png)
+![](https://i.imgur.com/Q6ya7cH.png)
 #### Checking durability
-![Check durability interaction](https://i.imgur.com/u4olMmm.gif)
+![](https://i.imgur.com/u4olMmm.gif)
 #### Picking up generator
-![Check durability interaction](https://i.imgur.com/wistrWC.gif)
+![](https://i.imgur.com/wistrWC.gif)
 #### Example infinite generator with 0 tick cooldown
-![Mining infinite generator](https://i.imgur.com/YtbBKPI.gif)
+![](https://i.imgur.com/YtbBKPI.gif)
 
 # Integrity with other plugins
 I make these plugins for me, according to my needs, meaning, I don't search for every possible plugin that I don't care about, that could be somehow better integrated with mine. But, if you care about better integration between this plugin and some other, then just let me know through [Discord](https://discord.gg/kZJhKZ48j8) or GitHub and I will see what I can do.

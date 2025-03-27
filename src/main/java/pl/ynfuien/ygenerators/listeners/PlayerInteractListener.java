@@ -14,6 +14,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import pl.ynfuien.ydevlib.utils.DoubleFormatter;
 import pl.ynfuien.ygenerators.Lang;
 import pl.ynfuien.ygenerators.YGenerators;
+import pl.ynfuien.ygenerators.api.event.GeneratorCheckStatusEvent;
+import pl.ynfuien.ygenerators.api.event.GeneratorPickUpEvent;
 import pl.ynfuien.ygenerators.core.Generators;
 import pl.ynfuien.ygenerators.core.InteractionOptions;
 import pl.ynfuien.ygenerators.core.generator.Generator;
@@ -82,11 +84,15 @@ public class PlayerInteractListener implements Listener {
 
 
         PlacedGenerator placedGenerator = placedGenerators.get(location);
+        // API Event
+        GeneratorPickUpEvent apiEvent = new GeneratorPickUpEvent(player, placedGenerator);
+        Bukkit.getPluginManager().callEvent(apiEvent);
+
+        event.setCancelled(true);
+        if (apiEvent.isCancelled()) return;
 
         placedGenerators.remove(location);
         placedGenerator.destroy(player);
-
-        event.setCancelled(true);
     }
 
     private void checkStatusInteraction(PlayerInteractEvent event) {
@@ -111,6 +117,13 @@ public class PlayerInteractListener implements Listener {
         PlacedGenerator placedGenerator = placedGenerators.get(location);
         Generator generator = placedGenerator.getGenerator();
 
+        // API Event
+        GeneratorCheckStatusEvent apiEvent = new GeneratorCheckStatusEvent(player, placedGenerator);
+        Bukkit.getPluginManager().callEvent(apiEvent);
+
+        event.setCancelled(true);
+        if (apiEvent.isCancelled()) return;
+
         double durability = placedGenerator.getDurability();
 
         HashMap<String, Object> placeholders = new HashMap<>(generator.getPlaceholders(durability));
@@ -119,6 +132,5 @@ public class PlayerInteractListener implements Listener {
         if (durability == -1) message = Lang.Message.GENERATOR_INFO_INFINITE;
 
         player.sendActionBar(message.getComponent(player, placeholders));
-        event.setCancelled(true);
     }
 }
