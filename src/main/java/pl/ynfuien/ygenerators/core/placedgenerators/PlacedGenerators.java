@@ -99,10 +99,8 @@ public class PlacedGenerators {
             modifiedGenerators.clear();
         }
 
-        boolean removeResult = database.removeGenerators(toRemove);
-        boolean updateResult = database.updateGenerators(toUpdate);
-
-        YLogger.debug(String.format("RemoveResult: %b (%d); UpdateResult: %b (%d);", removeResult, toRemove.size(), updateResult, toUpdate.size()));
+        database.removeGenerators(toRemove);
+        database.updateGenerators(toUpdate);
         return true;
     }
 

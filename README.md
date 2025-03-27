@@ -1,3 +1,6 @@
+[![Discord](https://img.shields.io/discord/1236019317208776786?style=flat&logo=discord&label=Discord&color=%235d6af2
+)](https://discord.gg/kZJhKZ48j8)
+
 # YGenerators
 Custom generators with custom durability, recipe, item and more.
 
